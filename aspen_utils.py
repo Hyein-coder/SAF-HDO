@@ -44,11 +44,13 @@ component_to_carbon_number = {
 
 
 class AspenSim(object):
-    def __init__(self, aspen_path, case_target='a'):
+    def __init__(self, aspen_path, case_target='a', visible=True):
         self.aspen = win32.Dispatch("Apwn.Document")
+        self.aspen_path = aspen_path
         self.aspen.InitFromArchive2(os.path.abspath(aspen_path))
-        self.aspen.Visible = False
+        self.aspen.Visible = visible
         self.aspen.SuppressDialogs = True
+        print("Opening Aspen simulation")
 
         self.rxtor_nodes = [
             "\Data\Blocks\R-201\Input\CONV",
@@ -109,8 +111,8 @@ class AspenSim(object):
                         break
                     except:
                         # print(f"Error: rxtor{ii}--rxn{rii[n]}")
-                        rii.remove(rii[n])
                         rii.append(rii[-1] + 1)
+                        rii.remove(rii[n])
                         # print(f"Appended {rii[-1]}")
             ri_valid.append(rii_valid)
 
@@ -127,18 +129,38 @@ class AspenSim(object):
         }
         return carbon_number_composition
 
+    def get_rxn_coefficients(self):
+        rxn_coefficients = []
+        for i, ris in enumerate(self.rxn_indices):
+            rxn_coef_i = []
+            for ii, rxn_idx in enumerate(ris):
+                rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[i])
+                rxn_coef_i.append(rxtor.Elements(f"{rxn_idx}").Value)
+            rxn_coefficients.append(rxn_coef_i)
+        return rxn_coefficients
+
     def apply_rxn_coefficients(self, rxn_coefficients):
         try:
             for i, ris in enumerate(self.rxn_indices):
                 for ii, rxn_idx in enumerate(ris):
                     rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[i])
-                    rxtor.Elements(f"{rxn_idx}").Value = rxn_coefficients[i, ii]
+                    rxtor.Elements(f"{rxn_idx}").Value = rxn_coefficients[i][ii]
             time.sleep(2)
+            print("Running simulation")
             self.aspen.Engine.Run2()
             time.sleep(2)
+            print("Simulation finished")
             res_composition = self.get_carbon_number_composition(self.prod_stream)
+            return res_composition
+        except:
+            print("Error in applying rxn coefficients")
+            return None
 
-        return
+    def reinit(self):
+        self.aspen = win32.Dispatch("Apwn.Document")
+        self.aspen.InitFromArchive2(os.path.abspath(self.aspen_path))
+        self.aspen.Visible = False
+        self.aspen.SuppressDialogs = True
 
     def terminate(self):
         self.aspen.Close(0)
