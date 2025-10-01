@@ -124,11 +124,12 @@ class AspenSim(object):
     def get_carbon_number_composition(self, stream_no):
         s = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFLOW\MIXED")
         massflow = [0 if s.Elements(c).Value is None else s.Elements(c).Value for c in self.component_list]
-        total_massflow = sum(massflow)
-        carbon_number_composition = {
-            n: sum([massflow[self.component_list.index(c)] / total_massflow for c in cs])
+        hydrocarbon_massflow = {
+            n: sum([massflow[self.component_list.index(c)] for c in cs])
             for n, cs in self.carbon_number_to_component.items()
         }
+        hydrocarbon_total = sum(hydrocarbon_massflow.values())
+        carbon_number_composition = {n: cs / hydrocarbon_total for n, cs in hydrocarbon_massflow.items()}
         return carbon_number_composition
 
     def get_rxn_coefficients(self):
