@@ -7,10 +7,14 @@ from GPyOpt.methods import ModularBayesianOptimization
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
+import pandas as pd
 
 case_target = "a"
-# past_path = None
-past_path = r"D:\saf_hdo\results\a_20251001_165004.xlsx"
+# past_path = []
+past_path = [
+    r"D:\saf_hdo\results\a_20251001_165004.xlsx",
+    r"D:\saf_hdo\results\a_20251001_170229.xlsx"
+]
 # aspen_path = "D:\\SAF-HDO py\\250926_pyrolysis_oil_CC_2.apw"
 aspen_path = "D:/saf_hdo/aspen/250926_pyrolysis_oil_CC_rxn_index.apw"
 
@@ -66,13 +70,17 @@ acquisition = GPyOpt.acquisitions.AcquisitionEI(model, domain_space, optimizer=a
 bo_evaluator = GPyOpt.core.evaluators.Sequential(acquisition)
 
 # Set Bayesian optimization
-if past_path is None:
+if len(past_path) < 1:
     BO = ModularBayesianOptimization(model, domain_space, objective, acquisition, bo_evaluator, r_init)
 else:
-    past_data = evaluator.read_past_results(past_path)
+    df_past = []
+    for p in past_path:
+        df = evaluator.read_past_results(p)
+        df_past.append(df)
+    past_data = pd.concat(df_past)
     nx = r_init.shape[1]
-    X_past = np.array(past_data.iloc[:, :nx])
-    obj_past = np.array(past_data.iloc[:, nx]).reshape(-1,1)
+    X_past = np.array(past_data.iloc[:, 1:nx+1])
+    obj_past = np.array(past_data.iloc[:, nx+1]).reshape(-1,1)
     BO = ModularBayesianOptimization(model, domain_space, objective, acquisition, bo_evaluator, X_past, Y_init=obj_past)
 
 max_time = None
