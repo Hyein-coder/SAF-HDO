@@ -52,7 +52,9 @@ class AspenSim(object):
         self.aspen.InitFromArchive2(os.path.abspath(aspen_path))
         self.aspen.Visible = visible
         self.aspen.SuppressDialogs = True
-        print("Aspen simulation opened and running")
+        print("Aspen simulation opened. Just wait..")
+        time.sleep(10)
+        print("Now run the initial simulation..")
         self.aspen.Engine.Run2()
         time.sleep(2)
         print("Initial simulation finished")
