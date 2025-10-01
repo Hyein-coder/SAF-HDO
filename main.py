@@ -52,12 +52,31 @@ evaluator = GPyOpt.core.evaluators.Sequential(acquisition)
 BO = ModularBayesianOptimization(model, domain_space, objective, acquisition, evaluator, r_init)
 
 max_time = None
-max_iter = 5
+max_iter = 5   # 100, 200, 500
 tolerance = -np.inf
 
 # Run Bayesian optimization
 BO.run_optimization(max_iter=max_iter, max_time=max_time, eps=tolerance, verbosity=False)
-BO.plot_convergence()
+BO.plot_convergence(f'res_{file_tag}_convergence.png')
+# plt.savefig(f'res_{file_tag}_convergence.png')
+#%%
+optimal_rxn_coef = BO.x_opt
+print("==============Optimal Result==============")
+print("Rxn Coefficients for the First Reactor: ")
+print(optimal_rxn_coef)
+np.savetxt(f'res_{file_tag}_optimal_coeff.txt', optimal_rxn_coef)
 
+optimal_result = hdo_prod_mse(optimal_rxn_coef.reshape(1, -1))
+print(f"Mean Squared Error: {optimal_result}")
+
+cc = sim.get_carbon_number_composition(sim.prod_stream)
+with open(f'res_{file_tag}_carbon_number_composition.txt', 'w') as f:
+    f.write(str(cc))
+fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+plt.plot(cc.keys(), cc.values(), '-', label='Simulation')
+plt.plot(sim.target.keys(), sim.target.values(), 'o', label='Experimental Data')
+plt.legend()
+plt.savefig(f'res_{file_tag}_composition.png')
+plt.show()
 #%%
 sim.terminate()

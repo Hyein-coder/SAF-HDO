@@ -52,7 +52,10 @@ class AspenSim(object):
         self.aspen.InitFromArchive2(os.path.abspath(aspen_path))
         self.aspen.Visible = visible
         self.aspen.SuppressDialogs = True
-        print("Opening Aspen simulation")
+        print("Aspen simulation opened and running")
+        self.aspen.Engine.Run2()
+        time.sleep(2)
+        print("Initial simulation finished")
 
         self.rxtor_nodes = [
             "\Data\Blocks\R-201\Input\CONV",
