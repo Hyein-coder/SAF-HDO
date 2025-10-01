@@ -2,8 +2,10 @@ import os
 import win32com.client as win32
 import time
 import pandas as pd
+import os
 
-data_path = "D:\saf_hdo\HDO_exp.xlsx"
+data_path = os.path.join(os.getcwd(), "HDO_exp.xlsx")
+# data_path = "D:\saf_hdo\HDO_exp.xlsx"
 xls = pd.ExcelFile(data_path)
 data = pd.read_excel(xls).fillna(0)
 

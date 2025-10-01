@@ -5,10 +5,14 @@ from utils import CustomEvaluator
 import GPy, GPyOpt
 from GPyOpt.methods import ModularBayesianOptimization
 import numpy as np
+import datetime
+import matplotlib.pyplot as plt
 
-
-aspen_path = "D:/saf_hdo/aspen/250926_pyrolysis_oil_CC.apw"
-sim = AspenSim(aspen_path)
+aspen_path = "D:\\SAF-HDO py\\250926_pyrolysis_oil_CC_2.apw"
+# aspen_path = "D:/saf_hdo/aspen/250926_pyrolysis_oil_CC.apw"
+case_target = "a"
+sim = AspenSim(aspen_path, case_target=case_target) # , case_target='j'
+file_tag = case_target + "_" + datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
 cc = sim.get_carbon_number_composition(sim.prod_stream)
 print(cc)
