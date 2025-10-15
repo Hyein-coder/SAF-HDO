@@ -46,7 +46,7 @@ component_to_carbon_number = {
 
 
 class AspenSim(object):
-    def __init__(self, aspen_path, case_target='a', visible=True):
+    def __init__(self, aspen_path, case_target='a', visible=True, rxtor_nodes=None):
         self.aspen = win32.Dispatch("Apwn.Document")
         self.aspen_path = aspen_path
         self.aspen.InitFromArchive2(os.path.abspath(aspen_path))
@@ -59,11 +59,14 @@ class AspenSim(object):
         time.sleep(2)
         print("Initial simulation finished")
 
-        self.rxtor_nodes = [
-            "\Data\Blocks\R-201\Input\CONV",
-            # "\Data\Blocks\R-202\Input\CONV",
-            # "\Data\Blocks\R-203\Input\CONV",
-        ]
+        if rxtor_nodes is None:
+            self.rxtor_nodes = [
+                "\Data\Blocks\R-201\Input\CONV",
+                # "\Data\Blocks\R-202\Input\CONV",
+                # "\Data\Blocks\R-203\Input\CONV",
+            ]
+        else:
+            self.rxtor_nodes = rxtor_nodes
         self.n_rxn = []
         self.rxn_indices = []
         self.set_rxtors()
@@ -99,6 +102,7 @@ class AspenSim(object):
 
         self.case_target = case_target
         self.target = target
+        return case_target, target
 
     def set_rxtors(self):
         n_rxns = [len(self.aspen.Tree.FindNode(rxtor).Elements) for rxtor in self.rxtor_nodes]
