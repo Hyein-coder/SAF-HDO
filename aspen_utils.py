@@ -1,13 +1,21 @@
 import os
 import win32com.client as win32
+import pythoncom
 import time
 import pandas as pd
 import os
+pythoncom.CoInitialize()
 
 data_path = os.path.join(os.getcwd(), "HDO_exp.xlsx")
 # data_path = "D:\saf_hdo\HDO_exp.xlsx"
-xls = pd.ExcelFile(data_path)
-data = pd.read_excel(xls).fillna(0)
+with pd.ExcelFile(data_path) as xls:
+    # xls = pd.ExcelFile(data_path)
+    data = pd.read_excel(xls).fillna(0)
+
+file_components = os.path.join(os.getcwd(), r"aspen\251009_pyrolysis_oil_CC_C6H8O_DGFORM_SMR_solver_R101_normalized.xlsx")
+with pd.ExcelFile(file_components) as xls:
+    df = xls.parse("Sheet2")
+df_components = df.loc[:, ["Component ID", "C", "H", "O"]].fillna(0)
 
 component_list = [
     'BIOMASS', 'WATER', 'H2', 'O2', 'N2', 'AR', 'CO', 'CO2', 'CH4',
@@ -86,6 +94,12 @@ class AspenSim(object):
                 carbon_number_to_component[n].append(c)
         self.carbon_number_to_component = carbon_number_to_component
 
+        self.pyrolyzer_node = "\Data\Blocks\R-101\Input\MOLE_YIELD"
+        self.pyrolyzer_num_components = 35
+        self.pyro_comp_names = []
+        self.set_pyrolyzer()
+        self.pyro_prod_stream = "146"   #TODO: Should be checked
+
     def set_target(self, case_target=None):
         if case_target is None:
             case_target = self.case_target
@@ -117,7 +131,7 @@ class AspenSim(object):
                     try:
                         # print(f"Try {rii[n]} for {n}")
                         val0 = rxtor.Elements(f"{rii[n]}").Value
-                        rxtor.Elements(f"{rii[n]}").Value = val0 * 0.99
+                        rxtor.Elements(f"{rii[n]}").Value = val0 * 0.99     # TODO: 여기서 input 바뀌고 있음 ㅂㄷㅂㄷ
                         rii_valid.append(rii[n])
                         break
                     except:
@@ -168,6 +182,38 @@ class AspenSim(object):
             print("Error in applying rxn coefficients")
             return None
 
+    def get_elemental_composition(self, stream_no):
+        s = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFLOW\MIXED")
+
+
+    def set_pyrolyzer(self):
+        pyro = self.aspen.Tree.FindNode(self.pyrolyzer_node).Elements
+        names_raw = [e.Name.replace(" MIXED", "") for i, e in enumerate(pyro)]
+        self.pyro_comp_names = [names_raw[self.pyrolyzer_num_components * i] for i in range(self.pyrolyzer_num_components)]
+
+    def get_pyro_yields(self):
+        pyro = self.aspen.Tree.FindNode(self.pyrolyzer_node).Elements
+        pyro_yields = [e.Value for i, e in enumerate(pyro) if i < self.pyrolyzer_num_components]
+        return pyro_yields
+
+    def apply_pyro_yields(self, yields):
+        assert len(yields) == self.pyrolyzer_num_components, f"Expected input_yields to have a length of 35, but got {len(yields)}"
+        try:
+            pyro = self.aspen.Tree.FindNode(self.pyrolyzer_node)
+            for i, y in enumerate(yields):
+                pyro.Elements[i].Value = y
+            time.sleep(2)
+            print("Running simulation")
+            self.aspen.Engine.Run2()
+            time.sleep(2)
+            print("Simulation finished")
+            res_composition = self.get_carbon_number_composition(self.pyro_prod_stream)
+            return res_composition
+        except:
+            print("Error in applying rxn coefficients")
+            return None
+
+
     def reinit(self):
         self.aspen = win32.Dispatch("Apwn.Document")
         self.aspen.InitFromArchive2(os.path.abspath(self.aspen_path))
@@ -176,3 +222,4 @@ class AspenSim(object):
 
     def terminate(self):
         self.aspen.Close(0)
+        pythoncom.CoUninitialize()
