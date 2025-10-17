@@ -32,5 +32,25 @@ frac_O = sim.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_U
 frac_water = sim.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFRAC\MIXED\WATER").Value
 
 # subtract hydrogen and oxygen frac due to water
-frac_H_wo_water = frac_H - frac_water * 2/18
-frac_O_wo_water = frac_O - frac_water * 16/18
+frac_C_wo_water = frac_C / (1- frac_water)
+frac_H_wo_water = (frac_H - frac_water * 2/18) / (1 - frac_water)
+frac_O_wo_water = (frac_O - frac_water * 16/18) / (1 - frac_water)
+
+sim.get_elemental_composition(stream_no)
+#%%
+err_node = sim.aspen.Tree.FindNode("\\Data\\Results Summary\\Run-Status\\Output\\PER_ERROR")
+# print(bool(err_node.Value))
+err_msg = "Results Summary status: \n"
+for e in err_node.Elements:
+    err_msg = err_msg + "\n" + e.Value
+    # print(e.Name, e.Value)
+
+status = None
+if "errors" in err_msg:
+    status = "Error"
+elif "warnings" in err_msg:
+    status = "Warning"
+else:
+    status = "Converged"
+
+#%%

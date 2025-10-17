@@ -67,6 +67,7 @@ class AspenSim(object):
         time.sleep(2)
         print("Initial simulation finished")
 
+        self.prod_stream = "208"
         if rxtor_nodes is None:
             self.rxtor_nodes = [
                 "\Data\Blocks\R-201\Input\CONV",
@@ -75,11 +76,7 @@ class AspenSim(object):
             ]
         else:
             self.rxtor_nodes = rxtor_nodes
-        self.n_rxn = []
-        self.rxn_indices = []
-        self.set_rxtors()
 
-        self.prod_stream = "208"
         self.data = data
         self.case_target = case_target
         self.target = None
@@ -93,6 +90,10 @@ class AspenSim(object):
             if n in carbon_number_list:
                 carbon_number_to_component[n].append(c)
         self.carbon_number_to_component = carbon_number_to_component
+
+        self.n_rxn = []
+        self.rxn_indices = []
+        self.set_rxtors()
 
         self.pyrolyzer_node = "\Data\Blocks\R-101\Input\MOLE_YIELD"
         self.pyrolyzer_num_components = 35
@@ -123,26 +124,30 @@ class AspenSim(object):
         ri_test = [[i for i in range(n)] for n in n_rxns]
 
         ri_valid = []
+        val_initial = []
         for ii, rii in enumerate(ri_test):
             rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[ii])
             rii_valid = []
+            vii_initial = []
             for n in range(n_rxns[ii]):
                 for k in range(10):
                     try:
                         # print(f"Try {rii[n]} for {n}")
                         val0 = rxtor.Elements(f"{rii[n]}").Value
-                        rxtor.Elements(f"{rii[n]}").Value = val0 * 0.99     # TODO: 여기서 input 바뀌고 있음 ㅂㄷㅂㄷ
+                        rxtor.Elements(f"{rii[n]}").Value = val0 * 0.99
                         rii_valid.append(rii[n])
+                        vii_initial.append(val0)
                         break
                     except:
-                        # print(f"Error: rxtor{ii}--rxn{rii[n]}")
                         rii.append(rii[-1] + 1)
                         rii.remove(rii[n])
-                        # print(f"Appended {rii[-1]}")
+
             ri_valid.append(rii_valid)
+            val_initial.append(vii_initial)
 
         self.n_rxn = n_rxns
         self.rxn_indices = ri_valid
+        self.apply_rxn_coefficients(val_initial)
 
     def get_carbon_number_composition(self, stream_no):
         s = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFLOW\MIXED")
@@ -183,8 +188,19 @@ class AspenSim(object):
             return None
 
     def get_elemental_composition(self, stream_no):
-        s = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFLOW\MIXED")
+        frac_C = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRC\MIXED\TOTAL").Value
+        frac_H = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRH\MIXED\TOTAL").Value
+        frac_O = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRO\MIXED\TOTAL").Value
 
+        # get water mass frac
+        frac_water = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFRAC\MIXED\WATER").Value
+
+        # subtract hydrogen and oxygen frac due to water
+        frac_C_wo_water = frac_C / (1 - frac_water)
+        frac_H_wo_water = (frac_H - frac_water * 2 / 18) / (1 - frac_water)
+        frac_O_wo_water = (frac_O - frac_water * 16 / 18) / (1 - frac_water)
+        elemental_composition = {"C": frac_C_wo_water, "H": frac_H_wo_water, "O": frac_O_wo_water}
+        return elemental_composition
 
     def set_pyrolyzer(self):
         pyro = self.aspen.Tree.FindNode(self.pyrolyzer_node).Elements
@@ -206,13 +222,27 @@ class AspenSim(object):
             print("Running simulation")
             self.aspen.Engine.Run2()
             time.sleep(2)
-            print("Simulation finished")
-            res_composition = self.get_carbon_number_composition(self.pyro_prod_stream)
-            return res_composition
+            status = self.check_result_status()
+            print("Simulation finished: " + status)
+            return status
         except:
             print("Error in applying rxn coefficients")
             return None
 
+    def check_result_status(self):
+        err_node = self.aspen.Tree.FindNode("\\Data\\Results Summary\\Run-Status\\Output\\PER_ERROR")
+        err_msg = "Results Summary status: \n"
+        for e in err_node.Elements:
+            err_msg = err_msg + "\n" + e.Value
+
+        status = None
+        if "errors" in err_msg:
+            status = "Error"
+        elif "warnings" in err_msg:
+            status = "Warning"
+        else:
+            status = "Converged"
+        return status
 
     def reinit(self):
         self.aspen = win32.Dispatch("Apwn.Document")
