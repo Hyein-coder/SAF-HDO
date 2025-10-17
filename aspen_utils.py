@@ -191,16 +191,27 @@ class AspenSim(object):
         frac_C = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRC\MIXED\TOTAL").Value
         frac_H = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRH\MIXED\TOTAL").Value
         frac_O = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRO\MIXED\TOTAL").Value
+        frac_N = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRN\MIXED\TOTAL").Value
+        elemental_composition = {"C": frac_C, "H": frac_H, "O": frac_O, "N": frac_N}
+        return elemental_composition
+
+    def get_frac_water(self, stream_no):
+        frac_water = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFRAC\MIXED\WATER").Value
+        return frac_water
+
+    def get_elemental_composition_wo_water(self, stream_no):
+        elemental_composition = self.get_elemental_composition(stream_no)
 
         # get water mass frac
-        frac_water = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFRAC\MIXED\WATER").Value
+        frac_water = self.get_frac_water(stream_no)
 
         # subtract hydrogen and oxygen frac due to water
-        frac_C_wo_water = frac_C / (1 - frac_water)
-        frac_H_wo_water = (frac_H - frac_water * 2 / 18) / (1 - frac_water)
-        frac_O_wo_water = (frac_O - frac_water * 16 / 18) / (1 - frac_water)
-        elemental_composition = {"C": frac_C_wo_water, "H": frac_H_wo_water, "O": frac_O_wo_water}
-        return elemental_composition
+        frac_C_wo_water = elemental_composition["C"] / (1 - frac_water)
+        frac_H_wo_water = (elemental_composition["H"] - frac_water * 2 / 18) / (1 - frac_water)
+        frac_O_wo_water = (elemental_composition["O"] - frac_water * 16 / 18) / (1 - frac_water)
+        frac_N_wo_water = elemental_composition["N"] / (1 - frac_water)
+        elemental_composition = {"C": frac_C_wo_water, "H": frac_H_wo_water, "O": frac_O_wo_water, "N": frac_N_wo_water}
+        return elemental_composition, frac_water
 
     def set_pyrolyzer(self):
         pyro = self.aspen.Tree.FindNode(self.pyrolyzer_node).Elements

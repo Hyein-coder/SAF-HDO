@@ -1,56 +1,16 @@
 from aspen_utils import AspenSim
 import os
 
-aspen_path = r"D:\saf_hdo\aspen\251009_pyrolysis_oil_CC_C6H8O_DGFORM_SMR_solver_R101_normalized_Elemental_properties.bkp"
+aspen_path = r"D:\saf_hdo\aspen\251017_Hyein4_c24h32o8.bkp"
 sim = AspenSim(aspen_path)
 
 pyro = sim.aspen.Tree.FindNode(sim.pyrolyzer_node)
 r1 = sim.aspen.Tree.FindNode(sim.rxtor_nodes[0])
+
+pyro_elem_comp, pyro_frac_water = sim.get_elemental_composition_wo_water(sim.pyro_prod_stream)
 #%%
-sim.pyrolyzer_num_components = 35
-pyro = sim.aspen.Tree.FindNode(sim.pyrolyzer_node)
-names_raw = [e.Name.replace(" MIXED", "") for i, e in enumerate(pyro.Elements)]
-sim.pyro_comp_names = [names_raw[sim.pyrolyzer_num_components * i] for i in range(sim.pyrolyzer_num_components)]
-sim.pyro_yields = [e.Value for i, e in enumerate(pyro.Elements) if i < sim.pyrolyzer_num_components]
-# sim.pyro_yields = [e.Value for e in pyro.Elements[:sim.pyrolyzer_num_components]]
+target_pyro = {"C": 0.6017, "H": 0.0602, "O": 0.3367, "N": 0.0013}
+target_pyro_water = 0.10
 
-#%%
-import pandas as pd
-file_components = os.path.join(os.getcwd(), r"aspen\251009_pyrolysis_oil_CC_C6H8O_DGFORM_SMR_solver_R101_normalized.xlsx")
-with pd.ExcelFile(file_components) as xls:
-    df = xls.parse("Sheet2")
-df_components = df.loc[:, ["Component ID", "C", "H", "O"]].fillna(0)
+target_hdo_water = 0.32
 
-#%%
-stream_no = sim.pyro_prod_stream
-# get carbon, hydrogen, oxygen frac
-frac_C = sim.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRC\MIXED\TOTAL").Value
-frac_H = sim.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRH\MIXED\TOTAL").Value
-frac_O = sim.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRO\MIXED\TOTAL").Value
-
-# get water mass frac
-frac_water = sim.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFRAC\MIXED\WATER").Value
-
-# subtract hydrogen and oxygen frac due to water
-frac_C_wo_water = frac_C / (1- frac_water)
-frac_H_wo_water = (frac_H - frac_water * 2/18) / (1 - frac_water)
-frac_O_wo_water = (frac_O - frac_water * 16/18) / (1 - frac_water)
-
-sim.get_elemental_composition(stream_no)
-#%%
-err_node = sim.aspen.Tree.FindNode("\\Data\\Results Summary\\Run-Status\\Output\\PER_ERROR")
-# print(bool(err_node.Value))
-err_msg = "Results Summary status: \n"
-for e in err_node.Elements:
-    err_msg = err_msg + "\n" + e.Value
-    # print(e.Name, e.Value)
-
-status = None
-if "errors" in err_msg:
-    status = "Error"
-elif "warnings" in err_msg:
-    status = "Warning"
-else:
-    status = "Converged"
-
-#%%
