@@ -249,17 +249,17 @@ average_mae = sum([res_tt["MAE"] for res_tt in res_min_mae.values()])/len(target
 print(f"\n Average MAE: {average_mae}")
 
 """
-Min mse for a: 0.0002529732169666972 with ('ak', 0)
-Min mse for b: 0.006608491759962732 with ('ak', 0)
-Min mse for c: 0.0052629724243000294 with ('ak', 0)
-Min mse for d: 0.012014613948835517 with ('k', 4)
-Min mse for e: 0.014485474892959163 with ('k', 3)
-Min mse for f: 0.010235598095682698 with ('a', 4)
-Min mse for g: 0.0057933974283757884 with ('k', 4)
-Min mse for h: 0.019066635463195102 with ('a', 2)
-Min mse for i: 0.03417726846070279 with ('a', 1)
-Min mse for j: 0.01799250676136089 with ('a', 2)
-Min mse for k: 0.0008808486254498194 with ('k', 4)
+Min mae for a: 0.002505843388259381 with ('ak', 0)
+Min mae for b: 0.012809453855033159 with ('ak', 0)
+Min mae for c: 0.010277377280008233 with ('ak', 0)
+Min mae for d: 0.014096723803346123 with ('k', 4)
+Min mae for e: 0.014881577966650805 with ('k', 4)
+Min mae for f: 0.015351980508727065 with ('ak', 1)
+Min mae for g: 0.009476820261689289 with ('k', 4)
+Min mae for h: 0.019036901897666995 with ('k', 4)
+Min mae for i: 0.02091871434373314 with ('k', 3)
+Min mae for j: 0.01903563834981138 with ('k', 3)
+Min mae for k: 0.004670099647673645 with ('k', 4)
 
 Average MAE: 0.013005557391145383
 
