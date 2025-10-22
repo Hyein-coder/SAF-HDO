@@ -133,7 +133,7 @@ plt.show()
 
 
 #%% Linearly decreasing a and k coefficients
-def plot_res_series(res_plot, points_plot, target_plot=target):
+def plot_res_series(res_plot, points_plot, target_plot=target, save_heading=None):
     cmap_res = cm.get_cmap('bone', len(points_plot) + 1)
     cmap_target = cm.get_cmap('viridis', len(target_plot))
 
@@ -145,6 +145,8 @@ def plot_res_series(res_plot, points_plot, target_plot=target):
         plt.plot(val.keys(), val.values(), 'o', markersize=3, label=key,
                  color=cmap_target(i))
     plt.legend()
+    if save_heading is not None:
+        plt.savefig(f"{save_heading}.png")
     plt.show()
 
 res_reducing_a = []
@@ -237,7 +239,8 @@ for target_name, target_data in target.items():
 
     k, i = min_idx
     res = res_all[k][0][i]
-    plot_res_series([res], [f"({k}, {i})"], {target_name: target_data})
+    plot_res_series([res], [f"({k}, {i})"], {target_name: target_data},
+                    save_heading=os.path.join(os.getcwd(), "results", f"min_mse_{target_name}_{k}_{i}"))
 
 """
 Min mse for a: 0.0002529732169666972 with ('ak', 0)
