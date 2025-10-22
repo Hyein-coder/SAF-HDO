@@ -149,7 +149,7 @@ def plot_res_series(res_plot, points_plot, target_plot=target):
 
 res_reducing_a = []
 for pi in points_to_interp:
-    coeffs = [[cc * pi for cc in c] for c in coeff_a_for_k]
+    coeffs = [[min(cc * pi, 1) for cc in c] for c in coeff_a_for_k]
     hdo_reduced = simK.apply_rxn_coefficients(coeffs)
     status = simK.check_result_status()
     res_reducing_a.append(hdo_reduced)
@@ -158,20 +158,97 @@ plot_res_series(res_reducing_a, points_to_interp)
 
 #%%
 res_reducing_k = []
-for pi in points_to_interp:
-    coeffs = [[cc * pi for cc in c] for c in coeff_k]
+for pi in points_to_interp_long:
+    coeffs = [[min(cc * pi, 1) for cc in c] for c in coeff_k]
     hdo_reduced = simK.apply_rxn_coefficients(coeffs)
     res_reducing_k.append(hdo_reduced)
 
-plot_res_series(res_reducing_k, points_to_interp)
+plot_res_series(res_reducing_k, points_to_interp_long)
 
 #%%, 'c', 'f', 'g'
 target_interp = {c: target[c] for c in ['a', 'b', 'c', 'k']}
 plot_res_series(res_interp_long, points_to_interp_long, target_interp)
 #%%
-target_a = {c: target[c] for c in ['a', 'd', 'e', 'i', 'j', 'f']}
-plot_res_series(res_reducing_a, points_to_interp, target_a)
+target_a = {c: target[c] for c in ['a', 'f', 'h', 'i', 'j']}
+plot_res_series(res_reducing_a[1:], points_to_interp[1:], target_a)
 #%%
-target_k = {c: target[c] for c in ['g', 'h', 'k']}
-plot_res_series(res_reducing_k[2:], points_to_interp[2:], target_k)
+target_k = {c: target[c] for c in ['d', 'e', 'g', 'k']}
+plot_res_series(res_reducing_k[3:], points_to_interp_long[3:], target_k)
 
+#%% Add noise to reproduce the exceptional cases
+np.random.seed(42)
+
+low = 0
+high = 1
+
+def rxn_coefficients_elemental_interp(pi_list):
+    coeffs_to_interp = [coeff_a_for_k[0], coeff_k[0]]
+    num_coeffs = len(coeffs_to_interp[0])
+
+    interpolated_coeffs = []
+    for i in range(num_coeffs):
+        interpolated_coeffs.append(np.interp(pi_list[i], [0, 1], [c[i] for c in coeffs_to_interp]))
+
+    rxn_coeffs = [interpolated_coeffs]
+    return rxn_coeffs
+
+num_trial = 10
+noise_list = []
+noise_res = []
+for iter in range(num_trial):
+    pi_list = np.random.uniform(low=low, high=high, size=len(coeff_k[0])).tolist()
+    coeffs = rxn_coefficients_elemental_interp(pi_list)
+    hdo_interp = simK.apply_rxn_coefficients(coeffs)
+    noise_res.append(hdo_interp)
+
+target_exception = {c: target[c] for c in ['c', 'f', 'g']}
+plot_res_series(noise_res, range(num_trial), target_exception)
+
+#%%
+def calc_mse(tt, hdo_res):
+    err = 0.
+    for key, val in tt.items():
+        err += (hdo_res[key] - val)**2
+    return err
+
+res_all = {
+    "ak": (res_interp_long, points_to_interp_long),
+    "a": (res_reducing_a, points_to_interp),
+    "k": (res_reducing_k, points_to_interp_long),
+    # "ak_noise": (noise_res, range(num_trial)),
+}
+
+def get_min_mse(target_i, res_all):
+    min_mse = 1e10
+    min_idx = None
+    min_res = None
+    for key, (res, points) in res_all.items():
+        for i, res_i in enumerate(res):
+            mse_i = calc_mse(target_i, res_i)
+            if mse_i < min_mse:
+                min_mse = mse_i
+                min_idx = (key, i)
+                min_res = res_i
+    return min_mse, min_idx, min_res
+
+for target_name, target_data in target.items():
+    min_mse, min_idx, min_res = get_min_mse(target_data, res_all)
+    print(f"Min mse for {target_name}: {min_mse} with {min_idx}")
+
+    k, i = min_idx
+    res = res_all[k][0][i]
+    plot_res_series([res], [f"({k}, {i})"], {target_name: target_data})
+
+"""
+Min mse for a: 0.0002529732169666972 with ('ak', 0)
+Min mse for b: 0.006608491759962732 with ('ak', 0)
+Min mse for c: 0.0052629724243000294 with ('ak', 0)
+Min mse for d: 0.012014613948835517 with ('k', 4)
+Min mse for e: 0.014485474892959163 with ('k', 3)
+Min mse for f: 0.010235598095682698 with ('a', 4)
+Min mse for g: 0.0057933974283757884 with ('k', 4)
+Min mse for h: 0.019066635463195102 with ('a', 2)
+Min mse for i: 0.03417726846070279 with ('a', 1)
+Min mse for j: 0.01799250676136089 with ('a', 2)
+Min mse for k: 0.0008808486254498194 with ('k', 4)
+"""
