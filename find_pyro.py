@@ -1,16 +1,132 @@
 from aspen_utils import AspenSim
 import os
 
-aspen_path = r"D:\saf_hdo\aspen\251017_Hyein4_c24h32o8.bkp"
-sim = AspenSim(aspen_path)
+simA = AspenSim(r"D:\saf_hdo\aspen\251020_pyrolysis_oil_CC_case_a.bkp")
 
-pyro = sim.aspen.Tree.FindNode(sim.pyrolyzer_node)
-r1 = sim.aspen.Tree.FindNode(sim.rxtor_nodes[0])
+pyro = simA.aspen.Tree.FindNode(simA.pyrolyzer_node)
+r1 = simA.aspen.Tree.FindNode(simA.rxtor_nodes[0])
 
-pyro_elem_comp, pyro_frac_water = sim.get_elemental_composition_wo_water(sim.pyro_prod_stream)
+pyro_elem_comp, pyro_frac_water = simA.get_elemental_composition_wo_water(simA.pyro_prod_stream)
+hdo_result = simA.get_carbon_number_composition(simA.prod_stream)
 #%%
-target_pyro = {"C": 0.6017, "H": 0.0602, "O": 0.3367, "N": 0.0013}
-target_pyro_water = 0.10
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(1, 1)
+plt.plot(hdo_result.keys(), hdo_result.values(), '-', label='Simulation')
+plt.plot(simA.target.keys(), simA.target.values(), 'o', label='Experimental Data')
+plt.legend()
+plt.show()
 
-target_hdo_water = 0.32
+#%%
+simK = AspenSim(r"D:\saf_hdo\aspen\251021_pyrolysis_oil_CC_case_k.bkp", case_target="k")
 
+#%%
+hdo_result_k = simK.get_carbon_number_composition(simA.prod_stream)
+
+fig, ax = plt.subplots(1, 1)
+plt.plot(hdo_result_k.keys(), hdo_result_k.values(), '-', label='Simulation')
+plt.plot(simK.target.keys(), simK.target.values(), 'o', label='Experimental Data')
+plt.legend()
+plt.show()
+#%%
+coeff_a = simA.get_rxn_coefficients()
+coeff_k = simK.get_rxn_coefficients()
+
+fig, ax = plt.subplots(1, 1)
+plt.plot(range(len(coeff_a[0])), coeff_a[0], '-o', label='A')
+plt.plot(range(len(coeff_k[0])), coeff_k[0], '-s', label='K')
+plt.legend()
+plt.show()
+
+#%%
+coeff_a_for_k = [coeff_a[0] + [0 for _ in range(len(coeff_k[0]) - len(coeff_a[0]))]]
+hdo_result_a_from_k = simK.apply_rxn_coefficients(coeff_a_for_k)
+
+#%% Check if the result is the same when applying the coefficients from simulation case A
+# hdo_result_a_from_k = simK.get_carbon_number_composition(simK.prod_stream)
+
+fig, ax = plt.subplots(1, 1)
+plt.plot(hdo_result_a_from_k.keys(), hdo_result_a_from_k.values(), '-', label='Simulation')
+plt.plot(simA.target.keys(), simA.target.values(), 'o', label='Experimental Data')
+plt.legend()
+plt.show()
+#%%
+import numpy as np
+pi = 0.5
+coeffs_to_interp = [coeff_a_for_k[0], coeff_k[0]]
+num_coeffs = len(coeffs_to_interp[0])
+
+cinterp = []
+for i in range(num_coeffs):
+    cinterp.append(np.interp(pi, [0, 1], [c[i] for c in coeffs_to_interp]))
+coeffs = [cinterp]
+
+hdo_interp = simK.apply_rxn_coefficients(coeffs)
+fig, ax = plt.subplots(1, 1)
+plt.plot(hdo_interp.keys(), hdo_interp.values(), '-', label='Simulation')
+plt.plot(simA.target.keys(), simA.target.values(), 'o', label='Case A')
+plt.plot(simK.target.keys(), simK.target.values(), 's', label='Case K')
+plt.legend()
+plt.show()
+#%%
+
+def rxn_coefficients_interp(pi):
+    coeffs_to_interp = [coeff_a_for_k[0], coeff_k[0]]
+    num_coeffs = len(coeffs_to_interp[0])
+
+    interpolated_coeffs = []
+    for i in range(num_coeffs):
+        interpolated_coeffs.append(np.interp(pi, [0, 1], [c[i] for c in coeffs_to_interp]))
+
+    rxn_coeffs = [interpolated_coeffs]
+    return rxn_coeffs
+
+points_to_interp = np.linspace(0, 1, 5)
+res_interp = []
+for pi in points_to_interp:
+    hdo_interp = simK.apply_rxn_coefficients(rxn_coefficients_interp(pi))
+    res_interp.append(hdo_interp)
+
+#%% Try to match case J with extrapolation
+from scipy.interpolate import interp1d
+
+def rxn_coefficients_linear_interp(pi):
+    coeffs_to_interp = [coeff_a_for_k[0], coeff_k[0]]
+    num_coeffs = len(coeffs_to_interp[0])
+
+    interpolated_coeffs = []
+    for i in range(num_coeffs):
+        linear_interp = interp1d([0, 1], [c[i] for c in coeffs_to_interp],
+                                 bounds_error=False, fill_value="extrapolate")
+        interpolated_coeffs.append(min(max(float(linear_interp(pi)), 0.), 1.))
+
+    rxn_coeffs = [interpolated_coeffs]
+    return rxn_coeffs
+
+pi = 1.2
+points_to_interp_long = np.append(points_to_interp, pi)
+coeffs_extrap = rxn_coefficients_linear_interp(pi)
+hdo_interp = simK.apply_rxn_coefficients(coeffs_extrap)
+res_interp_long = res_interp + [hdo_interp]
+
+#%%
+import matplotlib.cm as cm
+points_draw = points_to_interp_long
+res_draw = res_interp_long
+
+target = {}
+for a in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']:
+    _, tt = simK.set_target(a)
+    target[a] = tt
+
+cmap_interp = cm.get_cmap('bone', len(points_draw)+1)
+cmap_target = cm.get_cmap('viridis', len(target))
+
+fig, ax = plt.subplots(1, 1)
+for i, pi in enumerate(points_draw):
+    plt.plot(res_draw[i].keys(), res_draw[i].values(), '-', label=f'pi={pi}',
+             color=cmap_interp(i))
+for i, (key, val) in enumerate(target.items()):
+    plt.plot(val.keys(), val.values(), 'o', markersize=3, label=key,
+             color=cmap_target(i))
+plt.legend()
+plt.show()

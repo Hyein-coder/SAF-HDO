@@ -18,22 +18,22 @@ with pd.ExcelFile(file_components) as xls:
 df_components = df.loc[:, ["Component ID", "C", "H", "O"]].fillna(0)
 
 component_list = [
-    'BIOMASS', 'WATER', 'H2', 'O2', 'N2', 'AR', 'CO', 'CO2', 'CH4',
-    'C2H4', 'C2H4O', 'C2H4O2', 'C2H6', 'C2H6O', 'C3H6', 'C3H8',
-    'C3H8O', 'C3H8O2', 'C4H10', 'C4H4O', 'C4H8O', 'C5H4O2', 'C5H12',
-    'C6H6', 'C6H6O', 'C6H8O', 'C6H12', 'C6H12O6', 'C6H14', 'C6H14O6',
-    'C7H8', 'C7H8O', 'C7H14', 'C7H14-CY', 'C7H14-ME', 'C8H10', 'C8H10O',
-    'C8H16', 'C8H18', 'C8H16-CY', 'C9H10O3', 'C9H18', 'C9H20', 'C9H20-A',
-    'C10H22-C', 'C11H14O', 'C11H20-C', 'C11H24', 'C12H16O2', 'C12H20-C',
-    'C12H26', 'C13H18O2', 'C13H20O2', 'C13H26', 'C13H28', 'C14H12',
-    'C14H20O2', 'C14H28A', 'C14H30', 'C15H28', 'C16H32', 'C16H34',
-    'C17H34', 'C17H36', 'C18H38', 'C19H24O2', 'C19H38', 'C19H40', 'C20H40',
-    'C20H42', 'C21H24O5', 'C21H42', 'C22H26O5', 'C22H44', 'C23H28O5',
-    'C23H46', 'C24H32O3', 'C24H48', 'C25H30O3', 'C25H50', 'C26H42O4',
-    'C26H52', 'C27H54', 'C28H56', 'C29H58', 'C30H62', 'SO2', 'NO2',
-    'ACIDS', 'ALDEHYDE', 'KETONES', 'ALCOHOLS', 'GUAIACOL', 'LMWS',
-    'HMWS', 'EXTRACTI', 'N2COMP', 'SCOMPOUN', 'S', 'C', 'ASH', 'SIO2',
-    'LMWLA', 'LMWLB', 'HLB', 'NH3'
+    'BIOMASS', 'WATER', 'H2', 'O2', 'N2', 'AR', 'CO', 'CO2', 'CH4', 'C2H4',
+    'C2H4O', 'C2H4O2', 'C2H6', 'C2H6O', 'C3H6', 'C3H8', 'C3H8O', 'C3H8O2',
+    'C4H10', 'C4H4O', 'C4H8O', 'C5H4O2', 'C5H12', 'C6H6', 'C6H6O', 'C6H8O',
+    'C6H12', 'C6H12O6', 'C6H14', 'C6H14O6', 'C7H8', 'C7H8O', 'C7H14',
+    'C7H14-CY', 'C7H14-ME', 'C8H10', 'C8H10O', 'C8H16', 'C8H18', 'C8H16-CY',
+    'C9H10O3', 'C9H18', 'C9H20', 'C9H20-A', 'C10H22-C', 'C11H14O',
+    'C11H20-C', 'C11H24', 'C12H16O2', 'C12H20-C', 'C12H26', 'C13H18O2',
+    'C13H20O2', 'C13H26', 'C13H28', 'C14H12', 'C14H20O2', 'C14H28A',
+    'C14H30', 'C15H28', 'C16H32', 'C16H34', 'C17H34', 'C17H36', 'C18H38',
+    'C19H20O6', 'C19H38', 'C19H40', 'C20H40', 'C20H42', 'C20H22O9',
+    'C21H18O1', 'C21H42', 'C22H22O8', 'C22H44', 'C23H22O6', 'C23H46',
+    'C24H32O8', 'C24H48', 'C25H22O1', 'C25H50', 'C26H42O4', 'C26H52',
+    'C27H54', 'C28H56', 'C29H58', 'C30H62', 'SO2', 'NO2', 'ACIDS',
+    'ALDEHYDE', 'KETONES', 'ALCOHOLS', 'GUAIACOL', 'LMWS', 'HMWS',
+    'EXTRACTI', 'N2COMP', 'SCOMPOUN', 'S', 'C', 'ASH', 'SIO2', 'LMWLA',
+    'LMWLB', 'HLB', 'NH3'
 ]
 component_to_carbon_number = {
     "ACIDS": 4,
@@ -67,7 +67,7 @@ class AspenSim(object):
         time.sleep(2)
         print("Initial simulation finished")
 
-        self.prod_stream = "208"
+        self.prod_stream = "216"
         if rxtor_nodes is None:
             self.rxtor_nodes = [
                 "\Data\Blocks\R-201\Input\CONV",
