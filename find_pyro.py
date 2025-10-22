@@ -207,10 +207,11 @@ target_exception = {c: target[c] for c in ['c', 'f', 'g']}
 plot_res_series(noise_res, range(num_trial), target_exception)
 
 #%%
-def calc_mse(tt, hdo_res):
+def calc_mae(tt, hdo_res):
     err = 0.
     for key, val in tt.items():
-        err += (hdo_res[key] - val)**2
+        err += abs(hdo_res[key] - val)
+    err = err / len(tt)
     return err
 
 res_all = {
@@ -219,28 +220,33 @@ res_all = {
     "k": (res_reducing_k, points_to_interp_long),
     # "ak_noise": (noise_res, range(num_trial)),
 }
-
-def get_min_mse(target_i, res_all):
+def get_min_mae(target_i, res_all):
     min_mse = 1e10
     min_idx = None
     min_res = None
     for key, (res, points) in res_all.items():
         for i, res_i in enumerate(res):
-            mse_i = calc_mse(target_i, res_i)
+            mse_i = calc_mae(target_i, res_i)
             if mse_i < min_mse:
                 min_mse = mse_i
                 min_idx = (key, i)
                 min_res = res_i
     return min_mse, min_idx, min_res
 
+res_min_mae = {}
+
 for target_name, target_data in target.items():
-    min_mse, min_idx, min_res = get_min_mse(target_data, res_all)
-    print(f"Min mse for {target_name}: {min_mse} with {min_idx}")
+    min_mae, min_idx, min_res = get_min_mae(target_data, res_all)
+    print(f"Min mae for {target_name}: {min_mae} with {min_idx}")
 
     k, i = min_idx
     res = res_all[k][0][i]
     plot_res_series([res], [f"({k}, {i})"], {target_name: target_data},
-                    save_heading=os.path.join(os.getcwd(), "results", f"min_mse_{target_name}_{k}_{i}"))
+                    save_heading=os.path.join(os.getcwd(), "results", f"min_mae_{target_name}_{k}_{i}"))
+
+    res_min_mae[target_name] = {"MAE": min_mae, "min_idx": min_idx, "min_res": min_res}
+average_mae = sum([res_tt["MAE"] for res_tt in res_min_mae.values()])/len(target)
+print(f"\n Average MAE: {average_mae}")
 
 """
 Min mse for a: 0.0002529732169666972 with ('ak', 0)
@@ -254,4 +260,7 @@ Min mse for h: 0.019066635463195102 with ('a', 2)
 Min mse for i: 0.03417726846070279 with ('a', 1)
 Min mse for j: 0.01799250676136089 with ('a', 2)
 Min mse for k: 0.0008808486254498194 with ('k', 4)
+
+Average MAE: 0.013005557391145383
+
 """
