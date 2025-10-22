@@ -130,3 +130,48 @@ for i, (key, val) in enumerate(target.items()):
              color=cmap_target(i))
 plt.legend()
 plt.show()
+
+
+#%% Linearly decreasing a and k coefficients
+def plot_res_series(res_plot, points_plot, target_plot=target):
+    cmap_res = cm.get_cmap('bone', len(points_plot) + 1)
+    cmap_target = cm.get_cmap('viridis', len(target_plot))
+
+    fig, ax = plt.subplots(1, 1)
+    for i, pi in enumerate(points_plot):
+        plt.plot(res_plot[i].keys(), res_plot[i].values(), '-', label=f'pi={pi}',
+                 color=cmap_res(i))
+    for i, (key, val) in enumerate(target_plot.items()):
+        plt.plot(val.keys(), val.values(), 'o', markersize=3, label=key,
+                 color=cmap_target(i))
+    plt.legend()
+    plt.show()
+
+res_reducing_a = []
+for pi in points_to_interp:
+    coeffs = [[cc * pi for cc in c] for c in coeff_a_for_k]
+    hdo_reduced = simK.apply_rxn_coefficients(coeffs)
+    status = simK.check_result_status()
+    res_reducing_a.append(hdo_reduced)
+
+plot_res_series(res_reducing_a, points_to_interp)
+
+#%%
+res_reducing_k = []
+for pi in points_to_interp:
+    coeffs = [[cc * pi for cc in c] for c in coeff_k]
+    hdo_reduced = simK.apply_rxn_coefficients(coeffs)
+    res_reducing_k.append(hdo_reduced)
+
+plot_res_series(res_reducing_k, points_to_interp)
+
+#%%, 'c', 'f', 'g'
+target_interp = {c: target[c] for c in ['a', 'b', 'c', 'k']}
+plot_res_series(res_interp_long, points_to_interp_long, target_interp)
+#%%
+target_a = {c: target[c] for c in ['a', 'd', 'e', 'i', 'j', 'f']}
+plot_res_series(res_reducing_a, points_to_interp, target_a)
+#%%
+target_k = {c: target[c] for c in ['g', 'h', 'k']}
+plot_res_series(res_reducing_k[2:], points_to_interp[2:], target_k)
+
