@@ -22,7 +22,8 @@ plt.legend()
 plt.show()
 
 #%%
-simK = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_k_rxn_indenxing.bkp", case_target="k")
+# simK = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_k_rxn_indenxing.bkp", case_target="k")
+simK = AspenSim(r"D:\saf_hdo\aspen\251111_pyrolysis_oil_CC_case_i_indexing.bkp", case_target="i")
 hdo_result_k = simK.get_carbon_number_composition(simA.prod_stream)
 
 #%%
@@ -34,7 +35,7 @@ plt.ylabel("Weight Fraction", fontsize=11)
 plt.tight_layout()
 plt.legend()
 plt.show()
-#%
+#%%
 coef_a = simA.get_rxn_coefficients()
 coef_k = simK.get_rxn_coefficients()
 
@@ -58,7 +59,8 @@ plt.plot(hdo_result_a_from_k.keys(), hdo_result_a_from_k.values(), '-', label='S
 plt.plot(simA.target.keys(), simA.target.values(), 'o', label='Experimental Data')
 plt.legend()
 plt.show()
-#%
+
+#%%
 import numpy as np
 pi = 0.5
 coeffs_to_interp = [coef_a_for_k[0], coef_k[0]]
@@ -76,7 +78,7 @@ plt.plot(simA.target.keys(), simA.target.values(), 'o', label='Case A')
 plt.plot(simK.target.keys(), simK.target.values(), 's', label='Case K')
 plt.legend()
 plt.show()
-#%
+#%%
 
 def rxn_coefficients_interp(pi):
     coeffs_to_interp = [coef_a_for_k[0], coef_k[0]]
@@ -118,7 +120,7 @@ coefs_extrap = rxn_coefficients_linear_interp(pi)
 hdo_interp = simK.apply_rxn_coefficients(coefs_extrap)
 res_interp_long = res_interp + [hdo_interp]
 
-#%
+#%%
 import matplotlib.cm as cm
 points_draw = points_to_interp_long
 res_draw = res_interp_long

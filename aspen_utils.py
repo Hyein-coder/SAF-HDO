@@ -85,7 +85,8 @@ class AspenSim(object):
         self.component_list = component_list
         self.component_to_carbon_number = component_to_carbon_number
         carbon_number_list = self.data['Carbon'].tolist()
-        carbon_number_to_component = {n: [c for c in self.component_list if f"C{n}" in c] for n in carbon_number_list}
+        carbon_number_to_component = {n: [c for c in self.component_list if f"C{n}" in c]
+                                      for n in carbon_number_list if n < 26}
         for c, n in self.component_to_carbon_number.items():
             if n in carbon_number_list:
                 carbon_number_to_component[n].append(c)
@@ -260,6 +261,12 @@ class AspenSim(object):
         self.aspen.InitFromArchive2(os.path.abspath(self.aspen_path))
         self.aspen.Visible = False
         self.aspen.SuppressDialogs = True
+
+    def save_simulation_as(self, file_path):
+        file_path_abs = os.path.abspath(file_path)
+        print(f"Saving simulation...")
+        self.aspen.SaveAs(file_path_abs)
+        time.sleep(2)
 
     def terminate(self):
         self.aspen.Close(0)
