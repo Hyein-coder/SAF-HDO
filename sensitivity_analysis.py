@@ -107,6 +107,64 @@ for ax, hdo in zip(axs, [hdo_vary_x, hdo_vary_y]):
     ax.grid()
 plt.show()
 
+#%% Random data generation
+import numpy as np
+import random
+np.random.seed(42)
+rand_dir = os.path.join(r"D:\saf_hdo\aspen", 'random')
+os.makedirs(rand_dir, exist_ok=True)
+
+N = 100
+sa_points = np.random.rand(N, 2)
+sa_coefficients = []
+sa_results = []
+for idx, (x, y) in enumerate(sa_points):
+    print(f"Random Sensitivity Analysis #{idx}/{N}")
+    coef_sa = rxn_coef_interp(x, y)
+    res_sa = sim_main.apply_rxn_coefficients(coef_sa)
+
+    sa_coefficients.append(coef_sa)
+    sa_results.append(res_sa)
+    if res_sa is not None:
+        sim_main.save_simulation_as(os.path.join(rand_dir, f'caseSA_{idx}.bkp'))
+
+#%%
+original_points = [(0, 0), (1, 0), (0, 1)]
+original_coefficients_retreived = []
+original_results = []
+for idx, (x, y) in enumerate(original_points):
+    print(f"Original Data Generation #{idx}/3")
+    coef = rxn_coef_interp(x, y)
+    res = sim_main.apply_rxn_coefficients(coef)
+
+    original_coefficients_retreived.append(coef)
+    original_results.append(res)
+
+#%%
+fig, ax = plt.subplots(1, 1)
+cmap_rand = cm.get_cmap('magma', N)
+cmap_original = cm.get_cmap('viridis', len(original_points))
+
+for i, (key, val) in enumerate(targets.items()):
+    plt.plot(val.keys(), val.values(), 'o', markersize=3, label=key,
+             color=cmap_target(i))
+for i, res in enumerate(sa_results):
+    if res is None:
+        continue
+    plt.plot(res.keys(), res.values(), '-', color=cmap_rand(i))
+for i, res in enumerate(original_results):
+    plt.plot(res.keys(), res.values(), '-', color=cmap_original(i))
+
+ax.grid()
+plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
+plt.tight_layout()
+plt.show()
+
+#%%
+num_fail = sa_results.count(None)
+print(f"Simulation failed: {num_fail} / {N}")
+none_indices = [i for i, x in enumerate(sa_results) if x is None]
+
 #%% Matching case f
 # res = sim_main.get_carbon_number_composition(sim_main.prod_stream)
 #
