@@ -5,15 +5,16 @@ import matplotlib.pyplot as plt
 save_dir = os.path.join(os.getcwd(), 'results')
 simA = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_a_rxn_index.bkp")
 simI = AspenSim(r"D:\saf_hdo\aspen\251111_pyrolysis_oil_CC_case_i_indexing.bkp", case_target="i")
-simK = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_f.bkp", case_target="f")
+# simK = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_k_rxn_enabled.bkp", case_target="k")
+simF = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_f.bkp", case_target="f")
 
-sims = [simA, simI, simK]
+sims = [simA, simI, simF]
 original_coefs = []
 for s in sims:
     original_coefs.append(s.get_rxn_coefficients())
 
 #%
-sim_main = simK
+sim_main = simF
 coef_main = sim_main.get_rxn_coefficients()
 
 def convert_coef(simX):
@@ -28,45 +29,12 @@ def convert_coef(simX):
 names = [s.case_target for s in sims]
 coefs = [convert_coef(s) for s in sims]
 
-#%%
-fig, axs = plt.subplots(1, 2, figsize=(8, 5))
-ax_hdo = axs[0]
-ax_coef = axs[1]
-colors = ['#428bca', '#d9534f', '#5cb85c']
-markers = ['o', 's', '^']
-for n, c, cl, mk in zip(names, coefs, colors, markers):
-    hdo_res = sim_main.apply_rxn_coefficients(c)
-    _, hdo_target = sim_main.set_target(n)
-    ax_hdo.plot(hdo_res.keys(), hdo_res.values(), label=n+" (sim)", color=cl)
-    ax_hdo.plot(hdo_target.keys(), hdo_target.values(), mk, label=n+" (exp)", color=cl)
-    ax_coef.plot(range(len(c[0])), c[0], label=n, color=cl, marker=mk)
-
-ax_hdo.set_title("HDO Product Composition")
-ax_hdo.set_xlabel("Carbon Lengths")
-ax_hdo.legend()
-
-ax_coef.set_title("Reaction Coefficients")
-ax_coef.set_xlabel("Reaction Index")
-fig.tight_layout()
-plt.show()
-#%
-def rxn_coef_interp(x, y):
-    rxn_coef = []
-    for a_rxtor, i_rxtor, k_rxtor in zip(*coefs):
-        rxn_coef_rxtor = []
-        for a, i, k in zip(a_rxtor, i_rxtor, k_rxtor):
-            rxn_coef_rxtor.append(a * (1-x-y) + i * x + k * y)
-        rxn_coef.append(rxn_coef_rxtor)
-    return rxn_coef
-
-hdo_orig = sim_main.apply_rxn_coefficients(coefs[0])
-
-#%% Show the case data coverage
+#% Show the case data coverage
 import matplotlib.cm as cm
 
 targets = {}
 for a in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']:
-    _, tt = simK.set_target(a)
+    _, tt = simF.set_target(a)
     targets[a] = tt
 cmap_target = cm.get_cmap('viridis', len(targets))
 
@@ -79,33 +47,38 @@ plt.tight_layout()
 plt.show()
 
 #%%
-coarse_test = [0.1, 0.4, 0.7, 1.0]
-hdo_vary_x = []
-hdo_vary_y = []
-sensitivity_dir = os.path.join(r"D:\saf_hdo\aspen", 'sensitivity')
-os.makedirs(sensitivity_dir, exist_ok=True)
-for i in coarse_test:
-    coef_vary_x = rxn_coef_interp(i, 0)
-    hdo_vary_x.append(sim_main.apply_rxn_coefficients(coef_vary_x))
-    sim_main.save_simulation_as(os.path.join(sensitivity_dir, f'caseI_{i:.1f}.bkp'))
+fig, axs = plt.subplots(1, 2, figsize=(8, 5))
+ax_hdo = axs[0]
+ax_coef = axs[1]
+colors = ['#428bca', '#d9534f', '#5cb85c', '#faa632']
+markers = ['o', 's', '^', 'x']
+for i, (key, val) in enumerate(targets.items()):
+    ax_hdo.plot(val.keys(), val.values(), 'o', markersize=3, color=cmap_target(i))
+for n, c, cl, mk in zip(names, coefs, colors, markers):
+    hdo_res = sim_main.apply_rxn_coefficients(c)
+    _, hdo_target = sim_main.set_target(n)
+    ax_hdo.plot(hdo_res.keys(), hdo_res.values(), label=n+" (sim)", color=cl)
+    ax_hdo.plot(hdo_target.keys(), hdo_target.values(), mk, label=n+" (exp)", color=cl)
+    ax_coef.plot(range(len(c[0])), c[0], label=n, color=cl, marker=mk)
+ax_hdo.set_title("HDO Product Composition")
+ax_hdo.set_xlabel("Carbon Lengths")
+ax_hdo.legend()
 
-for i in coarse_test:
-    coef_vary_y = rxn_coef_interp(0, i)
-    hdo_vary_y.append(sim_main.apply_rxn_coefficients(coef_vary_y))
-    sim_main.save_simulation_as(os.path.join(sensitivity_dir, f'caseK_{i:.1f}.bkp'))
-
-#%%
-fig, axs = plt.subplots(1, 2, figsize=(8,5))
-cmap_coarse = cm.get_cmap('viridis', len(coarse_test)+1)
-
-for ax, hdo in zip(axs, [hdo_vary_x, hdo_vary_y]):
-    for i, (key, val) in enumerate(targets.items()):
-        ax.plot(val.keys(), val.values(), 'o', markersize=3, label=key,
-                 color=cmap_target(i))
-    for idx, d in enumerate([hdo_orig] + hdo):
-        ax.plot(d.keys(), d.values(), '-', color=cmap_coarse(idx))
-    ax.grid()
+ax_coef.set_title("Reaction Coefficients")
+ax_coef.set_xlabel("Reaction Index")
+fig.tight_layout()
 plt.show()
+#%%
+def rxn_coef_interp(_x, _y):
+    rxn_coef = []
+    for a_rxtor, i_rxtor, f_rxtor in zip(*coefs):
+        rxn_coef_rxtor = []
+        for a, i, f in zip(a_rxtor, i_rxtor, f_rxtor):
+            rxn_coef_rxtor.append(a * (1-_x-_y) + i * _x + f * _y)
+        rxn_coef.append(rxn_coef_rxtor)
+    return rxn_coef
+
+hdo_orig = sim_main.apply_rxn_coefficients(coefs[0])
 
 #%% Random data generation
 import numpy as np
@@ -114,14 +87,26 @@ np.random.seed(42)
 rand_dir = os.path.join(r"D:\saf_hdo\aspen", 'random')
 os.makedirs(rand_dir, exist_ok=True)
 
+n_ref = len(sims)
 N = 100
-sa_points = np.random.rand(N, 2)
+
+sa_points = np.random.rand(N, n_ref-1)
+for idx, p in enumerate(sa_points):
+    if sum(p) > 1:
+        sa_points[idx] = sa_points[idx] / sum(sa_points[idx])
+
 sa_coefficients = []
 sa_results = []
+noise = True
 for idx, (x, y) in enumerate(sa_points):
     print(f"Random Sensitivity Analysis #{idx}/{N}")
     coef_sa = rxn_coef_interp(x, y)
+    if noise:
+        coef_sa += np.random.normal(0, 0.05, len(coef_sa))
+        coef_sa = [[min(max(c, 0), 1) for c in cc] for cc in coef_sa]
+
     res_sa = sim_main.apply_rxn_coefficients(coef_sa)
+
 
     sa_coefficients.append(coef_sa)
     sa_results.append(res_sa)

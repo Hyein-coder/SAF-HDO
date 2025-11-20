@@ -22,7 +22,7 @@ plt.legend()
 plt.show()
 
 #%%
-# simK = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_k_rxn_indenxing.bkp", case_target="k")
+# simF = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_k_rxn_indenxing.bkp", case_target="k")
 simK = AspenSim(r"D:\saf_hdo\aspen\251111_pyrolysis_oil_CC_case_i_indexing.bkp", case_target="i")
 hdo_result_k = simK.get_carbon_number_composition(simA.prod_stream)
 
