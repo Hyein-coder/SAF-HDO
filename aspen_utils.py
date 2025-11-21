@@ -181,12 +181,13 @@ class AspenSim(object):
             print("Running simulation")
             self.aspen.Engine.Run2()
             time.sleep(2)
-            print("Simulation finished")
+            stat = self.check_result_status()
+            print("Simulation finished: " + stat)
             res_composition = self.get_carbon_number_composition(self.prod_stream)
-            return res_composition
+            return res_composition, stat
         except:
             print("Error in applying rxn coefficients")
-            return None
+            return None, 'RxnCoefError'
 
     def get_elemental_composition(self, stream_no):
         frac_C = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\STRM_UPP\MASSFRC\MIXED\TOTAL").Value
