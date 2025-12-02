@@ -137,3 +137,77 @@ def plot_heatmap(matrix, title=None, xlabel=None, ylabel=None,
     # --- Final Layout ---
     fig.tight_layout()
     plt.show()
+
+
+def plot_list_heatmap(data_list, title="Heatmaps from List Data", cmap='viridis'):
+    """
+    Plots a series of heatmaps from a list of 2D-like data.
+    Handles variable row lengths by padding.
+    """
+
+    num_matrices = len(data_list)
+
+    # Determine grid layout for subplots
+    cols = min(3, num_matrices)
+    rows = int(np.ceil(num_matrices / cols))
+
+    fig, axs = plt.subplots(rows, cols, figsize=(5 * cols, 4 * rows), constrained_layout=True)
+    axs = np.atleast_1d(axs).flatten()  # Ensure axs is iterable
+
+    # Find global min/max for consistent colorbar scaling
+    # We flatten everything to find the range, ignoring non-numeric types if any
+    all_values = []
+    for mat in data_list:
+        for row in mat:
+            all_values.extend(row)
+    vmin = min(all_values)
+    vmax = max(all_values)
+
+    for i, matrix_data in enumerate(data_list):
+        ax = axs[i]
+
+        # --- Convert irregular list of lists to a rectangular NumPy array ---
+        # 1. Find the maximum row length
+        max_len = max(len(row) for row in matrix_data)
+
+        # 2. Create a rectangular matrix filled with NaN (so empty spots don't show color)
+        rect_matrix = np.full((len(matrix_data), max_len), np.nan)
+
+        # 3. Fill in the data
+        for r, row in enumerate(matrix_data):
+            rect_matrix[r, :len(row)] = row
+
+        # --- Plotting ---
+        im = ax.imshow(rect_matrix, cmap=cmap, aspect='auto', vmin=vmin, vmax=vmax)
+
+        ax.set_title(f"Item {i}")
+        ax.set_xlabel("Index")
+        ax.set_ylabel("Row")
+
+        # Add text annotations
+        # Only show text if the matrix isn't too huge
+        if rect_matrix.size < 20:
+            for r in range(rect_matrix.shape[0]):
+                for c in range(rect_matrix.shape[1]):
+                    val = rect_matrix[r, c]
+                    if not np.isnan(val):
+                        # Determine text color based on background intensity
+                        text_color = "white" if (val - vmin) / (vmax - vmin) < 0.5 else "black"
+                        # If the colormap is reversed (like '_r'), swap the logic:
+                        if cmap.endswith('_r'):
+                            text_color = "black" if (val - vmin) / (vmax - vmin) < 0.5 else "white"
+
+                        ax.text(c, r, f'{val:.2f}', ha='center', va='center',
+                                fontsize=8, color=text_color)
+
+    # Hide empty subplots
+    for j in range(i + 1, len(axs)):
+        axs[j].axis('off')
+
+    # Add a single colorbar for the whole figure
+    fig.colorbar(im, ax=axs, label='Value', fraction=0.02, pad=0.04)
+
+    if title:
+        fig.suptitle(title, fontsize=16)
+
+    plt.show()

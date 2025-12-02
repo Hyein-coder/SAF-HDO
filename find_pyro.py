@@ -11,6 +11,10 @@ r1 = simA.aspen.Tree.FindNode(simA.rxtor_nodes[0])
 pyro_elem_comp, pyro_frac_water = simA.get_elemental_composition_wo_water(simA.pyro_prod_stream)
 hdo_result = simA.get_carbon_number_composition(simA.prod_stream)
 #%%
+# sim1 = AspenSim(r"D:\saf_hdo\aspen\Basecase_SAF_251128\251127_pyrolysis_oil_CC_case_a_3.bkp")
+# pyro_elem_comp1, pyro_frac_water1 = sim1.get_elemental_composition_wo_water(sim1.pyro_prod_stream)
+
+#%%
 
 fig, ax = plt.subplots(1, 1, figsize=(5,4))
 plt.plot(hdo_result.keys(), hdo_result.values(), '-', label='Simulation')

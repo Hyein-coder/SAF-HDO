@@ -70,7 +70,7 @@ class AspenSim(object):
         self.prod_stream = "216"
         if rxtor_nodes is None:
             self.rxtor_nodes = [
-                "\Data\Blocks\R-201\Input\CONV",
+                "\Data\Blocks\R-201\Input",
                 # "\Data\Blocks\R-202\Input\CONV",
                 # "\Data\Blocks\R-203\Input\CONV",
             ]
@@ -121,13 +121,13 @@ class AspenSim(object):
         return case_target, target
 
     def set_rxtors(self):
-        n_rxns = [len(self.aspen.Tree.FindNode(rxtor).Elements) for rxtor in self.rxtor_nodes]
+        n_rxns = [len(self.aspen.Tree.FindNode(rxtor + "\CONV").Elements) for rxtor in self.rxtor_nodes]
         ri_test = [[i for i in range(n)] for n in n_rxns]
 
         ri_valid = []
         val_initial = []
         for ii, rii in enumerate(ri_test):
-            rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[ii])
+            rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[ii] + "\CONV")
             rii_valid = []
             vii_initial = []
             for n in range(n_rxns[ii]):
@@ -150,6 +150,36 @@ class AspenSim(object):
         self.rxn_indices = ri_valid
         self.apply_rxn_coefficients(val_initial)
 
+    def get_rxtors_base_components(self):
+        base_components = []
+        for i, rix in enumerate(self.rxn_indices):
+            bc_i = []
+            for ii, rxn_idx in enumerate(rix):
+                bc = self.aspen.Tree.FindNode(self.rxtor_nodes[i] + f"\KEY_CID\\{rxn_idx}").Value
+                bc_i.append(bc)
+            base_components.append(bc_i)
+        return base_components
+
+    def sort_rxn_via_base_components(self):
+        base_components = self.get_rxtors_base_components()
+        base_c_length = []
+
+        extensive_component_to_carbon_number = {c: n for c in self.component_list for n in range(26) if f"C{n}" in c}
+        for c, n in self.component_to_carbon_number.items():
+            extensive_component_to_carbon_number[c] = n
+
+        for i, bc_rxtor_i in enumerate(base_components):
+            base_c_length_rxtor_i = []
+            for bc in bc_rxtor_i:
+                base_c_length_rxtor_i.append(extensive_component_to_carbon_number[bc])
+            base_c_length.append(base_c_length_rxtor_i)
+
+        nc_idx_ri_sorted = []
+        for i, rix in enumerate(self.rxn_indices):
+            ri_sorted_i = sorted(zip(base_c_length[i], [ii for ii in range(len(rix))], rix))
+            nc_idx_ri_sorted.append(ri_sorted_i)
+        return nc_idx_ri_sorted, base_c_length
+
     def get_carbon_number_composition(self, stream_no):
         s = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFLOW\MIXED")
         massflow = [0 if s.Elements(c).Value is None else s.Elements(c).Value for c in self.component_list]
@@ -166,7 +196,7 @@ class AspenSim(object):
         for i, ris in enumerate(self.rxn_indices):
             rxn_coef_i = []
             for ii, rxn_idx in enumerate(ris):
-                rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[i])
+                rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[i] + "\CONV")
                 rxn_coef_i.append(rxtor.Elements(f"{rxn_idx}").Value)
             rxn_coefficients.append(rxn_coef_i)
         return rxn_coefficients
@@ -175,7 +205,7 @@ class AspenSim(object):
         try:
             for i, ris in enumerate(self.rxn_indices):
                 for ii, rxn_idx in enumerate(ris):
-                    rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[i])
+                    rxtor = self.aspen.Tree.FindNode(self.rxtor_nodes[i] + "\CONV")
                     rxtor.Elements(f"{rxn_idx}").Value = rxn_coefficients[i][ii]
             time.sleep(2)
             print("Running simulation")
