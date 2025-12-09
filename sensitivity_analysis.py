@@ -47,7 +47,7 @@ plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
 plt.tight_layout()
 plt.show()
 
-#%
+#%%
 print("=== Check If Original Coefficients Match the Data ===")
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 dir_all = os.path.join(r"D:\saf_hdo\aspen", f'sa_{timestamp}_basecase')
@@ -91,6 +91,87 @@ def rxn_coef_interp(_x, _y):
 original_points = [(0, 0), (1, 0), (0, 1)]
 hdo_orig, _ = sim_main.apply_rxn_coefficients(original_coefficients[0])
 
+#%%
+from matplotlib import rcParams
+import numpy as np
+fs = 10
+dpi = 200
+config_figure = {'figure.figsize': (9, 2.5), 'figure.titlesize': fs,
+                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+                 'font.sans-serif': ['Arial'],
+                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'text.usetex': False, 'mathtext.default': 'regular',
+                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+rcParams.update(config_figure)
+
+fig, axs = plt.subplots(1, 3, sharex=True, sharey=True)
+target_to_draw = ['a', 'f', 'i']
+label_to_draw = ['Base', 'Peak-shifted', 'Heavy-end']
+for ax, t, l in zip(axs, target_to_draw, label_to_draw):
+    target_val = {k: v for (k,v) in targets[t].items() if k < 25}
+    c = original_coefficients[names.index(t)]
+    hdo_res = original_results[names.index(t)]
+    hdo_res_draw = {k: v for (k, v) in hdo_res.items() if k < 25}
+    hdo_res_cum = np.cumsum([v for v in hdo_res_draw.values()])
+
+    ax2 = ax.twinx()
+    ax2.plot(hdo_res_draw.keys(), [v*100 for v in hdo_res_cum], '-', linewidth=2, label="Cumulative",
+             color='#e95924', alpha=0.5)
+    ax2.set_ylim([-5, 105])
+    ax2.tick_params(axis='y', labelcolor='#e95924', color='#e95924')
+    ax2.spines['right'].set_color("#e95924")
+    if t == 'i':
+        ax2.set_ylabel("Cumulative Distribution (%)", color='#e95924')
+    else:
+        ax2.tick_params(labelright=False)
+
+    ax.plot(target_val.keys(), [v * 100 for v in target_val.values()], '-o', markersize=3, label="Experiment",
+            color='k', alpha=0.7)
+    ax.plot(hdo_res_draw.keys(), [v * 100 for v in hdo_res_draw.values()], '-s', markersize=3, label="Simulation",
+            color='g', alpha=0.7)
+
+    ax.set_xlim([5, 25])
+    x_ticks = np.arange(6, 25, 1)
+    ax.set_xticks(x_ticks)
+    ax.set_xlabel("Carbon Number")
+    if t == 'a':
+        ax.set_ylabel("Product Distribution (%)")
+    ax.set_title(l)
+
+fig.tight_layout()
+plt.savefig(r'D:\saf_hdo\figures\experimental_validation.png')
+plt.show()
+
+#%%
+fig, ax = plt.subplots(1, 1, figsize=(4, 3))
+colors = ['#428bca', '#d9534f', '#663399']
+cmap_target = cm.get_cmap('summer', len(targets))
+for i, (key, val) in enumerate(targets.items()):
+    val_to_draw = {k: v*100 for (k, v) in val.items() if k < 25}
+    ax.plot(val_to_draw.keys(), val_to_draw.values(), 'o', markersize=3, color=cmap_target(i),
+            alpha=0.5)
+for i, n in enumerate(target_to_draw):
+    val_to_draw = {k: v*100 for (k, v) in targets[n].items() if k < 25}
+    ax.plot(val_to_draw.keys(), val_to_draw.values(), '-s', markersize=3, color=colors[i],
+            label=label_to_draw[i], alpha=0.9)
+ax.set_xlim(5, 25)
+x_ticks = np.arange(6, 25, 1)
+ax.set_xticks(x_ticks)
+ax.set_xlabel("Carbon Number")
+ax.set_ylabel("Product Distribution (%)")
+
+plt.legend(loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=3)
+plt.tight_layout()
+plt.savefig(r'D:\saf_hdo\figures\experimental_data.png')
+plt.show()
 #%%
 import numpy as np
 import pandas as pd
@@ -148,10 +229,10 @@ for idx, (x, y) in enumerate(sa_points):
             sim_main.aspen.Reinit()
         else:
             sim_main.save_simulation_as(os.path.join(dir_conv, f'caseSA_{idx}.bkp'))
+    df_sa = pd.DataFrame(sa_all_rows)
+    df_sa.to_csv(os.path.join(dir_all, 'results.csv'))
 
-df_sa = pd.DataFrame(sa_all_rows)
-df_sa.to_csv(os.path.join(dir_all, 'results.csv'))
-#%%
+#%
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 fs = 10
