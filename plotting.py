@@ -37,7 +37,7 @@ import os
 dir_all = r"D:\saf_hdo\aspen\grid_20251203_105302_param_1"
 param_name = 'Interp2'
 df_sa = pd.read_csv(dir_all + r"\results.csv")
-df_plot = df_sa.iloc[[0]+[k*10-1 for k in range(1,11)],:]
+df_plot = df_sa.iloc[[0]+[k*10-1 for k in range(1,11)]+[80],:]
 df_plot = df_plot.sort_index()
 
 N_grid = len(df_plot)
@@ -136,3 +136,32 @@ plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_0.png')
 plt.show()
 
 #%%
+def res2df(_interp_point, _coef, _res, _stat):
+    row_interp = {}
+    for i, p in enumerate(_interp_point):
+        row_interp[f"Interp{i+1}"] = p
+    row_coef = {}
+    for i, c_rxtor in enumerate(_coef):
+        for idx, c in zip(sim_main.rxn_indices[i], c_rxtor):
+            row_coef[f"R{i+1}_rxn{idx}"] = c
+    row_res = {}
+    for i, r in _res.items():
+        row_res[f"C{i}"] = r
+    row = {**row_interp, **row_coef, **row_res, 'state': _stat}
+    return row
+
+read_folder = r"D:\saf_hdo\aspen\sa_20251203"
+read_files = os.listdir(os.path.join(read_folder, "converged"))
+n_total = len(read_files)
+sa_all_rows = []
+for idx, f in enumerate(read_files[103:]):
+    print(f"Reading file {idx+1}/{n_total}-----")
+    sim = AspenSim(os.path.join(read_folder, "converged", f))
+    coef = sim.get_rxn_coefficients()
+    res = sim.get_carbon_number_composition(sim.prod_stream)
+    stat = 'Warning'
+    sa_all_rows.append(res2df((0, 0), coef, res, stat))
+    sim.aspen.Close()
+
+    df_sa = pd.DataFrame(sa_all_rows)
+    df_sa.to_csv(os.path.join(read_folder, "converged_results.csv"))
