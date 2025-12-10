@@ -69,7 +69,7 @@ ax.set_xticks(x_ticks)
 
 ax.set_xlabel("Carbon Number")
 ax.set_ylabel("Product Distribution (%)")
-ax.set_title("(a) Degree of Decomposition")
+ax.set_title("Heavy-end")
 #%
 
 dir_all = r"D:\saf_hdo\aspen\grid_20251203_105302_param_1"
@@ -104,7 +104,7 @@ x_ticks = np.arange(6, product_carbon_range[-1], 1)
 ax.set_xticks(x_ticks)
 
 ax.set_xlabel("Carbon Number")
-ax.set_title("(b) Shift of Dominant Carbon-chain Length")
+ax.set_title("Peak Shift")
 plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
 plt.tight_layout()
 plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_combined.png')

@@ -17,7 +17,7 @@ args = [
     {"name" : "param_0",
      "file_simulation" : r"D:\SAF_Nurul\Sensitivity_1210\results_param_0.csv",
      "file_res" : r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251203_param_0.xlsx",
-     "pretty_name": "Decomposition Degree"
+     "pretty_name": "Heavy-end"
 },
     {"name" : "param_1",
      "file_simulation" : r"D:\SAF_Nurul\Sensitivity_1210\results_param_1.csv",
@@ -99,10 +99,10 @@ plt.savefig(fig_name)
 plt.show()
 
 #%%
-file_simulation = r"D:\SAF_Nurul\Sensitivity_1210\converged_results_combined.csv"
-file_res = r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251204_converged.xlsx"
+file_simulation = r"D:\SAF_Nurul\Sensitivity_1210\results_random_final.csv"
+file_res = r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251204_converged_corrected.xlsx"
 
-df_sim = pd.read_csv(file_simulation)
+df_sim = pd.read_csv(file_simulation).set_index('case_num')
 df_raw_tea = pd.read_excel(file_res, sheet_name="TEA").transpose()
 df_raw_lca = pd.read_excel(file_res, sheet_name="LCA")
 
@@ -123,6 +123,66 @@ df_tea_multi.columns = new_columns
 msp = pd.DataFrame(df_tea_multi['MSP [$/kg]'][np.nan].iloc[2:].copy().tolist(),
                    index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())
 lca = pd.concat([df_lca['Alloc_SAF_5'], df_lca['case_num']], axis=1).set_index('case_num')
-valid_indices = [int(i) for i in lca.index.tolist() if 0 <= int(i) < len(df_sim)]
-sim_selected = df_sim.iloc[valid_indices].copy()
+valid_indices = [int(i) for i in lca.index.tolist()]
+sim_selected = df_sim.loc[valid_indices].copy()
 
+pretty_names = ['Heavy-end', 'Peak Shift']
+params = ['param_0', 'param_1']
+#%%
+fig_name = os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", "random_line.png")
+
+fig, axs = plt.subplots(1, 2, sharey=True)
+axs2 = []
+for i, idx_param in enumerate(params):
+    ax = axs[i]
+    ax.plot(sim_selected[idx_param], msp, 'o', c='blue', markersize=5, linewidth=2, alpha=0.5)
+    # ax.tick_params(axis='y', labelcolor='blue', colors='blue')
+    # ax.spines['left'].set_color("blue")
+
+    ax2 = ax.twinx()
+    ax2.plot(sim_selected[idx_param], lca*1000, 'o', c='orange', markersize=5, linewidth=2, alpha=0.5)
+    ax2.tick_params(axis='y', labelcolor='orange', colors='orange')
+    ax2.spines['right'].set_color("orange")
+    ax2.set_ylim([11, 23])
+    axs2.append(ax2)
+
+    ax.set_xlabel(pretty_names[i])
+
+axs[0].set_ylabel('MSP [$/kg SAF]')
+axs2[0].tick_params(labelright=False)
+axs2[1].set_ylabel('GWP [g CO2e/MJ SAF]', color='orange')
+plt.tight_layout()
+plt.savefig(fig_name)
+plt.show()
+
+#%%
+from matplotlib import rcParams
+fs = 10
+dpi = 200
+config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
+                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
+                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'text.usetex': False, 'mathtext.default': 'regular',
+                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+rcParams.update(config_figure)
+
+fig, axs = plt.subplots(1, 2, sharey=True, sharex=True)
+output_names = ['MSP [$/kg]', 'GWP [g CO2e/MJ SAF']
+for ax, z_val, z_name in zip(axs, [msp.iloc[:,0], lca.iloc[:,0]*1000], output_names):
+    sc = ax.scatter(sim_selected[params[0]], sim_selected[params[1]], c=z_val, cmap='viridis', s=50, alpha=0.8)
+    cbar = fig.colorbar(sc, ax=ax, label=z_name)
+    ax.set_xlabel(pretty_names[0])
+    ax.set_ylabel(pretty_names[1])
+# plt.title('Heatmap of Z values at (X, Y) coordinates')
+# plt.grid(True, linestyle='--', alpha=0.5)
+plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", "random_heat.png"))
+plt.show()
