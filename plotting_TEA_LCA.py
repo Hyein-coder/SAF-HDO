@@ -122,6 +122,12 @@ df_tea_multi.columns = new_columns
 
 msp = pd.DataFrame(df_tea_multi['MSP [$/kg]'][np.nan].iloc[2:].copy().tolist(),
                    index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())
+h2 = pd.DataFrame(df_tea_multi['H2 consumption [kg/hr]'][np.nan].iloc[2:].copy().tolist(),
+                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())
+ng = pd.DataFrame(df_tea_multi['NG feed [kg/hr]'][np.nan].iloc[2:].copy().tolist(),
+                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())
+saf = pd.DataFrame(df_tea_multi['SAF production [kg/hr]'][np.nan].iloc[2:].copy().tolist(),
+                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())
 lca = pd.concat([df_lca['Alloc_SAF_5'], df_lca['case_num']], axis=1).set_index('case_num')
 valid_indices = [int(i) for i in lca.index.tolist()]
 sim_selected = df_sim.loc[valid_indices].copy()
@@ -133,24 +139,40 @@ fig_name = os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", "random_line.png")
 
 fig, axs = plt.subplots(1, 2, sharey=True)
 axs2 = []
+axs3 = []
+axs4 = []
 for i, idx_param in enumerate(params):
     ax = axs[i]
-    ax.plot(sim_selected[idx_param], msp, 'o', c='blue', markersize=5, linewidth=2, alpha=0.5)
+    ax.plot(sim_selected[idx_param], h2/1000, 'o', c='blue', markersize=5, linewidth=2, alpha=0.5)
     # ax.tick_params(axis='y', labelcolor='blue', colors='blue')
     # ax.spines['left'].set_color("blue")
 
     ax2 = ax.twinx()
-    ax2.plot(sim_selected[idx_param], lca*1000, 'o', c='orange', markersize=5, linewidth=2, alpha=0.5)
+    ax2.plot(sim_selected[idx_param], msp, 'o', c='orange', markersize=5, linewidth=2, alpha=0.5)
     ax2.tick_params(axis='y', labelcolor='orange', colors='orange')
     ax2.spines['right'].set_color("orange")
-    ax2.set_ylim([11, 23])
+    ax2.set_ylim([1.1, 2.1])
     axs2.append(ax2)
+
+    ax3 = ax.twinx()
+    if i < 1:
+        ax3.spines["right"].set_position(("outward", 10))
+    else:
+        ax3.spines["right"].set_position(("outward", 30))
+    ax3.plot(sim_selected[idx_param], lca*1000, 'o', c='green', markersize=5, linewidth=2, alpha=0.5)
+
+    ax3.tick_params(axis='y', labelcolor='green', color='green')
+    ax3.spines['right'].set_color("green")
+    ax3.set_ylim([11, 23])
+    axs3.append(ax3)
 
     ax.set_xlabel(pretty_names[i])
 
-axs[0].set_ylabel('MSP [$/kg SAF]')
+axs[0].set_ylabel('H2 Consumption [t/h]')
 axs2[0].tick_params(labelright=False)
-axs2[1].set_ylabel('GWP [g CO2e/MJ SAF]', color='orange')
+axs2[1].set_ylabel('MSP [$/kg SAF]', color='orange')
+axs3[0].tick_params(labelright=False)
+axs3[1].set_ylabel('GWP [g CO2e/MJ SAF]', color='green')
 plt.tight_layout()
 plt.savefig(fig_name)
 plt.show()
@@ -176,8 +198,9 @@ config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
 rcParams.update(config_figure)
 
 fig, axs = plt.subplots(1, 2, sharey=True, sharex=True)
-output_names = ['MSP [$/kg]', 'GWP [g CO2e/MJ SAF']
-for ax, z_val, z_name in zip(axs, [msp.iloc[:,0], lca.iloc[:,0]*1000], output_names):
+output_names = ['MSP [$/kg]', 'H2 Consumption [t/h]']
+output_res = [msp.iloc[:,0], h2.iloc[:,0]/1000]
+for ax, z_val, z_name in zip(axs, output_res, output_names):
     sc = ax.scatter(sim_selected[params[0]], sim_selected[params[1]], c=z_val, cmap='viridis', s=50, alpha=0.8)
     cbar = fig.colorbar(sc, ax=ax, label=z_name)
     ax.set_xlabel(pretty_names[0])
