@@ -126,15 +126,22 @@ h2 = pd.DataFrame(df_tea_multi['H2 consumption [kg/hr]'][np.nan].iloc[2:].copy()
                    index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1000
 ng = pd.DataFrame(df_tea_multi['NG feed [kg/hr]'][np.nan].iloc[2:].copy().tolist(),
                    index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1000
+ncg = pd.DataFrame((df_tea_multi['LG in 416 [kg/hr]'][np.nan].iloc[2:].copy() +
+                   df_tea_multi['CH4 in 416 [kg/hr]'][np.nan].iloc[2:].copy()).tolist(),
+                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1000
 saf = pd.DataFrame(df_tea_multi['SAF production [kg/hr]'][np.nan].iloc[2:].copy().tolist(),
                    index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1000
+capex = pd.DataFrame(df_tea_multi['CAPEX']['Total CAPEX'].iloc[2:].copy().tolist(),
+                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1e6
+opex = pd.DataFrame(df_tea_multi['OPEX']['Total OPEX'].iloc[2:].copy().tolist(),
+                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1e6
 lca = pd.concat([df_lca['Alloc_SAF_5'], df_lca['case_num']], axis=1).set_index('case_num')*1000
 valid_indices = [int(i) for i in lca.index.tolist()]
 sim_selected = df_sim.loc[valid_indices].copy()
 
 pretty_names = ['Heavy-end', 'Peak Shift']
 params = ['param_0', 'param_1']
-#%%
+#%% TRI-AXIS PLOT
 from matplotlib import rcParams
 import datetime
 output_data = [saf, msp, lca]
@@ -200,7 +207,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_line_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()
 
-#%%
+#%% PARAMETER SPACE PLOT
 from matplotlib import rcParams
 import datetime
 fs = 10
@@ -237,10 +244,11 @@ for ax, z_val, z_name in zip(axs, output_data, output_label):
 plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_heat_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()
 
-#%% Ternary plot
+#%% TERNARY PLOT
 fs = 10
 dpi = 200
-config_figure = {'figure.figsize': (10, 4), 'figure.titlesize': fs,
+config_figure = {'figure.figsize': (14, 4),
+                 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
                  'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
@@ -259,9 +267,9 @@ rcParams.update(config_figure)
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
-output_data = [ng, saf]
-output_label = ["NG Consumption [t/h]", "SAF Production [t/h]"]
-
+output_data = [h2, msp.iloc[:,0], lca.iloc[:,0]]
+output_label = ["H2 Consumption [t/h]", "MSP [$/kg SAF]", r"GWP [g CO$_2$-eq/kg SAF]"]
+output_cmap = ['viridis', 'magma_r', 'magma_r']
 # 1. Helper function for coordinates
 def ternary_to_cartesian(a, b, c):
     total = a + b + c
@@ -281,30 +289,91 @@ def draw_ternary_frame(ax):
     ax.axis('off')
     ax.axis('equal')
 
-# 3. Generate Data
-np.random.seed(101)
-n = 100
-
-# 4. Create Subplots (1 Row, 2 Columns)
-fig, (ax1, ax2) = plt.subplots(1, 2)
+# fig, axes = plt.subplots(2, int(np.ceil(len(output_data)/2)))
+# axes = axes.flatten()
+fig, axes = plt.subplots(1, len(output_data))
 
 tx, ty = ternary_to_cartesian(*input_data)
-# --- Plot 1 ---
-draw_ternary_frame(ax1)
-sc1 = ax1.scatter(tx, ty, c=output_data[0], cmap='viridis_r', edgecolors='w', s=50)
-# ax1.set_title('Plot 1: Uniform Dist.\n(Color = A)', fontsize=14)
-# Add colorbar for ax1
-cb1 = plt.colorbar(sc1, ax=ax1, shrink=0.6)
-cb1.set_label(output_label[0])
-
-# --- Plot 2 ---
-draw_ternary_frame(ax2)
-sc2 = ax2.scatter(tx, ty, c=output_data[1], cmap='magma', edgecolors='w', s=50)
-# ax2.set_title('Plot 2: High A Concentration\n(Color = A)', fontsize=14)
-# Add colorbar for ax2
-cb2 = plt.colorbar(sc2, ax=ax2, shrink=0.6)
-cb2.set_label(output_label[1])
+for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
+    draw_ternary_frame(ax)
+    sc1 = ax.scatter(tx, ty, c=data, cmap=cmap, edgecolors='w', s=50)
+    # ax1.set_title('Plot 1: Uniform Dist.\n(Color = A)', fontsize=14)
+    # Add colorbar for ax1
+    cb1 = plt.colorbar(sc1, ax=ax, shrink=0.6)
+    cb1.set_label(label)
 
 plt.tight_layout()
 plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_ternary_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()
+
+#%% DUAL INPUT - DUAL OUTPUT PLOT
+from matplotlib import rcParams
+import datetime
+input_data = [sim_selected['param_0'], sim_selected['param_1']]
+input_label = pretty_names
+output_data = [h2, saf, ng]
+output_label = [r'H$_2$ Consumption [t/h]', 'SAF Production [t/h]', r'NG Consumption [t/h]']
+output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)) for x in output_data]
+# output_scale = [(min(x.iloc[:,0])*0.95, max(x.iloc[:,0])*1.05) for x in output_data]
+
+colormaps = ["#004166", "#e95924", "#198747"]
+# colormaps = ["blue", "orange", "green"]
+
+fs = 10
+dpi = 200
+config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
+                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
+                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'text.usetex': False, 'mathtext.default': 'regular',
+                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+rcParams.update(config_figure)
+
+fig, axs = plt.subplots(1, 2, sharey=True)
+axs2 = []
+axs3 = []
+axs4 = []
+for i, input_i in enumerate(input_data):
+    ax = axs[i]
+    ax.plot(input_i, output_data[0], 'o', c=colormaps[0], markersize=5, linewidth=2, alpha=0.5)
+    # ax.tick_params(axis='y', labelcolor='blue', colors='blue')
+    # ax.spines['left'].set_color("blue")
+
+    ax2 = ax.twinx()
+    ax2.plot(input_i, output_data[1], 'o', c=colormaps[1], markersize=5, linewidth=2, alpha=0.5)
+    ax2.tick_params(axis='y', labelcolor=colormaps[1], colors=colormaps[1])
+    ax2.spines['right'].set_color(colormaps[1])
+    ax2.set_ylim(output_scale[1])
+    axs2.append(ax2)
+
+    ax3 = ax.twinx()
+    if i < 1:
+        ax3.spines["right"].set_position(("outward", 10))
+    else:
+        ax3.spines["right"].set_position(("outward", 35))
+    ax3.plot(input_i, output_data[2], 'o', c=colormaps[2], markersize=5, linewidth=2, alpha=0.5)
+
+    ax3.tick_params(axis='y', labelcolor=colormaps[2], color=colormaps[2])
+    ax3.spines['right'].set_color(colormaps[2])
+    ax3.set_ylim(output_scale[2])
+    axs3.append(ax3)
+
+    ax.set_xlabel(input_label[i])
+
+axs[0].set_ylabel(output_label[0])
+axs2[0].tick_params(labelright=False)
+axs2[1].set_ylabel(output_label[1], color=colormaps[1])
+axs3[0].tick_params(labelright=False)
+axs3[1].set_ylabel(output_label[2], color=colormaps[2])
+plt.tight_layout()
+plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_line_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
+plt.show()
+
