@@ -15,13 +15,14 @@ cmap_target = cm.get_cmap('viridis', len(targets))
 from matplotlib import rcParams
 import numpy as np
 import os
+import pandas as pd
 
 fs = 10
 dpi = 200
-config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
+config_figure = {'figure.figsize': (4, 2.5), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
-                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+                 'font.sans-serif': ['Helvetica Neue LT Pro'],
+                 'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
@@ -40,17 +41,16 @@ param_name = 'Interp1'
 df_sa = pd.read_csv(dir_all + r"\results.csv")
 df_plot = df_sa.iloc[[0, 10]+[k*10-1 for k in range(2,11)],:]
 df_plot = df_plot.sort_index()
+df_converged = df_plot[df_plot['state'].isin(['Converged', 'Warning'])]
 
-N_grid = len(df_plot)
-fig, axs = plt.subplots(1, 2, sharey=True)
+N_grid = len(df_converged)
 cmap_rand = cm.get_cmap('RdBu', N_grid)
 cmap_target = cm.get_cmap('summer', len(targets))
 
-df_converged = df_plot[df_plot['state'].isin(['Converged', 'Warning'])]
 product_carbon_range = [c for c in sim_main.carbon_number_to_component.keys()]
 col_products = [f"C{i}" for i in product_carbon_range]
 
-ax = axs[0]
+fig, ax = plt.subplots(1, 1)
 for i, (key, val) in enumerate(targets.items()):
     val_to_draw = {k: v for (k, v) in val.items() if k < 25}
     ax.plot(val_to_draw.keys(), [v * 100 for v in val_to_draw.values()], '-o', markersize=3,
@@ -64,29 +64,32 @@ for i, (idx, row) in enumerate(df_converged.iterrows()):
              color=cmap_rand(i), label=f"{val_interp:.1f}")
 
 ax.set_xlim(5, 25)
+ax.set_ylim(-0.4, 17.2)
 x_ticks = np.arange(6, product_carbon_range[-1], 1)
 ax.set_xticks(x_ticks)
 
 ax.set_xlabel("Carbon Number")
 ax.set_ylabel("Product Distribution (%)")
-ax.set_title("Heavy-end")
+plt.legend(loc='upper right', ncol=3)
+plt.tight_layout()
+plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_0.png')
+plt.show()
 #%
-
 dir_all = r"D:\saf_hdo\aspen\grid_20251203_105302_param_1"
 param_name = 'Interp2'
 df_sa = pd.read_csv(dir_all + r"\results.csv")
-df_plot = df_sa.iloc[[0]+[k*10-1 for k in range(1,11)]+[80],:]
+df_plot = df_sa.iloc[[0]+[k*10-1 for k in range(1,11)] + [78],:]
 df_plot = df_plot.sort_index()
+df_converged = df_plot[df_plot['state'].isin(['Converged', 'Warning'])]
 
-N_grid = len(df_plot)
+N_grid = len(df_converged)
 cmap_rand = cm.get_cmap('RdBu', N_grid)
 cmap_target = cm.get_cmap('summer', len(targets))
 
-df_converged = df_plot[df_plot['state'].isin(['Converged', 'Warning'])]
 product_carbon_range = [c for c in sim_main.carbon_number_to_component.keys()]
 col_products = [f"C{i}" for i in product_carbon_range]
 
-ax = axs[1]
+fig, ax = plt.subplots(1, 1)
 for i, (key, val) in enumerate(targets.items()):
     val_to_draw = {k: v for (k, v) in val.items() if k < 25}
     ax.plot(val_to_draw.keys(), [v * 100 for v in val_to_draw.values()], '-o', markersize=3,
@@ -100,14 +103,15 @@ for i, (idx, row) in enumerate(df_converged.iterrows()):
              color=cmap_rand(i), label=f"{val_interp:.1f}")
 
 ax.set_xlim(5, 25)
+ax.set_ylim(-0.4, 17.2)
 x_ticks = np.arange(6, product_carbon_range[-1], 1)
 ax.set_xticks(x_ticks)
 
 ax.set_xlabel("Carbon Number")
-ax.set_title("Peak Shift")
-plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
+ax.set_ylabel("Product Distribution (%)")
+plt.legend(loc='upper right', ncol=3)
 plt.tight_layout()
-plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_combined.png')
+plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_1.png')
 plt.show()
 
 #%%
