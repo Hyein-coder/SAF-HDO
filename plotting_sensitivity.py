@@ -14,44 +14,81 @@ def extract_tag(name):
     return None # Return None if pattern doesn't match
 
 #%%
-file_simulation = r"D:\SAF_Nurul\Sensitivity_1210\results_random_final.csv"
-file_res = r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251204_converged_corrected.xlsx"
+file_simulation = [r"D:\SAF_Nurul\Sensitivity_1210\results_random_final.csv",
+                   r"D:\SAF_Nurul\Sensitivity_1210\results_param_0.csv",
+                   r"D:\SAF_Nurul\Sensitivity_1210\results_param_1.csv"]
+file_res = [r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251204_converged_corrected.xlsx",
+            r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251203_param_0.xlsx",
+            r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251204_param_1.xlsx"]
+file_type = ['RD', 'PP', 'PH']
 
-df_sim = pd.read_csv(file_simulation).set_index('case_num')
-df_raw_tea = pd.read_excel(file_res, sheet_name="TEA").transpose()
-df_raw_lca = pd.read_excel(file_res, sheet_name="LCA")
+dsim, dtea, dlca = [], [], []
+for fsim, fres, ftype in zip(file_simulation, file_res, file_type):
+    ds = pd.read_csv(fsim)
+    ds['case_name'] =  [ftype + str(i) for i in ds['case_num'].tolist()]
+    ds = ds.set_index('case_name')
 
-tags_tea = [extract_tag(col) for col in df_raw_tea.index]
-tags_tea[0] = 'Case Number'
-tags_row_tea = pd.DataFrame([tags_tea], columns=df_raw_tea.index, index=['case_num']).transpose()
-df_tea = pd.concat([tags_row_tea, df_raw_tea], axis=1)
+    dt = pd.read_excel(fres, sheet_name="TEA").transpose()
+    tags_tea = ['Case Number']
+    for i in dt.index[1:].tolist():
+        tag = extract_tag(i)
+        if tag is None:
+            tags_tea.append(np.nan)
+        else:
+            tags_tea.append(ftype + str(tag))
+    # tags_tea = [extract_tag(i) for i in dt.index]
+    # tags_tea[0] = 'Case Number'
+    tags_row_tea = pd.DataFrame([tags_tea], columns=dt.index, index=['case_num']).transpose()
+    dt = pd.concat([tags_row_tea, dt], axis=1)
+    new_columns = pd.MultiIndex.from_arrays([dt.loc['ComponentGroup'], dt.loc['Category']],
+                                            names=['ComponentGroup', 'Category'])
+    dt_multi = dt.copy()
+    dt_multi.columns = new_columns
+    dt_multi = dt_multi.drop(['ComponentGroup', 'Category'])
 
-tags_lca = [extract_tag(case[:-4]) for case in df_raw_lca['Case']]
-tags_row_lca = pd.DataFrame([tags_lca], columns=df_raw_lca.index, index=['case_num']).transpose()
-df_lca = pd.concat([tags_row_lca, df_raw_lca], axis=1)
+    dl = pd.read_excel(fres, sheet_name="LCA")
+    tags_lca = [ftype + str(extract_tag(case[:-4])) for case in dl['Case']]
+    tags_row_lca = pd.DataFrame([tags_lca], columns=dl.index, index=['case_num']).transpose()
+    dl = pd.concat([tags_row_lca, dl], axis=1)
+
+    dsim.append(ds)
+    dtea.append(dt_multi)
+    dlca.append(dl)
+
+df_sim = pd.concat(dsim)
+df_tea = pd.concat(dtea)
+df_lca = pd.concat(dlca)
+
+# df_sim = pd.read_csv(file_simulation).set_index('case_num')
+# df_raw_tea = pd.read_excel(file_res, sheet_name="TEA").transpose()
+# df_raw_lca = pd.read_excel(file_res, sheet_name="LCA")
+
+# tags_lca = [extract_tag(case[:-4]) for case in df_raw_lca['Case']]
+# tags_row_lca = pd.DataFrame([tags_lca], columns=df_raw_lca.index, index=['case_num']).transpose()
+# df_lca = pd.concat([tags_row_lca, df_raw_lca], axis=1)
 # %
-new_columns = pd.MultiIndex.from_arrays([df_tea.loc['ComponentGroup'], df_tea.loc['Category']],
-                                        names=['ComponentGroup', 'Category'])
-df_tea_multi = df_tea.copy()
-df_tea_multi.columns = new_columns
+# new_columns = pd.MultiIndex.from_arrays([df_tea.loc['ComponentGroup'], df_tea.loc['Category']],
+#                                         names=['ComponentGroup', 'Category'])
+# df_tea_multi = df_tea.copy()
+# df_tea_multi.columns = new_columns
 
-msp = pd.DataFrame(df_tea_multi['MSP [$/kg]'][np.nan].iloc[2:].copy().tolist(),
-                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())
-h2 = pd.DataFrame(df_tea_multi['H2 consumption [kg/hr]'][np.nan].iloc[2:].copy().tolist(),
-                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1000
-ng = pd.DataFrame(df_tea_multi['NG feed [kg/hr]'][np.nan].iloc[2:].copy().tolist(),
-                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1000
-ncg = pd.DataFrame((df_tea_multi['LG in 416 [kg/hr]'][np.nan].iloc[2:].copy() +
-                   df_tea_multi['CH4 in 416 [kg/hr]'][np.nan].iloc[2:].copy()).tolist(),
-                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1000
-saf = pd.DataFrame(df_tea_multi['SAF production [kg/hr]'][np.nan].iloc[2:].copy().tolist(),
-                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1000
-capex = pd.DataFrame(df_tea_multi['CAPEX']['Total CAPEX'].iloc[2:].copy().tolist(),
-                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1e6
-opex = pd.DataFrame(df_tea_multi['OPEX']['Total OPEX'].iloc[2:].copy().tolist(),
-                   index=df_tea_multi['Case Number'][np.nan].iloc[2:].copy().tolist())/1e6
+msp = pd.DataFrame(df_tea['MSP [$/kg]'][np.nan].copy().tolist(),
+                   index=df_tea['Case Number'][np.nan].copy().tolist())
+h2 = pd.DataFrame(df_tea['H2 consumption [kg/hr]'][np.nan].copy().tolist(),
+                   index=df_tea['Case Number'][np.nan].copy().tolist())/1000
+ng = pd.DataFrame(df_tea['NG feed [kg/hr]'][np.nan].copy().tolist(),
+                   index=df_tea['Case Number'][np.nan].copy().tolist())/1000
+ncg = pd.DataFrame((df_tea['LG in 416 [kg/hr]'][np.nan].copy() +
+                   df_tea['CH4 in 416 [kg/hr]'][np.nan].copy()).tolist(),
+                   index=df_tea['Case Number'][np.nan].copy().tolist())/1000
+saf = pd.DataFrame(df_tea['SAF production [kg/hr]'][np.nan].copy().tolist(),
+                   index=df_tea['Case Number'][np.nan].copy().tolist())/1000
+capex = pd.DataFrame(df_tea['CAPEX']['Total CAPEX'].copy().tolist(),
+                   index=df_tea['Case Number'][np.nan].copy().tolist())/1e6
+opex = pd.DataFrame(df_tea['OPEX']['Total OPEX'].copy().tolist(),
+                   index=df_tea['Case Number'][np.nan].copy().tolist())/1e6
 lca = pd.concat([df_lca['Alloc_SAF_5'], df_lca['case_num']], axis=1).set_index('case_num')*1000
-valid_indices = [int(i) for i in lca.index.tolist()]
+valid_indices = [i for i in lca.index.tolist()]
 sim_selected = df_sim.loc[valid_indices].copy()
 
 pretty_names = ['Heavy-end', 'Peak Shift']
@@ -305,8 +342,8 @@ dpi = 200
 config_figure = {'figure.figsize': (14, 4),
                  'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
                  'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,

@@ -96,10 +96,10 @@ from matplotlib import rcParams
 import numpy as np
 fs = 10
 dpi = 200
-config_figure = {'figure.figsize': (9, 2.5), 'figure.titlesize': fs,
+config_figure = {'figure.figsize': (4, 2.5), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Arial'],
-                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+                 'font.sans-serif': ['Helvetica Neue LT Pro'],
+                 'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
@@ -112,10 +112,10 @@ config_figure = {'figure.figsize': (9, 2.5), 'figure.titlesize': fs,
                  'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
 rcParams.update(config_figure)
 
-fig, axs = plt.subplots(1, 3, sharex=True, sharey=True)
 target_to_draw = ['a', 'f', 'i']
 label_to_draw = ['Base', 'Peak-shifted', 'Heavy-end']
-for ax, t, l in zip(axs, target_to_draw, label_to_draw):
+for t, l in zip(target_to_draw, label_to_draw):
+    fig, ax = plt.subplots(1, 1)
     target_val = {k: v for (k,v) in targets[t].items() if k < 25}
     c = original_coefficients[names.index(t)]
     hdo_res = original_results[names.index(t)]
@@ -128,10 +128,7 @@ for ax, t, l in zip(axs, target_to_draw, label_to_draw):
     ax2.set_ylim([-5, 105])
     ax2.tick_params(axis='y', labelcolor='#e95924', color='#e95924')
     ax2.spines['right'].set_color("#e95924")
-    if t == 'i':
-        ax2.set_ylabel("Cumulative Distribution (%)", color='#e95924')
-    else:
-        ax2.tick_params(labelright=False)
+    ax2.set_ylabel("Cumulative Distribution (%)", color='#e95924')
 
     ax.plot(target_val.keys(), [v * 100 for v in target_val.values()], '-o', markersize=3, label="Experiment",
             color='k', alpha=0.7)
@@ -139,36 +136,61 @@ for ax, t, l in zip(axs, target_to_draw, label_to_draw):
             color='g', alpha=0.7)
 
     ax.set_xlim([5, 25])
-    x_ticks = np.arange(6, 25, 1)
+    x_ticks = np.arange(6, 25, 3)
     ax.set_xticks(x_ticks)
     ax.set_xlabel("Carbon Number")
-    if t == 'a':
-        ax.set_ylabel("Product Distribution (%)")
-    ax.set_title(l)
+    ax.set_ylim([-0.4, 18.2])
+    ax.set_ylabel("Product Distribution (%)")
 
-fig.tight_layout()
-plt.savefig(r'D:\saf_hdo\figures\experimental_validation.png')
-plt.show()
+    lines_1, labels_1 = ax.get_legend_handles_labels()
+    lines_2, labels_2 = ax2.get_legend_handles_labels()
+    lines = lines_1 + lines_2
+    labels = labels_1 + labels_2
+    ax.legend(lines, labels, loc='center right')
+
+    fig.tight_layout()
+    plt.savefig(os.path.join(r'D:\saf_hdo\figures', f'experimental_validation_{l}.png'))
+    plt.show()
 
 #%%
-fig, ax = plt.subplots(1, 1, figsize=(4, 3))
+from matplotlib import rcParams
+import numpy as np
+fs = 10
+dpi = 200
+config_figure = {'figure.figsize': (4, 2.5), 'figure.titlesize': fs,
+                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+                 'font.sans-serif': ['Helvetica Neue LT Pro'],
+                 'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
+                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'text.usetex': False, 'mathtext.default': 'regular',
+                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+rcParams.update(config_figure)
+
+fig, ax = plt.subplots(1, 1)
 colors = ['#428bca', '#d9534f', '#663399']
 cmap_target = cm.get_cmap('summer', len(targets))
 for i, (key, val) in enumerate(targets.items()):
     val_to_draw = {k: v*100 for (k, v) in val.items() if k < 25}
-    ax.plot(val_to_draw.keys(), val_to_draw.values(), 'o', markersize=3, color=cmap_target(i),
-            alpha=0.5)
+    ax.plot(val_to_draw.keys(), val_to_draw.values(), '-o', markersize=3, color=cmap_target(i),
+            alpha=0.3)
 for i, n in enumerate(target_to_draw):
     val_to_draw = {k: v*100 for (k, v) in targets[n].items() if k < 25}
     ax.plot(val_to_draw.keys(), val_to_draw.values(), '-s', markersize=3, color=colors[i],
-            label=label_to_draw[i], alpha=0.9)
+            label=label_to_draw[i], alpha=0.7)
 ax.set_xlim(5, 25)
 x_ticks = np.arange(6, 25, 1)
 ax.set_xticks(x_ticks)
 ax.set_xlabel("Carbon Number")
 ax.set_ylabel("Product Distribution (%)")
 
-plt.legend(loc='lower center', bbox_to_anchor=(0.5, 1.0), ncol=3)
+plt.legend(loc='upper right')
 plt.tight_layout()
 plt.savefig(r'D:\saf_hdo\figures\experimental_data.png')
 plt.show()
