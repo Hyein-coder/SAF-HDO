@@ -28,7 +28,8 @@ config_figure = {'figure.figsize': (4, 2.5), 'figure.titlesize': fs,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
                  'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
                  'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
-                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+                 'figure.subplot.left': 0.15,
+                 'figure.subplot.right': 0.93,
                  'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
                  'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
                  'text.usetex': False, 'mathtext.default': 'regular',
@@ -144,3 +145,62 @@ for idx, f in enumerate(read_files[103:]):
 
     df_sa = pd.DataFrame(sa_all_rows)
     df_sa.to_csv(os.path.join(read_folder, "converged_results.csv"))
+
+#%%
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 1. Apply your config_figure
+fs = 13
+dpi = 200
+config_figure = {'figure.figsize': (8, 2.5), 'figure.titlesize': fs,
+                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+                 'font.sans-serif': ['Helvetica Neue LT Pro'],
+                 'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
+                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+                 'figure.subplot.left': 0.15,
+                 'figure.subplot.right': 0.93,
+                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'text.usetex': False, 'mathtext.default': 'regular',
+                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+plt.rcParams.update(config_figure)
+
+cmap_target = cm.get_cmap('summer', len(targets))
+x_subset = [19, 20, 21, 22, 23, 24]
+case_keys = list(targets.keys())  # 'a', 'b', etc.
+n_cases = len(case_keys)
+
+x = np.arange(len(x_subset))
+width = 0.8 / n_cases
+
+fig, ax = plt.subplots()
+
+# 3. Plotting loop
+for i, case in enumerate(case_keys):
+    y_values = [targets[case][val]*100 for val in x_subset]
+
+    # Position each bar in the group
+    offset = (i - n_cases / 2) * width + width / 2
+
+    ax.bar(x + offset, y_values, width,
+           label=f'{case}',
+           color=cmap_target(i), alpha=0.8)
+
+# 4. Final Polish
+ax.set_xticks(x)
+ax.set_xticklabels(x_subset)
+ax.set_xlabel('Carbon Number', fontweight='300')
+ax.set_ylabel('Product Distribution (%)', fontweight='300')
+
+# Personal text box with your font settings
+# ax.text(0.05, -0.18, "Distribution: Values 19-25", transform=ax.transAxes,
+#         fontsize=fs, ha='left', fontweight='bold', family='sans-serif')
+
+# ax.legend(ncol=4, loc='upper right', frameon=False)
+plt.tight_layout()
+plt.show()

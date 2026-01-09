@@ -337,13 +337,13 @@ import os
 import datetime
 from matplotlib import rcParams
 
-fs = 10
+fs = 14
 dpi = 200
 config_figure = {'figure.figsize': (14, 4),
                  'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
-                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
+                 'font.sans-serif': ['Helvetica Neue LT Pro'],
+                 'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
@@ -355,12 +355,13 @@ config_figure = {'figure.figsize': (14, 4),
                  'text.usetex': False, 'mathtext.default': 'regular',
                  'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
 rcParams.update(config_figure)
-
+#TODO: REDRAW
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
 output_data = [h2.values[:,0], msp.iloc[:,0], lca.iloc[:,0]]
-output_label = ["H2 Consumption [t/h]", "MSP [$/kg SAF]", r"GWP [g CO$_2$-eq/kg SAF]"]
+output_label = [r"H2 Consumption [$t \cdot h^{-1}$]",
+                "MSP [$ per kg SAF]", r"GWP [gCO$_2$e per MJ SAF]"]
 output_cmap = ['viridis', 'magma_r', 'magma_r']
 
 def ternary_to_cartesian(a, b, c):
@@ -375,9 +376,9 @@ def draw_ternary_frame(ax):
     corners = np.array([[0, 0], [1, 0], [0.5, np.sqrt(3) / 2], [0, 0]])
     ax.plot(corners[:, 0], corners[:, 1], 'k-', lw=2)
     # Labels
-    ax.text(0.05, -0.07, input_label[0], fontsize=12, ha='right', fontweight='bold')
-    ax.text(0.95, -0.07, input_label[1], fontsize=12, ha='left', fontweight='bold')
-    ax.text(0.5, np.sqrt(3) / 2 + 0.05, input_label[2], fontsize=12, ha='center', fontweight='bold')
+    ax.text(0.05, -0.07, input_label[0], fontsize=fs, ha='right', fontweight='300', family='sans-serif')
+    ax.text(0.95, -0.07, input_label[1], fontsize=fs, ha='left', fontweight='300', family='sans-serif')
+    ax.text(0.5, np.sqrt(3) / 2 + 0.05, input_label[2], fontsize=fs, ha='center', fontweight='300', family='sans-serif')
     ax.axis('off')
     ax.axis('equal')
 
@@ -394,8 +395,6 @@ tx, ty = ternary_to_cartesian(np.array(input_data[0]),
 for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
     draw_ternary_frame(ax)
 
-    # --- CHANGE START: Contour Plotting ---
-
     # 1. Create Filled Contours (The main heat map)
     # levels=14 determines how smooth the gradients look.
     # Use extend='both' to capture min/max outliers nicely.
@@ -409,14 +408,9 @@ for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
     # 3. Add Colorbar
     # Note: We pass 'contour_filled' to the colorbar, not a scatter object
     cb = plt.colorbar(contour_filled, ax=ax, shrink=0.6, pad=0.05)
-    cb.set_label(label)
-
-    # 4. (Optional) Plot the original points as tiny dots?
-    # Uncomment the line below if you want to see where the actual simulation points are
-    # ax.scatter(tx, ty, c='k', s=2, alpha=0.2)
-
-    # --- CHANGE END ---
+    cb.set_label(label, fontsize=fs-1)
+    cb.ax.tick_params(labelsize=fs-2)
 
 plt.tight_layout()
-# plt.savefig(...) # Keep your save logic
+plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_contour_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()
