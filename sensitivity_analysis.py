@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import datetime
 
 save_dir = os.path.join(os.getcwd(), 'results')
-simA = AspenSim(r"D:\saf_hdo\aspen\Basecase_SAF_251128\251127_pyrolysis_oil_CC_case_a_3.bkp")
-simI = AspenSim(r"D:\saf_hdo\aspen\Basecase_SAF_251128\251127_pyrolysis_oil_CC_case_i.bkp", case_target="i")
+simA = AspenSim(r"D:\saf_hdo\aspen\Simulation_260126\260115_pyrolysis_oil_CC_case_a.bkp")
+simI = AspenSim(r"D:\saf_hdo\aspen\Simulation_260126\260120_pyrolysis_oil_CC_case_i.bkp", case_target="i")
 # simK = AspenSim(r"D:\saf_hdo\aspen\251023_pyrolysis_oil_CC_case_k_rxn_enabled.bkp", case_target="k")
-simF = AspenSim(r"D:\saf_hdo\aspen\Basecase_SAF_251128\251127_pyrolysis_oil_CC_case_f.bkp", case_target="f")
+simF = AspenSim(r"D:\saf_hdo\aspen\Simulation_260126\260115_pyrolysis_oil_CC_case_f.bkp", case_target="f")
 
 sims = [simA, simI, simF]
 original_coefs = []
@@ -15,7 +15,7 @@ for s in sims:
     original_coefs.append(s.get_rxn_coefficients())
 
 #%
-sim_main = AspenSim(r"D:\saf_hdo\aspen\Basecase_SAF_251128\251127_pyrolysis_oil_CC_case_a_3.bkp")
+sim_main =  AspenSim(r"D:\saf_hdo\aspen\Simulation_260126\260115_pyrolysis_oil_CC_case_a.bkp")
 coef_main = sim_main.get_rxn_coefficients()
 
 def convert_coef(simX):
@@ -200,7 +200,7 @@ import pandas as pd
 import time
 print("=== Effect of Parameters ===")
 N_grid = 11
-param_idx = 1
+param_idx = 0
 
 grid_values = np.linspace(0, 1, N_grid)
 grid_points = [[(x, 0) for x in grid_values], [(0, x) for x in grid_values]]
@@ -219,109 +219,109 @@ def res2df(_interp_point, _coef, _res, _stat):
     row = {**row_interp, **row_coef, **row_res, 'state': _stat}
     return row
 
-timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-dir_all = os.path.join(r"D:\saf_hdo\aspen", f'grid_{timestamp}_param_{param_idx}')
-dir_conv = os.path.join(dir_all, 'converged')
-dir_error = os.path.join(dir_all, 'error')
-os.makedirs(dir_conv, exist_ok=True)
-os.makedirs(dir_error, exist_ok=True)
-
-sa_points = grid_points[param_idx]
-
-sa_coefficients = []
-sa_results = []
-sa_all_rows = []
-for idx, (x, y) in enumerate(sa_points):
-    print(f"Grid for Parameter {param_idx}: #{idx}/{N_grid}")
-    coef_sa = rxn_coef_interp(x, y)
-    res_sa, stat = sim_main.apply_rxn_coefficients(coef_sa)
-
-    if stat == 'Error':
-        time.sleep(0.5)
-        sim_main.aspen.Reinit()
-        time.sleep(0.5)
-        res_sa, stat = sim_main.apply_rxn_coefficients(coef_sa)
-
-    sa_coefficients.append(coef_sa)
-    sa_results.append(res_sa)
-    sa_all_rows.append(res2df((x, y), coef_sa, res_sa, stat))
-    if res_sa is not None:
-        if 'Error' in stat:
-            sim_main.save_simulation_as(os.path.join(dir_error, f'caseSA_{idx}.bkp'))
-            sim_main.aspen.Reinit()
-        else:
-            sim_main.save_simulation_as(os.path.join(dir_conv, f'caseSA_{idx}.bkp'))
-    df_sa = pd.DataFrame(sa_all_rows)
-    df_sa.to_csv(os.path.join(dir_all, 'results.csv'))
-
-#%
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-fs = 10
-dpi = 200
-config_figure = {'figure.figsize': (4.5, 3), 'figure.titlesize': fs,
-                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
-                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
-                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
-                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
-                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
-                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
-                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
-                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
-                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
-                 'text.usetex': False, 'mathtext.default': 'regular',
-                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
-rcParams.update(config_figure)
-
-fig, ax = plt.subplots(1, 1)
-cmap_rand = cm.get_cmap('magma', N_grid+3)
-cmap_original = cm.get_cmap('viridis', len(original_points))
-
-df_sa_converged = df_sa[df_sa['state'].isin(['Converged', 'Warning'])]
-product_carbon_range = [c for c in sim_main.carbon_number_to_component.keys()]
-col_products = [f"C{i}" for i in product_carbon_range]
-
-for i, (key, val) in enumerate(targets.items()):
-    val_to_draw = {k: v for (k, v) in val.items() if k < 25}
-    plt.plot(val_to_draw.keys(), [v*100 for v in val_to_draw.values()], '-o', markersize=3, label=key,
-             color=cmap_target(i), alpha=0.5)
-for i, row in df_sa_converged.iterrows():
-    res = row[col_products].tolist()
-    if res is None:
-        continue
-    plt.plot(product_carbon_range[:-1], res[:-1], '-', color=cmap_rand(i))
-
-ax.set_xlim(5, 25)
-x_ticks = np.arange(6, product_carbon_range[-1], 1)
-ax.set_xticks(x_ticks)
-
-ax.set_xlabel("Carbon Number")
-ax.set_ylabel("Product Distribution (%)")
-plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
-plt.tight_layout()
-plt.savefig(os.path.join(dir_all, 'plot.png'))
-plt.show()
-
-num_fail = df_sa[df_sa['state'] == 'RxnCoefError'].shape[0]
-num_error = df_sa[df_sa['state'] == 'Error'].shape[0]
-print(f"Simulation failed: {num_fail + num_error} / {N_grid}")
-none_indices = [i for i, x in enumerate(sa_results) if x is None]
-
-#%% Draw a heatmap to see the shift of reactions
-from utils import plot_list_heatmap
-
-nc_idx_ri_sorted, base_c_length = sim_main.sort_rxn_via_base_components()
-sa_coef_sorted = [[sc[0][idx] for nc, idx, ri in nc_idx_ri_sorted[0]] for sc in sa_coefficients]
-nc_sorted = [[nc for nc, idx, ri in nc_idx_ri_sorted[0]]]
-plot_list_heatmap([sa_coef_sorted], f"Varying Parameter #{param_idx}")
-plot_list_heatmap([nc_sorted])
+# timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+# dir_all = os.path.join(r"D:\saf_hdo\aspen", f'grid_{timestamp}_param_{param_idx}')
+# dir_conv = os.path.join(dir_all, 'converged')
+# dir_error = os.path.join(dir_all, 'error')
+# os.makedirs(dir_conv, exist_ok=True)
+# os.makedirs(dir_error, exist_ok=True)
+#
+# sa_points = grid_points[param_idx]
+#
+# sa_coefficients = []
+# sa_results = []
+# sa_all_rows = []
+# for idx, (x, y) in enumerate(sa_points):
+#     print(f"Grid for Parameter {param_idx}: #{idx}/{N_grid}")
+#     coef_sa = rxn_coef_interp(x, y)
+#     res_sa, stat = sim_main.apply_rxn_coefficients(coef_sa)
+#
+#     if stat == 'Error':
+#         time.sleep(0.5)
+#         sim_main.aspen.Reinit()
+#         time.sleep(0.5)
+#         res_sa, stat = sim_main.apply_rxn_coefficients(coef_sa)
+#
+#     sa_coefficients.append(coef_sa)
+#     sa_results.append(res_sa)
+#     sa_all_rows.append(res2df((x, y), coef_sa, res_sa, stat))
+#     if res_sa is not None:
+#         if 'Error' in stat:
+#             sim_main.save_simulation_as(os.path.join(dir_error, f'caseSA_{idx}.bkp'))
+#             sim_main.aspen.Reinit()
+#         else:
+#             sim_main.save_simulation_as(os.path.join(dir_conv, f'caseSA_{idx}.bkp'))
+#     df_sa = pd.DataFrame(sa_all_rows)
+#     df_sa.to_csv(os.path.join(dir_all, 'results.csv'))
+#
+# #%
+# import matplotlib.pyplot as plt
+# from matplotlib import rcParams
+# fs = 10
+# dpi = 200
+# config_figure = {'figure.figsize': (4.5, 3), 'figure.titlesize': fs,
+#                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+#                  'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
+#                  'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+#                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+#                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+#                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+#                  'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+#                  'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+#                  'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+#                  'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+#                  'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+#                  'text.usetex': False, 'mathtext.default': 'regular',
+#                  'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+# rcParams.update(config_figure)
+#
+# fig, ax = plt.subplots(1, 1)
+# cmap_rand = cm.get_cmap('magma', N_grid+3)
+# cmap_original = cm.get_cmap('viridis', len(original_points))
+#
+# df_sa_converged = df_sa[df_sa['state'].isin(['Converged', 'Warning'])]
+# product_carbon_range = [c for c in sim_main.carbon_number_to_component.keys()]
+# col_products = [f"C{i}" for i in product_carbon_range]
+#
+# for i, (key, val) in enumerate(targets.items()):
+#     val_to_draw = {k: v for (k, v) in val.items() if k < 25}
+#     plt.plot(val_to_draw.keys(), [v*100 for v in val_to_draw.values()], '-o', markersize=3, label=key,
+#              color=cmap_target(i), alpha=0.5)
+# for i, row in df_sa_converged.iterrows():
+#     res = row[col_products].tolist()
+#     if res is None:
+#         continue
+#     plt.plot(product_carbon_range[:-1], res[:-1], '-', color=cmap_rand(i))
+#
+# ax.set_xlim(5, 25)
+# x_ticks = np.arange(6, product_carbon_range[-1], 1)
+# ax.set_xticks(x_ticks)
+#
+# ax.set_xlabel("Carbon Number")
+# ax.set_ylabel("Product Distribution (%)")
+# plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
+# plt.tight_layout()
+# plt.savefig(os.path.join(dir_all, 'plot.png'))
+# plt.show()
+#
+# num_fail = df_sa[df_sa['state'] == 'RxnCoefError'].shape[0]
+# num_error = df_sa[df_sa['state'] == 'Error'].shape[0]
+# print(f"Simulation failed: {num_fail + num_error} / {N_grid}")
+# none_indices = [i for i, x in enumerate(sa_results) if x is None]
+#
+# #%% Draw a heatmap to see the shift of reactions
+# from utils import plot_list_heatmap
+#
+# nc_idx_ri_sorted, base_c_length = sim_main.sort_rxn_via_base_components()
+# sa_coef_sorted = [[sc[0][idx] for nc, idx, ri in nc_idx_ri_sorted[0]] for sc in sa_coefficients]
+# nc_sorted = [[nc for nc, idx, ri in nc_idx_ri_sorted[0]]]
+# plot_list_heatmap([sa_coef_sorted], f"Varying Parameter #{param_idx}")
+# plot_list_heatmap([nc_sorted])
 
 #%% Random data generation
 np.random.seed(42)
 
-N = 200
+N = 103   #200
 noise = False
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -342,8 +342,6 @@ sa_coefficients = []
 sa_results = []
 sa_all_rows = []
 for idx, (x, y) in enumerate(sa_points):
-    if idx < 103:
-        continue
     print(f"Random SA #{idx}/{N}-----")
     coef_sa = rxn_coef_interp(x, y)
     if noise:

@@ -14,12 +14,17 @@ def extract_tag(name):
     return None # Return None if pattern doesn't match
 
 #%%
-file_simulation = [r"D:\SAF_Nurul\Sensitivity_1210\results_random_final.csv",
-                   r"D:\SAF_Nurul\Sensitivity_1210\results_param_0.csv",
-                   r"D:\SAF_Nurul\Sensitivity_1210\results_param_1.csv"]
-file_res = [r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251204_converged_corrected.xlsx",
-            r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251203_param_0.xlsx",
-            r"D:\SAF_Nurul\Sensitivity_1210\SAF_Sensitivity_Analysis_251204_param_1.xlsx"]
+dir_save = r"D:\saf_hdo\results\sensitivity_20260130"
+file_simulation = [
+    r"D:\saf_hdo\results\sensitivity_20260130\results_random.csv",
+    r"D:\saf_hdo\results\sensitivity_20260130\results_param_0.csv",
+    r"D:\saf_hdo\results\sensitivity_20260130\results_param_1.csv"
+]
+file_res = [
+    r"D:\saf_hdo\results\sensitivity_20260130\SAF_Sensitivity_Analysis_260130_converged.xlsx",
+    r"D:\saf_hdo\results\sensitivity_20260130\SAF_Sensitivity_Analysis_260129_param_0.xlsx",
+    r"D:\saf_hdo\results\sensitivity_20260130\SAF_Sensitivity_Analysis_260129_param_1.xlsx"
+]
 file_type = ['RD', 'PP', 'PH']
 
 dsim, dtea, dlca = [], [], []
@@ -156,7 +161,7 @@ axs2[1].set_ylabel(output_label[1], color='orange')
 axs3[0].tick_params(labelright=False)
 axs3[1].set_ylabel(output_label[2], color='green')
 plt.tight_layout()
-plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_line_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
+plt.savefig(os.path.join(dir_save, f"random_line_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()
 
 #%% PARAMETER SPACE PLOT
@@ -193,7 +198,7 @@ for ax, z_val, z_name in zip(axs, output_data, output_label):
     ax.set_ylabel(input_label[1])
 # plt.title('Heatmap of Z values at (X, Y) coordinates')
 # plt.grid(True, linestyle='--', alpha=0.5)
-plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_heat_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
+plt.savefig(os.path.join(dir_save, f"random_heat_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()
 
 #%% TERNARY PLOT
@@ -255,7 +260,7 @@ for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
     cb1.set_label(label)
 
 plt.tight_layout()
-plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_ternary_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
+plt.savefig(os.path.join(dir_save, f"random_ternary_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()
 
 #%% DUAL INPUT - DUAL OUTPUT PLOT
@@ -326,7 +331,7 @@ axs2[1].set_ylabel(output_label[1], color=colormaps[1])
 axs3[0].tick_params(labelright=False)
 axs3[1].set_ylabel(output_label[2], color=colormaps[2])
 plt.tight_layout()
-plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_line_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
+plt.savefig(os.path.join(dir_save, f"random_line_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()
 
 #%%
@@ -412,5 +417,5 @@ for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
     cb.ax.tick_params(labelsize=fs-2)
 
 plt.tight_layout()
-plt.savefig(os.path.join(r"D:\SAF_Nurul\Sensitivity_1210", f"random_contour_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
+plt.savefig(os.path.join(dir_save, f"random_contour_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
 plt.show()

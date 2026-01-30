@@ -3,7 +3,7 @@ import pandas as pd
 from aspen_utils import AspenSim
 import matplotlib.cm as cm
 
-sim_main = AspenSim(r"D:\saf_hdo\aspen\Basecase_SAF_251128\251127_pyrolysis_oil_CC_case_a_3.bkp")
+sim_main = AspenSim(r"D:\saf_hdo\aspen\Simulation_260126\260115_pyrolysis_oil_CC_case_a.bkp")
 
 targets = {}
 for a in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']:
@@ -37,11 +37,11 @@ config_figure = {'figure.figsize': (4, 2.5), 'figure.titlesize': fs,
 rcParams.update(config_figure)
 
 #%
-dir_all = r"D:\saf_hdo\aspen\grid_20251203_102034_param_0"
+dir_all = r"D:\saf_hdo\aspen\grid_20260129_183257_param_0"
 param_name = 'Interp1'
 df_sa = pd.read_csv(dir_all + r"\results.csv")
-df_plot = df_sa.iloc[[0, 10]+[k*10-1 for k in range(2,11)],:]
-df_plot = df_plot.sort_index()
+# df_plot = df_sa.iloc[[0, 10]+[k*10-1 for k in range(2,11)],:]
+df_plot = df_sa.sort_index()
 df_converged = df_plot[df_plot['state'].isin(['Converged', 'Warning'])]
 
 N_grid = len(df_converged)
@@ -76,11 +76,11 @@ plt.tight_layout()
 plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_0.png')
 plt.show()
 #%
-dir_all = r"D:\saf_hdo\aspen\grid_20251203_105302_param_1"
+dir_all = r"D:\saf_hdo\aspen\grid_20260129_161722_param_1"
 param_name = 'Interp2'
 df_sa = pd.read_csv(dir_all + r"\results.csv")
-df_plot = df_sa.iloc[[0]+[k*10-1 for k in range(1,11)] + [78],:]
-df_plot = df_plot.sort_index()
+# df_plot = df_sa.iloc[[0]+[k*10-1 for k in range(1,11)] + [78],:]
+df_plot = df_sa.sort_index()
 df_converged = df_plot[df_plot['state'].isin(['Converged', 'Warning'])]
 
 N_grid = len(df_converged)
@@ -130,11 +130,11 @@ def res2df(_interp_point, _coef, _res, _stat):
     row = {**row_interp, **row_coef, **row_res, 'state': _stat}
     return row
 
-read_folder = r"D:\saf_hdo\aspen\sa_20251203"
+read_folder = r"D:\saf_hdo\aspen\sa_20260129_162406_noise_False"
 read_files = os.listdir(os.path.join(read_folder, "converged"))
 n_total = len(read_files)
 sa_all_rows = []
-for idx, f in enumerate(read_files[103:]):
+for idx, f in enumerate(read_files):
     print(f"Reading file {idx+1}/{n_total}-----")
     sim = AspenSim(os.path.join(read_folder, "converged", f))
     coef = sim.get_rxn_coefficients()
