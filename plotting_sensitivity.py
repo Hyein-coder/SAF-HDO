@@ -108,7 +108,7 @@ output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)
 
 fs = 10
 dpi = 200
-config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
+config_figure = {'figure.figsize': (4, 3), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
                  'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
@@ -124,12 +124,11 @@ config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
                  'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
 rcParams.update(config_figure)
 
-fig, axs = plt.subplots(1, 2, sharey=True)
 axs2 = []
 axs3 = []
 axs4 = []
 for i, idx_param in enumerate(params):
-    ax = axs[i]
+    fig, ax = plt.subplots(1, 1)
     ax.plot(sim_selected[idx_param], output_data[0], 'o', c='blue', markersize=5, linewidth=2, alpha=0.5)
     # ax.tick_params(axis='y', labelcolor='blue', colors='blue')
     # ax.spines['left'].set_color("blue")
@@ -139,13 +138,9 @@ for i, idx_param in enumerate(params):
     ax2.tick_params(axis='y', labelcolor='orange', colors='orange')
     ax2.spines['right'].set_color("orange")
     ax2.set_ylim(output_scale[1])
-    axs2.append(ax2)
 
     ax3 = ax.twinx()
-    if i < 1:
-        ax3.spines["right"].set_position(("outward", 10))
-    else:
-        ax3.spines["right"].set_position(("outward", 30))
+    ax3.spines["right"].set_position(("outward", 30))
     ax3.plot(sim_selected[idx_param], output_data[2], 'o', c='green', markersize=5, linewidth=2, alpha=0.5)
 
     ax3.tick_params(axis='y', labelcolor='green', color='green')
@@ -154,57 +149,53 @@ for i, idx_param in enumerate(params):
     axs3.append(ax3)
 
     ax.set_xlabel(pretty_names[i])
-
-axs[0].set_ylabel(output_label[0])
-axs2[0].tick_params(labelright=False)
-axs2[1].set_ylabel(output_label[1], color='orange')
-axs3[0].tick_params(labelright=False)
-axs3[1].set_ylabel(output_label[2], color='green')
-plt.tight_layout()
-plt.savefig(os.path.join(dir_save, f"random_line_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
-plt.show()
+    ax.set_ylabel(output_label[0])
+    ax2.set_ylabel(output_label[1], color='orange')
+    ax3.set_ylabel(output_label[2], color='green')
+    plt.tight_layout()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{pretty_names[i]}.png"))
+    plt.show()
 
 #%% PARAMETER SPACE PLOT
 from matplotlib import rcParams
 import datetime
-fs = 10
-dpi = 200
-config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
-                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
-                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
-                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
-                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
-                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
-                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
-                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
-                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
-                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
-                 'text.usetex': False, 'mathtext.default': 'regular',
-                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
-rcParams.update(config_figure)
+# fs = 10
+# dpi = 200
+# config_figure = {'figure.figsize': (4, 3), 'figure.titlesize': fs,
+#                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+#                  'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
+#                  'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+#                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+#                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+#                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+#                  'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+#                  'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+#                  'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+#                  'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+#                  'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+#                  'text.usetex': False, 'mathtext.default': 'regular',
+#                  'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+# rcParams.update(config_figure)
 
-fig, axs = plt.subplots(1, 2, sharey=True, sharex=True)
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_label = [pretty_names[0], pretty_names[1]]
 output_data = [ng, msp]
 output_label = ['NG Consumption [t/h]', 'MSP [$/kg SAF]']
-for ax, z_val, z_name in zip(axs, output_data, output_label):
+for z_val, z_name in zip(output_data, output_label):
+    fig, ax = plt.subplots(1, 1)
     # sc = ax.scatter(input_data[0].iloc[:,0], input_data[1].iloc[:,0], c=z_val.iloc[:,0], cmap='viridis', s=50, alpha=0.8)
     sc = ax.scatter(input_data[0], input_data[1], c=z_val.iloc[:,0], cmap='viridis', s=50, alpha=0.8)
     cbar = fig.colorbar(sc, ax=ax, label=z_name)
     ax.set_xlabel(input_label[0])
     ax.set_ylabel(input_label[1])
-# plt.title('Heatmap of Z values at (X, Y) coordinates')
-# plt.grid(True, linestyle='--', alpha=0.5)
-plt.savefig(os.path.join(dir_save, f"random_heat_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
-plt.show()
+    z_name_wo_unit = z_name.split('[')[0].strip()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_heat_{z_name_wo_unit}.png"))
+    plt.show()
 
 #%% TERNARY PLOT
 fs = 10
 dpi = 200
-config_figure = {'figure.figsize': (14, 4),
+config_figure = {'figure.figsize': (4, 3),
                  'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
@@ -246,12 +237,9 @@ def draw_ternary_frame(ax):
     ax.axis('off')
     ax.axis('equal')
 
-# fig, axes = plt.subplots(2, int(np.ceil(len(output_data)/2)))
-# axes = axes.flatten()
-fig, axes = plt.subplots(1, len(output_data))
-
 tx, ty = ternary_to_cartesian(*input_data)
-for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
+for data, label, cmap in zip(output_data, output_label, output_cmap):
+    fig, ax = plt.subplots(1, 1)
     draw_ternary_frame(ax)
     sc1 = ax.scatter(tx, ty, c=data, cmap=cmap, edgecolors='w', s=100)
     # ax1.set_title('Plot 1: Uniform Dist.\n(Color = A)', fontsize=14)
@@ -259,9 +247,10 @@ for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
     cb1 = plt.colorbar(sc1, ax=ax, shrink=0.6)
     cb1.set_label(label)
 
-plt.tight_layout()
-plt.savefig(os.path.join(dir_save, f"random_ternary_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
-plt.show()
+    plt.tight_layout()
+    label_wo_unit = label.split('[')[0].strip()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_ternary_{label_wo_unit}.png"))
+    plt.show()
 
 #%% DUAL INPUT - DUAL OUTPUT PLOT
 from matplotlib import rcParams
@@ -278,7 +267,7 @@ colormaps = ["#004166", "#e95924", "#198747"]
 
 fs = 10
 dpi = 200
-config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
+config_figure = {'figure.figsize': (4, 3), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
                  'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
@@ -294,12 +283,8 @@ config_figure = {'figure.figsize': (7, 3), 'figure.titlesize': fs,
                  'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
 rcParams.update(config_figure)
 
-fig, axs = plt.subplots(1, 2, sharey=True)
-axs2 = []
-axs3 = []
-axs4 = []
 for i, input_i in enumerate(input_data):
-    ax = axs[i]
+    fig, ax = plt.subplots(1, 1)
     ax.plot(input_i, output_data[0], 'o', c=colormaps[0], markersize=5, linewidth=2, alpha=0.5)
     # ax.tick_params(axis='y', labelcolor='blue', colors='blue')
     # ax.spines['left'].set_color("blue")
@@ -309,13 +294,9 @@ for i, input_i in enumerate(input_data):
     ax2.tick_params(axis='y', labelcolor=colormaps[1], colors=colormaps[1])
     ax2.spines['right'].set_color(colormaps[1])
     ax2.set_ylim(output_scale[1])
-    axs2.append(ax2)
 
     ax3 = ax.twinx()
-    if i < 1:
-        ax3.spines["right"].set_position(("outward", 10))
-    else:
-        ax3.spines["right"].set_position(("outward", 35))
+    ax3.spines["right"].set_position(("outward", 35))
     ax3.plot(input_i, output_data[2], 'o', c=colormaps[2], markersize=5, linewidth=2, alpha=0.5)
 
     ax3.tick_params(axis='y', labelcolor=colormaps[2], color=colormaps[2])
@@ -324,15 +305,12 @@ for i, input_i in enumerate(input_data):
     axs3.append(ax3)
 
     ax.set_xlabel(input_label[i])
-
-axs[0].set_ylabel(output_label[0])
-axs2[0].tick_params(labelright=False)
-axs2[1].set_ylabel(output_label[1], color=colormaps[1])
-axs3[0].tick_params(labelright=False)
-axs3[1].set_ylabel(output_label[2], color=colormaps[2])
-plt.tight_layout()
-plt.savefig(os.path.join(dir_save, f"random_line_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
-plt.show()
+    ax.set_ylabel(output_label[0])
+    ax2.set_ylabel(output_label[1], color=colormaps[1])
+    ax3.set_ylabel(output_label[2], color=colormaps[2])
+    plt.tight_layout()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{input_label[i]}.png"))
+    plt.show()
 
 #%%
 import matplotlib.pyplot as plt
@@ -342,9 +320,9 @@ import os
 import datetime
 from matplotlib import rcParams
 
-fs = 14
+fs = 12
 dpi = 200
-config_figure = {'figure.figsize': (14, 4),
+config_figure = {'figure.figsize': (4, 4),
                  'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'font.sans-serif': ['Helvetica Neue LT Pro'],
@@ -387,17 +365,14 @@ def draw_ternary_frame(ax):
     ax.axis('off')
     ax.axis('equal')
 
-
-# Setup Plot
-fig, axes = plt.subplots(1, len(output_data))
-
 # Calculate Cartesian coordinates for all points
 # Ensure inputs are numpy arrays for stability
 tx, ty = ternary_to_cartesian(np.array(input_data[0]),
                               np.array(input_data[1]),
                               np.array(input_data[2]))
 
-for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
+for data, label, cmap in zip(output_data, output_label, output_cmap):
+    fig, ax = plt.subplots(1, 1)
     draw_ternary_frame(ax)
 
     # 1. Create Filled Contours (The main heat map)
@@ -412,10 +387,11 @@ for ax, data, label, cmap in zip(axes, output_data, output_label, output_cmap):
 
     # 3. Add Colorbar
     # Note: We pass 'contour_filled' to the colorbar, not a scatter object
-    cb = plt.colorbar(contour_filled, ax=ax, shrink=0.6, pad=0.05)
+    cb = plt.colorbar(contour_filled, ax=ax, shrink=0.45, aspect=15, pad=0.08)
     cb.set_label(label, fontsize=fs-1)
     cb.ax.tick_params(labelsize=fs-2)
 
-plt.tight_layout()
-plt.savefig(os.path.join(dir_save, f"random_contour_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png"))
-plt.show()
+    plt.tight_layout(pad=1.0)
+    label_wo_unit = label.split('[')[0].strip()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_contour_{label_wo_unit}.png"))
+    plt.show()
