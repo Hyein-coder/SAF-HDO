@@ -16,16 +16,37 @@ def extract_tag(name):
 #%%
 dir_save = r"D:\saf_hdo\results\sensitivity_20260130"
 file_simulation = [
-    r"D:\saf_hdo\results\sensitivity_20260130\results_random.csv",
+    r"D:\saf_hdo\results\sensitivity_20260130\results_random_combined.csv",
     r"D:\saf_hdo\results\sensitivity_20260130\results_param_0.csv",
     r"D:\saf_hdo\results\sensitivity_20260130\results_param_1.csv"
 ]
 file_res = [
-    r"D:\saf_hdo\results\sensitivity_20260130\SAF_Sensitivity_Analysis_260130_converged.xlsx",
+    r"D:\saf_hdo\results\sensitivity_20260130\SAF_Sensitivity_Analysis_260130_converged_combined.xlsx",
     r"D:\saf_hdo\results\sensitivity_20260130\SAF_Sensitivity_Analysis_260129_param_0.xlsx",
     r"D:\saf_hdo\results\sensitivity_20260130\SAF_Sensitivity_Analysis_260129_param_1.xlsx"
 ]
 file_type = ['RD', 'PP', 'PH']
+
+
+from matplotlib import rcParams
+import datetime
+fs = 10
+dpi = 200
+config_figure = {'figure.figsize': (4, 4),
+                 'figure.titlesize': fs,
+                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+                 'font.sans-serif': ['Helvetica Neue LT Pro'],
+                 'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
+                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'text.usetex': False, 'mathtext.default': 'regular',
+                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
 
 dsim, dtea, dlca = [], [], []
 for fsim, fres, ftype in zip(file_simulation, file_res, file_type):
@@ -98,30 +119,20 @@ sim_selected = df_sim.loc[valid_indices].copy()
 
 pretty_names = ['Heavy-end', 'Peak Shift']
 params = ['param_0', 'param_1']
+
 #%% TRI-AXIS PLOT
-from matplotlib import rcParams
-import datetime
 output_data = [saf, msp, lca]
-output_label = ['SAF Production [t/h]', 'MSP [$/kg SAF]', 'GWP [g CO2/MJ SAF']
+output_label = ['SAF Production [t $\cdot$ h$^{-1}$]', 'MSP [\$ $\cdot$ kg$^{-1}$]', 'GWP [gCO$_2$e $\cdot$ MJ$^{-1}$]']
 output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)) for x in output_data]
 # output_scale = [(min(x.iloc[:,0])*0.95, max(x.iloc[:,0])*1.05) for x in output_data]
 
 fs = 10
-dpi = 200
 config_figure = {'figure.figsize': (4, 3), 'figure.titlesize': fs,
-                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
-                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
+                 'font.size': fs,
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
-                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
-                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
-                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
-                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
-                 'text.usetex': False, 'mathtext.default': 'regular',
-                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+                 }
 rcParams.update(config_figure)
 
 axs2 = []
@@ -140,7 +151,7 @@ for i, idx_param in enumerate(params):
     ax2.set_ylim(output_scale[1])
 
     ax3 = ax.twinx()
-    ax3.spines["right"].set_position(("outward", 30))
+    ax3.spines["right"].set_position(("outward", 35))
     ax3.plot(sim_selected[idx_param], output_data[2], 'o', c='green', markersize=5, linewidth=2, alpha=0.5)
 
     ax3.tick_params(axis='y', labelcolor='green', color='green')
@@ -154,11 +165,10 @@ for i, idx_param in enumerate(params):
     ax3.set_ylabel(output_label[2], color='green')
     plt.tight_layout()
     plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{pretty_names[i]}.png"))
-    plt.show()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{pretty_names[i]}.svg"), format='svg', bbox_inches='tight')
+    # plt.show()
 
 #%% PARAMETER SPACE PLOT
-from matplotlib import rcParams
-import datetime
 # fs = 10
 # dpi = 200
 # config_figure = {'figure.figsize': (4, 3), 'figure.titlesize': fs,
@@ -180,7 +190,7 @@ import datetime
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_label = [pretty_names[0], pretty_names[1]]
 output_data = [ng, msp]
-output_label = ['NG Consumption [t/h]', 'MSP [$/kg SAF]']
+output_label = ['NG Consumption [t $\cdot$ h$^{-1}$]', 'MSP [\$ $\cdot$ kg$^{-1}$]']
 for z_val, z_name in zip(output_data, output_label):
     fig, ax = plt.subplots(1, 1)
     # sc = ax.scatter(input_data[0].iloc[:,0], input_data[1].iloc[:,0], c=z_val.iloc[:,0], cmap='viridis', s=50, alpha=0.8)
@@ -190,33 +200,25 @@ for z_val, z_name in zip(output_data, output_label):
     ax.set_ylabel(input_label[1])
     z_name_wo_unit = z_name.split('[')[0].strip()
     plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_heat_{z_name_wo_unit}.png"))
-    plt.show()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_heat_{z_name_wo_unit}.svg"), format='svg', bbox_inches='tight')
+    # plt.show()
 
 #%% TERNARY PLOT
 fs = 10
-dpi = 200
 config_figure = {'figure.figsize': (4, 3),
                  'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
-                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
-                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
-                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
-                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
-                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
-                 'text.usetex': False, 'mathtext.default': 'regular',
-                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+                 }
 rcParams.update(config_figure)
 
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
 output_data = [h2, msp.iloc[:,0], lca.iloc[:,0]]
-output_label = ["H2 Consumption [t/h]", "MSP [$/kg SAF]", r"GWP [g CO$_2$-eq/kg SAF]"]
+output_label = ["H2 Consumption [t $\cdot$ h$^{-1}$]", "MSP [\$ $\cdot$ kg$^{-1}$]", r"GWP [gCO$_2$e $\cdot$ MJ$^{-1}$]"]
 output_cmap = ['viridis', 'magma_r', 'magma_r']
 # 1. Helper function for coordinates
 def ternary_to_cartesian(a, b, c):
@@ -231,9 +233,9 @@ def draw_ternary_frame(ax):
     corners = np.array([[0, 0], [1, 0], [0.5, np.sqrt(3)/2], [0, 0]])
     ax.plot(corners[:, 0], corners[:, 1], 'k-', lw=2)
     # Labels
-    ax.text(0.05, -0.07, input_label[0], fontsize=12, ha='right', fontweight='bold')
-    ax.text(0.95, -0.07, input_label[1], fontsize=12, ha='left', fontweight='bold')
-    ax.text(0.5, np.sqrt(3)/2 + 0.05, input_label[2], fontsize=12, ha='center', fontweight='bold')
+    ax.text(0.05, -0.07, input_label[0], fontsize=12, ha='right', fontweight='300', family='sans-serif')
+    ax.text(0.95, -0.07, input_label[1], fontsize=12, ha='left', fontweight='300', family='sans-serif')
+    ax.text(0.5, np.sqrt(3)/2 + 0.05, input_label[2], fontsize=12, ha='center', fontweight='300', family='sans-serif')
     ax.axis('off')
     ax.axis('equal')
 
@@ -250,7 +252,8 @@ for data, label, cmap in zip(output_data, output_label, output_cmap):
     plt.tight_layout()
     label_wo_unit = label.split('[')[0].strip()
     plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_ternary_{label_wo_unit}.png"))
-    plt.show()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_ternary_{label_wo_unit}.svg"), format='svg', bbox_inches='tight')
+    # plt.show()
 
 #%% DUAL INPUT - DUAL OUTPUT PLOT
 from matplotlib import rcParams
@@ -258,7 +261,7 @@ import datetime
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_label = pretty_names
 output_data = [h2, saf, ng]
-output_label = [r'H$_2$ Consumption [t/h]', 'SAF Production [t/h]', r'NG Consumption [t/h]']
+output_label = [r'H$_2$ Consumption [t $\cdot$ h$^{-1}$]', 'SAF Production [t $\cdot$ h$^{-1}$]', r'NG Consumption [t $\cdot$ h$^{-1}$]']
 output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)) for x in output_data]
 # output_scale = [(min(x.iloc[:,0])*0.95, max(x.iloc[:,0])*1.05) for x in output_data]
 
@@ -266,21 +269,12 @@ colormaps = ["#004166", "#e95924", "#198747"]
 # colormaps = ["blue", "orange", "green"]
 
 fs = 10
-dpi = 200
 config_figure = {'figure.figsize': (4, 3), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Arial'],  # Avenir LT Std, Helvetica Neue LT Pro, Helvetica LT Std, Helvetica Neue LT Pro
-                 'font.weight': '300', 'axes.titleweight': 'bold', 'axes.labelweight': 'bold',
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
-                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
-                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
-                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
-                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
-                 'text.usetex': False, 'mathtext.default': 'regular',
-                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+                 }
 rcParams.update(config_figure)
 
 for i, input_i in enumerate(input_data):
@@ -310,7 +304,8 @@ for i, input_i in enumerate(input_data):
     ax3.set_ylabel(output_label[2], color=colormaps[2])
     plt.tight_layout()
     plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{input_label[i]}.png"))
-    plt.show()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{input_label[i]}.svg"), format='svg', bbox_inches='tight')
+    # plt.show()
 
 #%%
 import matplotlib.pyplot as plt
@@ -321,30 +316,21 @@ import datetime
 from matplotlib import rcParams
 
 fs = 12
-dpi = 200
 config_figure = {'figure.figsize': (4, 4),
                  'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
-                 'font.sans-serif': ['Helvetica Neue LT Pro'],
-                 'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
-                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
-                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
-                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
-                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
-                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
-                 'text.usetex': False, 'mathtext.default': 'regular',
-                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False
+                 }
 rcParams.update(config_figure)
 #TODO: REDRAW
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
 output_data = [h2.values[:,0], msp.iloc[:,0], lca.iloc[:,0]]
-output_label = [r"H2 Consumption [$t \cdot h^{-1}$]",
-                "MSP [$ per kg SAF]", r"GWP [gCO$_2$e per MJ SAF]"]
+output_label = [r"H2 Consumption [t $\cdot$ h$^{-1}$]",
+                "MSP [\$ $\cdot$ kg$^{-1}$]", r"GWP [gCO$_2$e $\cdot$ MJ$^{-1}$]"]
 output_cmap = ['viridis', 'magma_r', 'magma_r']
 
 def ternary_to_cartesian(a, b, c):
@@ -394,4 +380,5 @@ for data, label, cmap in zip(output_data, output_label, output_cmap):
     plt.tight_layout(pad=1.0)
     label_wo_unit = label.split('[')[0].strip()
     plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_contour_{label_wo_unit}.png"))
-    plt.show()
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_contour_{label_wo_unit}.svg"), format='svg', bbox_inches='tight')
+plt.show()

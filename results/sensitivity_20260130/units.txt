@@ -1,0 +1,3 @@
+MSP [\$ $\cdot$ kg$^{-1}$]
+SAF Production [t $\cdot$ h$^{-1}$]
+GWP [gCO$_2$e $\cdot$ MJ$^{-1}$]

@@ -74,6 +74,8 @@ ax.set_ylabel("Product Distribution (%)")
 plt.legend(loc='upper right', ncol=3)
 plt.tight_layout()
 plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_0.png')
+plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_0.svg', format='svg', bbox_inches='tight')
+
 plt.show()
 #%
 dir_all = r"D:\saf_hdo\aspen\grid_20260129_161722_param_1"
@@ -113,6 +115,7 @@ ax.set_ylabel("Product Distribution (%)")
 plt.legend(loc='upper right', ncol=3)
 plt.tight_layout()
 plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_1.png')
+plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_1.svg', format='svg', bbox_inches='tight')
 plt.show()
 
 #%%

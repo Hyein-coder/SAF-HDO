@@ -6,7 +6,7 @@ import pandas as pd
 sim = AspenSim(r"D:\saf_hdo\aspen\Simulation_260126\260115_pyrolysis_oil_CC_case_a.bkp")
 summary_coef = pd.read_excel(r"D:\saf_hdo\aspen\summary_conversion_coef_new_20260130.xlsx")
 
-#%%
+#%
 # 0. Get the carbon length of fractional conversion bases
 
 component_list = [
@@ -55,19 +55,57 @@ for n, cs in carbon_number_to_component.items():
         all_component_to_carbon_number[c] = n
 
 basis_carbon_length = [all_component_to_carbon_number[b] for b in summary_coef['Fractional Conversion of Component']]
+summary_coef['Carbon Length of Basis'] = basis_carbon_length
 
 #%%
-# 1. Sort the reactions according to the basis carbon length
-summary_coef['Carbon Length of Basis'] = basis_carbon_length
-summary_coef_sorted = summary_coef.sort_values(by=['Carbon Length of Basis'])
+# Separate the reactions without carbon chain scission
+rxn_cleavage = summary_coef[summary_coef['Longest Product Length'] < summary_coef['Carbon Length of Basis']]
 
+# 1. Sort the reactions according to the basis carbon length
+summary_coef_sorted = rxn_cleavage.sort_values(by=['Carbon Length of Basis'])
+# summary_coef_sorted = summary_coef_sorted.sort_values(by=['(A) Fractional conversion'])
 #%%
 # 2. Plot the conversion coefficient of each reaction
-coef_draw = summary_coef_sorted[['Carbon Length of Basis'] + [f'({case}) Fractional conversion' for case in ['A', 'F', 'I']]]
+coef_draw = summary_coef_sorted[
+    ['Carbon Length of Basis', 'Longest Product Length'] + [f'({case}) Fractional conversion' for case in ['A', 'F', 'I']]
+]
 num_rxn = len(coef_draw)
 
 fig, ax = plt.subplots(1, 1)
+# ax.plot([n for n in range(num_rxn)], coef_draw['Carbon Length of Basis'], label='Carbon #')
 for case in ['A', 'F', 'I']:
     ax.plot([n for n in range(num_rxn)], coef_draw[f'({case}) Fractional conversion'], label=case)
 ax.legend()
+plt.show()
+
+#%%
+import numpy as np
+# coef_draw2 = coef_draw.copy()
+coef_draw2 = coef_draw[coef_draw['(A) Fractional conversion'] > 0.99].copy()
+# coef_draw2 = coef_draw[coef_draw['Carbon Length of Basis'] > 15].copy()
+# coef_draw2 = coef_draw2[coef_draw2['Carbon Length of Basis'] <= 16].copy()
+coef_draw2 = coef_draw2.sort_values(by=['Longest Product Length']).copy()
+num_rxn = len(coef_draw2)
+
+fig, ax = plt.subplots(1, 1, figsize=(20, 3))
+x = np.arange(num_rxn)  # The label locations
+width = 0.25           # The width of the bars
+
+cases = ['F', 'A', 'I']
+custom_labels = [f'R{r}\n(C{c})' for r, c in zip(coef_draw2.index, coef_draw2['Carbon Length of Basis'])]
+
+# Iterate through cases and apply an offset to the x position
+for i, case in enumerate(cases):
+    offset = (i - 1) * width
+    ax.bar(x + offset, coef_draw2[f'({case}) Fractional conversion'], width, label=case)
+
+# Formatting
+ax.set_xlim([-1, num_rxn + width])
+ax.set_xlabel('Reaction Index')
+ax.set_ylabel('Fractional Conversion')
+ax.set_xticks(x)
+ax.set_xticklabels(custom_labels, ha='right')
+ax.legend()
+
+plt.tight_layout()
 plt.show()
