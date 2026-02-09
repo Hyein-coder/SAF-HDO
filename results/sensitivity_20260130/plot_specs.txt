@@ -1,0 +1,21 @@
+MSP [\$ $\cdot$ kg$^{-1}$]
+SAF Production [t $\cdot$ h$^{-1}$]
+GWP [gCO$_2$e $\cdot$ MJ$^{-1}$]
+
+config_figure = {'figure.figsize': (4, 4),
+                 'figure.titlesize': fs,
+                 'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
+                 'font.sans-serif': ['Helvetica Neue LT Pro'],
+                 'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
+                 'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
+                 'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
+                 'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
+                 'legend.labelspacing': 0.5, 'legend.columnspacing': 0.5, 'legend.handletextpad': 0.2,
+                 'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
+                 'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
+                 'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'text.usetex': False, 'mathtext.default': 'regular',
+                 'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+
+    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{pretty_names[i]}.svg"), format='svg', bbox_inches='tight')
