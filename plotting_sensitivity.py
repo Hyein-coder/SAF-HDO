@@ -44,9 +44,10 @@ config_figure = {'figure.figsize': (4, 4),
                  'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
                  'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
                  'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
-                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': True,  # change here True if you want transparent background
                  'text.usetex': False, 'mathtext.default': 'regular',
                  'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
+timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 
 dsim, dtea, dlca = [], [], []
 for fsim, fres, ftype in zip(file_simulation, file_res, file_type):
@@ -127,13 +128,14 @@ output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)
 # output_scale = [(min(x.iloc[:,0])*0.95, max(x.iloc[:,0])*1.05) for x in output_data]
 
 fs = 10
-config_figure = {'figure.figsize': (4, 3), 'figure.titlesize': fs,
+config_custom = config_figure.copy()
+config_custom.update({'figure.figsize': (4, 3), 'figure.titlesize': fs,
                  'font.size': fs,
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 }
-rcParams.update(config_figure)
+                 })
+rcParams.update(config_custom)
 
 axs2 = []
 axs3 = []
@@ -164,8 +166,8 @@ for i, idx_param in enumerate(params):
     ax2.set_ylabel(output_label[1], color='orange')
     ax3.set_ylabel(output_label[2], color='green')
     plt.tight_layout()
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{pretty_names[i]}.png"))
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{pretty_names[i]}.svg"), format='svg', bbox_inches='tight')
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_old_line_{pretty_names[i]}.png"))
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_old_line_{pretty_names[i]}.svg"), format='svg', bbox_inches='tight')
     # plt.show()
 
 #%% PARAMETER SPACE PLOT
@@ -199,20 +201,21 @@ for z_val, z_name in zip(output_data, output_label):
     ax.set_xlabel(input_label[0])
     ax.set_ylabel(input_label[1])
     z_name_wo_unit = z_name.split('[')[0].strip()
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_heat_{z_name_wo_unit}.png"))
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_heat_{z_name_wo_unit}.svg"), format='svg', bbox_inches='tight')
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_heat_{z_name_wo_unit}.png"))
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_heat_{z_name_wo_unit}.svg"), format='svg', bbox_inches='tight')
     # plt.show()
 
 #%% TERNARY PLOT
 fs = 10
-config_figure = {'figure.figsize': (4, 3),
+config_custom = config_figure.copy()
+config_custom.update({'figure.figsize': (4, 3),
                  'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 }
-rcParams.update(config_figure)
+                 })
+rcParams.update(config_custom)
 
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
@@ -251,8 +254,8 @@ for data, label, cmap in zip(output_data, output_label, output_cmap):
 
     plt.tight_layout()
     label_wo_unit = label.split('[')[0].strip()
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_ternary_{label_wo_unit}.png"))
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_ternary_{label_wo_unit}.svg"), format='svg', bbox_inches='tight')
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_ternary_{label_wo_unit}.png"))
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_ternary_{label_wo_unit}.svg"), format='svg', bbox_inches='tight')
     # plt.show()
 
 #%% DUAL INPUT - DUAL OUTPUT PLOT
@@ -269,13 +272,14 @@ colormaps = ["#004166", "#e95924", "#198747"]
 # colormaps = ["blue", "orange", "green"]
 
 fs = 10
-config_figure = {'figure.figsize': (4, 3), 'figure.titlesize': fs,
+config_custom = config_figure.copy()
+config_custom.update({'figure.figsize': (4.3, 3), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False,
-                 }
-rcParams.update(config_figure)
+                 })
+rcParams.update(config_custom)
 
 for i, input_i in enumerate(input_data):
     fig, ax = plt.subplots(1, 1)
@@ -303,8 +307,8 @@ for i, input_i in enumerate(input_data):
     ax2.set_ylabel(output_label[1], color=colormaps[1])
     ax3.set_ylabel(output_label[2], color=colormaps[2])
     plt.tight_layout()
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{input_label[i]}.png"))
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_line_{input_label[i]}.svg"), format='svg', bbox_inches='tight')
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_line_{input_label[i]}.png"))
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_line_{input_label[i]}.svg"), format='svg', bbox_inches='tight')
     # plt.show()
 
 #%%
@@ -316,15 +320,16 @@ import datetime
 from matplotlib import rcParams
 
 fs = 12
-config_figure = {'figure.figsize': (4, 4),
+config_custom = config_figure.copy()
+config_custom.update({'figure.figsize': (4, 3),
                  'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
                  'legend.fontsize': fs-2, 'legend.title_fontsize': fs, 'legend.frameon': False
-                 }
-rcParams.update(config_figure)
-#TODO: REDRAW
+                 })
+rcParams.update(config_custom)
+
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
@@ -345,8 +350,8 @@ def draw_ternary_frame(ax):
     corners = np.array([[0, 0], [1, 0], [0.5, np.sqrt(3) / 2], [0, 0]])
     ax.plot(corners[:, 0], corners[:, 1], 'k-', lw=2)
     # Labels
-    ax.text(0.05, -0.07, input_label[0], fontsize=fs, ha='right', fontweight='300', family='sans-serif')
-    ax.text(0.95, -0.07, input_label[1], fontsize=fs, ha='left', fontweight='300', family='sans-serif')
+    ax.text(0.05, -0.08, input_label[0], fontsize=fs, ha='right', fontweight='300', family='sans-serif')
+    ax.text(0.95, -0.08, input_label[1], fontsize=fs, ha='left', fontweight='300', family='sans-serif')
     ax.text(0.5, np.sqrt(3) / 2 + 0.05, input_label[2], fontsize=fs, ha='center', fontweight='300', family='sans-serif')
     ax.axis('off')
     ax.axis('equal')
@@ -379,6 +384,6 @@ for data, label, cmap in zip(output_data, output_label, output_cmap):
 
     plt.tight_layout(pad=1.0)
     label_wo_unit = label.split('[')[0].strip()
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_contour_{label_wo_unit}.png"))
-    plt.savefig(os.path.join(dir_save, f"random_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}_contour_{label_wo_unit}.svg"), format='svg', bbox_inches='tight')
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_contour_{label_wo_unit}.png"))
+    plt.savefig(os.path.join(dir_save, f"random_{timestamp}_contour_{label_wo_unit}.svg"), format='svg', bbox_inches='tight')
 plt.show()

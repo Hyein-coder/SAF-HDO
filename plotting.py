@@ -19,7 +19,7 @@ import pandas as pd
 
 fs = 10
 dpi = 200
-config_figure = {'figure.figsize': (4, 2.5), 'figure.titlesize': fs,
+config_figure = {'figure.figsize': (3.8, 3), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'font.sans-serif': ['Helvetica Neue LT Pro'],
                  'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
@@ -71,7 +71,7 @@ ax.set_xticks(x_ticks)
 
 ax.set_xlabel("Carbon Number")
 ax.set_ylabel("Product Distribution (%)")
-plt.legend(loc='upper right', ncol=3)
+plt.legend(loc='upper left', bbox_to_anchor=(1.01, 1), ncol=1)
 plt.tight_layout()
 plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_0.png')
 plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_0.svg', format='svg', bbox_inches='tight')
@@ -112,42 +112,42 @@ ax.set_xticks(x_ticks)
 
 ax.set_xlabel("Carbon Number")
 ax.set_ylabel("Product Distribution (%)")
-plt.legend(loc='upper right', ncol=3)
+plt.legend(loc='upper left', bbox_to_anchor=(1.01, 1), ncol=1)
 plt.tight_layout()
 plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_1.png')
 plt.savefig(r'D:\saf_hdo\figures\sensitivity_param_1.svg', format='svg', bbox_inches='tight')
 plt.show()
 
 #%%
-def res2df(_interp_point, _coef, _res, _stat):
-    row_interp = {}
-    for i, p in enumerate(_interp_point):
-        row_interp[f"Interp{i+1}"] = p
-    row_coef = {}
-    for i, c_rxtor in enumerate(_coef):
-        for idx, c in zip(sim_main.rxn_indices[i], c_rxtor):
-            row_coef[f"R{i+1}_rxn{idx}"] = c
-    row_res = {}
-    for i, r in _res.items():
-        row_res[f"C{i}"] = r
-    row = {**row_interp, **row_coef, **row_res, 'state': _stat}
-    return row
-
-read_folder = r"D:\saf_hdo\aspen\sa_20260129_162406_noise_False"
-read_files = os.listdir(os.path.join(read_folder, "converged"))
-n_total = len(read_files)
-sa_all_rows = []
-for idx, f in enumerate(read_files):
-    print(f"Reading file {idx+1}/{n_total}-----")
-    sim = AspenSim(os.path.join(read_folder, "converged", f))
-    coef = sim.get_rxn_coefficients()
-    res = sim.get_carbon_number_composition(sim.prod_stream)
-    stat = 'Warning'
-    sa_all_rows.append(res2df((0, 0), coef, res, stat))
-    sim.aspen.Close()
-
-    df_sa = pd.DataFrame(sa_all_rows)
-    df_sa.to_csv(os.path.join(read_folder, "converged_results.csv"))
+# def res2df(_interp_point, _coef, _res, _stat):
+#     row_interp = {}
+#     for i, p in enumerate(_interp_point):
+#         row_interp[f"Interp{i+1}"] = p
+#     row_coef = {}
+#     for i, c_rxtor in enumerate(_coef):
+#         for idx, c in zip(sim_main.rxn_indices[i], c_rxtor):
+#             row_coef[f"R{i+1}_rxn{idx}"] = c
+#     row_res = {}
+#     for i, r in _res.items():
+#         row_res[f"C{i}"] = r
+#     row = {**row_interp, **row_coef, **row_res, 'state': _stat}
+#     return row
+#
+# read_folder = r"D:\saf_hdo\aspen\sa_20260129_162406_noise_False"
+# read_files = os.listdir(os.path.join(read_folder, "converged"))
+# n_total = len(read_files)
+# sa_all_rows = []
+# for idx, f in enumerate(read_files):
+#     print(f"Reading file {idx+1}/{n_total}-----")
+#     sim = AspenSim(os.path.join(read_folder, "converged", f))
+#     coef = sim.get_rxn_coefficients()
+#     res = sim.get_carbon_number_composition(sim.prod_stream)
+#     stat = 'Warning'
+#     sa_all_rows.append(res2df((0, 0), coef, res, stat))
+#     sim.aspen.Close()
+#
+#     df_sa = pd.DataFrame(sa_all_rows)
+#     df_sa.to_csv(os.path.join(read_folder, "converged_results.csv"))
 
 #%%
 import matplotlib.pyplot as plt
