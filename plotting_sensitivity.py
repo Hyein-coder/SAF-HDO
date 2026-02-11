@@ -122,7 +122,7 @@ params = ['param_0', 'param_1']
 
 #%% TRI-AXIS PLOT
 output_data = [saf, msp, lca]
-output_label = ['SAF Production [t $\cdot$ h$^{-1}$]', 'MSP [\$ $\cdot$ kg$^{-1}$]', 'GWP [gCO$_2$e $\cdot$ MJ$^{-1}$]']
+output_label = ['SAF Production [t h$^{-1}$]', 'MSP [\$ kg$^{-1}$]', 'GWP [gCO$_2$e MJ$^{-1}$]']
 output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)) for x in output_data]
 # output_scale = [(min(x.iloc[:,0])*0.95, max(x.iloc[:,0])*1.05) for x in output_data]
 
@@ -190,7 +190,7 @@ for i, idx_param in enumerate(params):
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_label = [pretty_names[0], pretty_names[1]]
 output_data = [ng, msp]
-output_label = ['NG Consumption [t $\cdot$ h$^{-1}$]', 'MSP [\$ $\cdot$ kg$^{-1}$]']
+output_label = ['NG Consumption [t h$^{-1}$]', 'MSP [\$ kg$^{-1}$]']
 for z_val, z_name in zip(output_data, output_label):
     fig, ax = plt.subplots(1, 1)
     # sc = ax.scatter(input_data[0].iloc[:,0], input_data[1].iloc[:,0], c=z_val.iloc[:,0], cmap='viridis', s=50, alpha=0.8)
@@ -218,7 +218,7 @@ input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
 output_data = [h2, msp.iloc[:,0], lca.iloc[:,0]]
-output_label = ["H2 Consumption [t $\cdot$ h$^{-1}$]", "MSP [\$ $\cdot$ kg$^{-1}$]", r"GWP [gCO$_2$e $\cdot$ MJ$^{-1}$]"]
+output_label = ["H2 Consumption [t h$^{-1}$]", "MSP [\$ kg$^{-1}$]", r"GWP [gCO$_2$e MJ$^{-1}$]"]
 output_cmap = ['viridis', 'magma_r', 'magma_r']
 # 1. Helper function for coordinates
 def ternary_to_cartesian(a, b, c):
@@ -261,7 +261,7 @@ import datetime
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_label = pretty_names
 output_data = [h2, saf, ng]
-output_label = [r'H$_2$ Consumption [t $\cdot$ h$^{-1}$]', 'SAF Production [t $\cdot$ h$^{-1}$]', r'NG Consumption [t $\cdot$ h$^{-1}$]']
+output_label = [r'H$_2$ Consumption [t h$^{-1}$]', 'SAF Production [t h$^{-1}$]', r'NG Consumption [t h$^{-1}$]']
 output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)) for x in output_data]
 # output_scale = [(min(x.iloc[:,0])*0.95, max(x.iloc[:,0])*1.05) for x in output_data]
 
@@ -329,8 +329,8 @@ input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
 output_data = [h2.values[:,0], msp.iloc[:,0], lca.iloc[:,0]]
-output_label = [r"H2 Consumption [t $\cdot$ h$^{-1}$]",
-                "MSP [\$ $\cdot$ kg$^{-1}$]", r"GWP [gCO$_2$e $\cdot$ MJ$^{-1}$]"]
+output_label = [r"H2 Consumption [t h$^{-1}$]",
+                "MSP [\$ kg$^{-1}$]", r"GWP [gCO$_2$e MJ$^{-1}$]"]
 output_cmap = ['viridis', 'magma_r', 'magma_r']
 
 def ternary_to_cartesian(a, b, c):
