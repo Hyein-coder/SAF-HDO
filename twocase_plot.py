@@ -70,7 +70,7 @@ for si, scen in enumerate(scenarios):
                linewidth=0.7)
         bottom += val
 
-    ax.text(x_centers[si], bottom + 0.007, f'MSP ${bottom + bottom_CAPEX:.2f}/kg',
+    ax.text(x_centers[si], bottom + 0.009, f'MSP ${bottom + bottom_CAPEX:.2f}/kg',
             ha='center', va='bottom', fontsize=9, fontweight='bold', color='#444444')
 ax.set_xticks(x_centers)
 ax.set_xticklabels(scen_labels, fontsize=12)
