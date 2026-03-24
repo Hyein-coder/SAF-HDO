@@ -11,11 +11,6 @@ opex  = xl['OPEX ($MMperyear)'].set_index('Case')
 scenarios   = ['Base case', 'Heavy-end']
 scen_labels = ['Base Case', 'Heavy End']
 
-# capex_colors = ['#1565C0','#1E88E5','#42A5F5','#90CAF9','#0D47A1',
-#                 '#1976D2','#64B5F6','#BBDEFB','#E3F2FD','#82B1FF',
-#                 '#448AFF','#2979FF','#2962FF']
-# opex_colors  = ['#B71C1C','#E53935','#EF9A9A','#FF7043']
-
 # CAPEX: cool blue-teal family
 # TODO: WITH BORDERS
 capex_colors = [
@@ -34,23 +29,6 @@ capex_colors = [
     '#C4E0D4',  # pale teal
     '#6AAEC4',  # medium teal-blue
 ]
-
-# Updated CAPEX: Enhanced contrast with greener accents
-# capex_colors = [
-#     '#D4ECE8',  # very pale teal (Original)
-#     '#B8D4E8',  # light steel blue (Original)
-#     '#CDE3B2',  # soft chartreuse (New Green)
-#     '#A2C5AC',  # pale fern green (New Green)
-#     '#86AF91',  # muted sage green (New Green)
-#     '#5F8C6E',  # deep juniper green (New Green)
-#     '#9CCCC0',  # soft aqua (Original)
-#     '#6AAEC4',  # medium teal-blue (Original)
-#     '#4A7C77',  # dark pine teal (New Green)
-#     '#90C4D8',  # medium sky blue (Original)
-#     '#7AB8D0',  # muted cyan (Original)
-#     '#5898B4',  # deeper blue (Original)
-#     '#4A88A4',  # slate blue (Original)
-# ]
 
 # OPEX: warm pink-peach-gold family
 opex_colors = [
@@ -79,10 +57,9 @@ for si, scen in enumerate(scenarios):
         val = capex.loc[scen, comp]
         ax.bar(capex_pos[si], val, bar_width, bottom=bottom_CAPEX,
                color=capex_colors[ci % len(capex_colors)],
-               edgecolor='white', linewidth=0.5)
+               edgecolor='#444444',  # Dark grey border for better segment separation
+               linewidth=0.7)  # Slightly thicker line for clarity
         bottom_CAPEX += val
-    # ax.text(capex_pos[si], bottom + 0.003, f'{bottom:.2f}',
-    #         ha='center', va='bottom', fontsize=9, fontweight='bold', color='#1565C0')
 
     # OPEX stacked bar
     bottom = 0
@@ -90,13 +67,12 @@ for si, scen in enumerate(scenarios):
         val = opex.loc[scen, comp]
         ax.bar(opex_pos[si], val, bar_width, bottom=bottom,
                color=opex_colors[oi % len(opex_colors)],
-               edgecolor='white', linewidth=0.5)
+               edgecolor='#444444',  # Consistent dark grey border
+               linewidth=0.7)
         bottom += val
-    # ax.text(opex_pos[si], bottom + 0.003, f'{bottom:.2f}',
-    #         ha='center', va='bottom', fontsize=9, fontweight='bold', color='#B71C1C')
-    ax.text(x_centers[si], bottom + 0.003, f'MSP ${bottom+bottom_CAPEX:.2f}/kg',
-            ha='center', va='bottom', fontsize=9, fontweight='bold', color='#B71C1C')
 
+    ax.text(x_centers[si], bottom + 0.003, f'MSP ${bottom + bottom_CAPEX:.2f}/kg',
+            ha='center', va='bottom', fontsize=9, fontweight='bold', color='#B71C1C')
 ax.set_xticks(x_centers)
 ax.set_xticklabels(scen_labels, fontsize=12)
 
@@ -127,9 +103,13 @@ leg1 = ax.legend(handles=capex_patches, title='CAPEX Components',
                  bbox_to_anchor=(1.01, 1), loc='upper left',
                  fontsize=8, title_fontsize=9, framealpha=0.9)
 ax.add_artist(leg1)
-ax.legend(handles=opex_patches, title='OPEX Components',
+lef2 = ax.legend(handles=opex_patches, title='OPEX Components',
           bbox_to_anchor=(1.01, 0.38), loc='upper left',
           fontsize=8, title_fontsize=9, framealpha=0.9)
+
+for patch in leg1.get_patches() + lef2.get_patches():
+    patch.set_edgecolor('#444444')
+    patch.set_linewidth(0.7)
 
 plt.tight_layout()
 plt.savefig('figures/TwoCase_TEA_plot.png', dpi=150, bbox_inches='tight')
