@@ -17,38 +17,40 @@ scen_labels = ['Base Case', 'Heavy End']
 # opex_colors  = ['#B71C1C','#E53935','#EF9A9A','#FF7043']
 
 # CAPEX: cool blue-teal family
-# capex_colors = [
-#     '#B8D4E8',  # light steel blue
-#     '#AED6C4',  # soft mint
-#     '#90C4D8',  # medium sky blue
-#     '#A8D8B8',  # soft seafoam
-#     '#7AB8D0',  # muted cyan
-#     '#C4E0D4',  # pale teal
-#     '#6AAEC4',  # medium teal-blue
-#     '#B4D4CC',  # light sage-teal
-#     '#5898B4',  # deeper blue
-#     '#9CCCC0',  # soft aqua
-#     '#4A88A4',  # slate blue
-#     '#88C0B8',  # medium aquamarine
-#     '#D4ECE8',  # very pale teal
-# ]
+# TODO: WITH BORDERS
+capex_colors = [
+    '#B8D4E8',  # light steel blue
+    '#CDE3B2',  # soft chartreuse (New Green)
+    '#5F8C6E',  # deep juniper green (New Green)
+    '#AED6C4',  # soft mint
+    '#90C4D8',  # medium sky blue
+    '#B4D4CC',  # light sage-teal
+    '#5898B4',  # deeper blue
+    '#88C0B8',  # medium aquamarine
+    # '#9CCCC0',  # soft aqua
+    '#4A88A4',  # slate blue
+    '#A8D8B8',  # soft seafoam
+    '#7AB8D0',  # muted cyan
+    '#C4E0D4',  # pale teal
+    '#6AAEC4',  # medium teal-blue
+]
 
 # Updated CAPEX: Enhanced contrast with greener accents
-capex_colors = [
-    '#D4ECE8',  # very pale teal (Original)
-    '#B8D4E8',  # light steel blue (Original)
-    '#CDE3B2',  # soft chartreuse (New Green)
-    '#A2C5AC',  # pale fern green (New Green)
-    '#86AF91',  # muted sage green (New Green)
-    '#5F8C6E',  # deep juniper green (New Green)
-    '#9CCCC0',  # soft aqua (Original)
-    '#6AAEC4',  # medium teal-blue (Original)
-    '#4A7C77',  # dark pine teal (New Green)
-    '#90C4D8',  # medium sky blue (Original)
-    '#7AB8D0',  # muted cyan (Original)
-    '#5898B4',  # deeper blue (Original)
-    '#4A88A4',  # slate blue (Original)
-]
+# capex_colors = [
+#     '#D4ECE8',  # very pale teal (Original)
+#     '#B8D4E8',  # light steel blue (Original)
+#     '#CDE3B2',  # soft chartreuse (New Green)
+#     '#A2C5AC',  # pale fern green (New Green)
+#     '#86AF91',  # muted sage green (New Green)
+#     '#5F8C6E',  # deep juniper green (New Green)
+#     '#9CCCC0',  # soft aqua (Original)
+#     '#6AAEC4',  # medium teal-blue (Original)
+#     '#4A7C77',  # dark pine teal (New Green)
+#     '#90C4D8',  # medium sky blue (Original)
+#     '#7AB8D0',  # muted cyan (Original)
+#     '#5898B4',  # deeper blue (Original)
+#     '#4A88A4',  # slate blue (Original)
+# ]
 
 # OPEX: warm pink-peach-gold family
 opex_colors = [
