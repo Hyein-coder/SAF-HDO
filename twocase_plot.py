@@ -171,4 +171,86 @@ for patch in leg1.get_patches() + lef2.get_patches():
 plt.tight_layout()
 plt.savefig('figures/TwoCase_TEA_plot.png', dpi=150, bbox_inches='tight')
 plt.savefig('figures/TwoCase_TEA_plot.svg', dpi=150, bbox_inches='tight', format='svg')
-print("Saved.")
+print("TEA plot saved.")
+
+#%%
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import matplotlib.patches as mpatches
+# import numpy as np
+
+# 1. Load Data
+df = pd.read_excel('results/TwoCase_LCA.xlsx')
+first_col = df.columns[0]
+df.set_index(first_col, inplace=True)
+df.index = df.index.astype(str).str.strip()
+
+# 2. Filter Scenarios
+target_rows = [row for row in df.index if 'base' in row.lower() or 'heavy' in row.lower()]
+df_plot = df.loc[target_rows]
+
+scenarios = df_plot.index.tolist()
+scen_labels = ['Base', 'Heavy-end']
+components = df_plot.columns.tolist()
+
+# 3. Apply your CAPEX color family to the LCA components
+lca_colors = [
+    '#4A88A4',  # slate blue (CAPEX)
+    '#F08080',  # coral pink (OPEX)
+    '#CDE3B2',  # soft chartreuse (CAPEX)
+    '#FDD280',  # soft amber (OPEX)
+    '#7AB8D0',  # muted cyan (CAPEX)
+    '#D4A870',  # warm tan/amber (OPEX)
+    '#AED6C4',  # soft mint (CAPEX)
+    '#FEEBD6',  # very pale peach (OPEX)
+]
+
+# 4. Setup Plot matching your specified dimensions
+fig, ax = plt.subplots(figsize=(6,4))
+bar_width = 0.45
+x_centers = np.arange(len(scenarios))
+
+# 5. Build Stacked Bars with Borders
+tallest_val = 0
+for si, scen in enumerate(scenarios):
+    bottom = 0
+    for ci, comp in enumerate(components):
+        val = df_plot.loc[scen, comp]
+        ax.bar(x_centers[si], val, bar_width, bottom=bottom,
+               color=lca_colors[ci],
+               edgecolor='#444444',  # Dark grey border for segment separation
+               linewidth=0.7)        # Slightly thicker line
+        bottom += val
+
+    ax.text(x_centers[si], bottom + 0.5, f'{bottom:.2f}',
+            ha='center', va='bottom', fontsize=9, fontweight='500', color='#444444')
+
+    if bottom > tallest_val:
+        tallest_val = bottom
+
+# 6. Typography and Axis Formatting
+ax.set_xticks(x_centers)
+ax.set_xticklabels(scen_labels, fontsize=12)
+for label in ax.get_xticklabels():
+    label.set_fontweight('500')
+ax.set_xlim(-0.6, len(scenarios) - 0.4)
+ax.set_ylabel(r'Component-wise LCA Result (g CO$_2$e MJ$^{-1}$)', fontsize=12)
+ax.set_ylim(0, tallest_val*1.1)
+
+# 7. Custom Legend (Outside plot, no frame, bordered patches)
+patches = [mpatches.Patch(color=lca_colors[i], label=comp)
+           for i, comp in enumerate(components)]
+
+leg = ax.legend(handles=patches, title='LCA Components',
+                bbox_to_anchor=(1.01, 1), loc='upper left',
+                title_fontproperties={'weight': '500'})
+
+# Apply matching borders to legend
+for patch in leg.get_patches():
+    patch.set_edgecolor('#444444')
+    patch.set_linewidth(0.7)
+
+plt.tight_layout()
+plt.savefig('figures/TwoCase_LCA_plot.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/TwoCase_LCA_plot.svg', dpi=150, bbox_inches='tight', format='svg')
+print("LCA plot saved.")
