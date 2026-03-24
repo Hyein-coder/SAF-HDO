@@ -9,36 +9,35 @@ capex = xl['CAPEX ($MM)'].set_index('Case')
 opex  = xl['OPEX ($MMperyear)'].set_index('Case')
 
 scenarios   = ['Base case', 'Heavy-end']
-scen_labels = ['Base Case', 'Heavy End']
+scen_labels = ['Base', 'Heavy-end']
 
 # CAPEX: cool blue-teal family
 # TODO: WITH BORDERS
 capex_colors = [
-    '#B8D4E8',  # light steel blue
+    '#4A88A4',  # slate blue
     '#CDE3B2',  # soft chartreuse (New Green)
-    '#5F8C6E',  # deep juniper green (New Green)
+    '#7AB8D0',  # muted cyan
     '#AED6C4',  # soft mint
     '#90C4D8',  # medium sky blue
     '#B4D4CC',  # light sage-teal
     '#5898B4',  # deeper blue
     '#88C0B8',  # medium aquamarine
-    # '#9CCCC0',  # soft aqua
-    '#4A88A4',  # slate blue
-    '#A8D8B8',  # soft seafoam
-    '#7AB8D0',  # muted cyan
     '#C4E0D4',  # pale teal
     '#6AAEC4',  # medium teal-blue
+    '#A8D8B8',  # soft seafoam
+    '#5F8C6E',  # deep juniper green (New Green)
+    '#B8D4E8',  # light steel blue
 ]
 
 # OPEX: warm pink-peach-gold family
 opex_colors = [
     '#F08080',  # coral pink
-    '#F4C28A',  # warm peach
-    '#E8C84A',  # golden yellow
+    '#FDD280',  #: Soft Amber
+    '#FEEBD6',  #: Very Pale Peach (Bottom-most segment)
     '#D4A870',  # warm tan/amber
 ]
 
-fig, ax = plt.subplots(figsize=(11, 8))
+fig, ax = plt.subplots(figsize=(6,4))
 
 bar_width = 0.35
 gap       = 0.08
@@ -71,28 +70,26 @@ for si, scen in enumerate(scenarios):
                linewidth=0.7)
         bottom += val
 
-    ax.text(x_centers[si], bottom + 0.003, f'MSP ${bottom + bottom_CAPEX:.2f}/kg',
-            ha='center', va='bottom', fontsize=9, fontweight='bold', color='#B71C1C')
+    ax.text(x_centers[si], bottom + 0.007, f'MSP ${bottom + bottom_CAPEX:.2f}/kg',
+            ha='center', va='bottom', fontsize=9, fontweight='bold', color='#444444')
 ax.set_xticks(x_centers)
 ax.set_xticklabels(scen_labels, fontsize=12)
+ax.tick_params(axis='x', pad=10)
 
 for si in range(len(scenarios)):
-    ax.text(capex_pos[si], -0.055, 'CAPEX\n($MM)',
+    ax.text(capex_pos[si]-0.02, -0.025, 'CAPEX',
             ha='center', va='top', fontsize=8, color='#1565C0', fontweight='bold')
-    ax.text(opex_pos[si],  -0.055, 'OPEX\n($MM/yr)',
+    ax.text(opex_pos[si]+0.02,  -0.025, 'OPEX',
             ha='center', va='top', fontsize=8, color='#B71C1C', fontweight='bold')
 
 ax.set_xlim(-0.6, len(scenarios) - 0.4)
 top = max(capex.loc[scenarios].sum(axis=1).max(),
           opex.loc[scenarios].sum(axis=1).max()) * 1.18
-ax.set_ylim(-0.12, top)
+ax.set_ylim(0., top)
 
-ax.set_ylabel('Cost ($MM)', fontsize=12)
-ax.set_title('TEA Cost Comparison: CAPEX & OPEX by Scenario\n(stacked by component)',
-             fontsize=13, fontweight='bold', pad=14)
-ax.spines['top'].set_visible(False)
-ax.spines['right'].set_visible(False)
-ax.grid(axis='y', linestyle='--', alpha=0.35)
+ax.set_ylabel(r'Component-wise MSP (\$ kg$^{-1}$ SAF)', fontsize=12)
+# ax.spines['top'].set_visible(False)
+# ax.spines['right'].set_visible(False)
 
 capex_patches = [mpatches.Patch(color=capex_colors[i], label=comp)
                  for i, comp in enumerate(capex_components)]
@@ -101,11 +98,11 @@ opex_patches  = [mpatches.Patch(color=opex_colors[i], label=comp)
 
 leg1 = ax.legend(handles=capex_patches, title='CAPEX Components',
                  bbox_to_anchor=(1.01, 1), loc='upper left',
-                 fontsize=8, title_fontsize=9, framealpha=0.9)
+                 fontsize=8, title_fontsize=9, framealpha=0.)
 ax.add_artist(leg1)
 lef2 = ax.legend(handles=opex_patches, title='OPEX Components',
-          bbox_to_anchor=(1.01, 0.38), loc='upper left',
-          fontsize=8, title_fontsize=9, framealpha=0.9)
+          bbox_to_anchor=(1.01, 0.28), loc='upper left',
+          fontsize=8, title_fontsize=9, framealpha=0., borderaxespad=0.01)
 
 for patch in leg1.get_patches() + lef2.get_patches():
     patch.set_edgecolor('#444444')
