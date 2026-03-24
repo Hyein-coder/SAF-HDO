@@ -67,8 +67,8 @@ xl = pd.read_excel('results/TwoCase_TEA.xlsx', sheet_name=None)
 capex = xl['CAPEX ($MM)'].set_index('Case')
 opex  = xl['OPEX ($MMperyear)'].set_index('Case')
 
-scenarios   = ['Base case', 'Heavy-end']
-scen_labels = ['Base', 'Heavy-end']
+scenarios   = ['Peak-shifted', 'Heavy-end']
+scen_labels = ['Best', 'Worst']
 
 # CAPEX: cool blue-teal family
 capex_colors = [
@@ -128,7 +128,7 @@ for si, scen in enumerate(scenarios):
                )
         bottom += val
 
-    ax.text(x_centers[si], bottom + 0.009, f'MSP ${bottom + bottom_CAPEX:.2f}/kg',
+    ax.text(x_centers[si], bottom + 0.009, rf'MSP \${bottom + bottom_CAPEX:.2f} kg$^{{\mathbf{{-1}}}}$',
             ha='center', va='bottom', fontsize=9, fontweight='500', color='#444444')
 ax.set_xticks(x_centers)
 ax.set_xticklabels(scen_labels)
@@ -147,7 +147,7 @@ top = max(capex.loc[scenarios].sum(axis=1).max(),
           opex.loc[scenarios].sum(axis=1).max()) * 1.18
 ax.set_ylim(0., top)
 
-ax.set_ylabel(r'Component-wise MSP (\$ kg$^{-1}$ SAF)')
+ax.set_ylabel(r'Minimum Selling Price (\$ kg$^{-1}$ SAF)')
 # ax.spines['top'].set_visible(False)
 # ax.spines['right'].set_visible(False)
 
@@ -186,23 +186,21 @@ df.set_index(first_col, inplace=True)
 df.index = df.index.astype(str).str.strip()
 
 # 2. Filter Scenarios
-target_rows = [row for row in df.index if 'base' in row.lower() or 'heavy' in row.lower()]
-df_plot = df.loc[target_rows]
-
-scenarios = df_plot.index.tolist()
-scen_labels = ['Base', 'Heavy-end']
+scenarios   = ['Peak-shifted', 'Heavy-end', 'CAF']
+scen_labels = ['Best', 'Worst', 'CAF']
+df_plot = df.loc[scenarios].drop(columns=['Emission'], errors='ignore')
 components = df_plot.columns.tolist()
 
 # 3. Apply your CAPEX color family to the LCA components
 lca_colors = [
-    '#4A88A4',  # slate blue (CAPEX)
-    '#F08080',  # coral pink (OPEX)
-    '#CDE3B2',  # soft chartreuse (CAPEX)
-    '#FDD280',  # soft amber (OPEX)
-    '#7AB8D0',  # muted cyan (CAPEX)
-    '#D4A870',  # warm tan/amber (OPEX)
-    '#AED6C4',  # soft mint (CAPEX)
-    '#FEEBD6',  # very pale peach (OPEX)
+    '#B3CDE0',  # pastel blue
+    '#CCEBC5',  # pastel mint green
+    '#DECBE4',  # pastel lavender
+    '#FED9A6',  # pastel orange
+    '#F9E79F',  # pastel yellow
+    '#B3E2CD',  # pastel aqua/teal
+    # '#FDCDAC',  # pastel peach
+    '#FBB4AE',  # pastel pink
 ]
 
 # 4. Setup Plot matching your specified dimensions
@@ -216,11 +214,12 @@ for si, scen in enumerate(scenarios):
     bottom = 0
     for ci, comp in enumerate(components):
         val = df_plot.loc[scen, comp]
-        ax.bar(x_centers[si], val, bar_width, bottom=bottom,
-               color=lca_colors[ci],
-               edgecolor='#444444',  # Dark grey border for segment separation
-               linewidth=0.7)        # Slightly thicker line
-        bottom += val
+        if val > 0:
+            ax.bar(x_centers[si], val, bar_width, bottom=bottom,
+                   color=lca_colors[ci],
+                   edgecolor='#444444',  # Dark grey border for segment separation
+                   linewidth=0.7)        # Slightly thicker line
+            bottom += val
 
     ax.text(x_centers[si], bottom + 0.5, f'{bottom:.2f}',
             ha='center', va='bottom', fontsize=9, fontweight='500', color='#444444')
@@ -234,7 +233,7 @@ ax.set_xticklabels(scen_labels, fontsize=12)
 for label in ax.get_xticklabels():
     label.set_fontweight('500')
 ax.set_xlim(-0.6, len(scenarios) - 0.4)
-ax.set_ylabel(r'Component-wise LCA Result (g CO$_2$e MJ$^{-1}$)', fontsize=12)
+ax.set_ylabel(r'GHG Emission (g CO$_2$e MJ$^{-1}$)', fontsize=12)
 ax.set_ylim(0, tallest_val*1.1)
 
 # 7. Custom Legend (Outside plot, no frame, bordered patches)
