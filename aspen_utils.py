@@ -53,18 +53,24 @@ component_to_carbon_number = {
 
 
 class AspenSim(object):
-    def __init__(self, aspen_path, case_target='a', visible=True, rxtor_nodes=None):
-        self.aspen = win32.Dispatch("Apwn.Document")
+    def __init__(self, aspen_path, case_target='a', visible=True, rxtor_nodes=None, from_directory=True):
         self.aspen_path = aspen_path
-        self.aspen.InitFromArchive2(os.path.abspath(aspen_path))
+        if from_directory:
+            self.aspen = win32.Dispatch("Apwn.Document")
+            self.aspen.InitFromArchive2(os.path.abspath(aspen_path))
+            print("Aspen simulation opened. Just wait..")
+        else:
+            self.aspen = win32.GetObject(os.path.abspath(aspen_path))
+            print("Connected to the already open Aspen simulation. Just wait..")
+
         self.aspen.Visible = visible
         self.aspen.SuppressDialogs = True
-        print("Aspen simulation opened. Just wait..")
-        time.sleep(10)
-        print("Now run the initial simulation..")
-        self.aspen.Engine.Run2()
-        time.sleep(2)
-        print("Initial simulation finished")
+        if from_directory:
+            time.sleep(10)
+            print("Now run the initial simulation..")
+            self.aspen.Engine.Run2()
+            time.sleep(2)
+            print("Initial simulation finished")
 
         self.prod_stream = "216"
         if rxtor_nodes is None:
@@ -229,6 +235,10 @@ class AspenSim(object):
     def get_frac_water(self, stream_no):
         frac_water = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFRAC\MIXED\WATER").Value
         return frac_water
+
+    def get_mass_flow(self, stream_no):
+        mass_flow = self.aspen.Tree.FindNode("\Data\Streams\\" + stream_no + "\Output\MASSFLMX\$TOTAL").Value
+        return mass_flow
 
     def get_elemental_composition_wo_water(self, stream_no):
         elemental_composition = self.get_elemental_composition(stream_no)
