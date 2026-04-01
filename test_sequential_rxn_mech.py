@@ -94,3 +94,21 @@ def plot_sim_summary():
 res = plot_sim_summary()
 print(res[f"sim ({case_target})"])
 # sim.terminate()
+
+#=======================================================================================================================
+"""
+Compare the final product yield
+"""
+
+sim_k = AspenSim(r"D:\SAF_Nurul\20260330_NewSim\260401_pyrolysis_oil_CC_case_k_6.bkp")
+sim_j = AspenSim(r"D:\SAF_Nurul\20260330_NewSim\260401_pyrolysis_oil_CC_case_j_HOadjustment3.bkp")
+
+prod_compare = {
+    "k": {'sim': sim_k},
+    "j": {'sim': sim_j}
+}
+for case_name, case_item in prod_compare.items():
+    case_sim = case_item['sim']
+    prod_compare[case_name]["oil"] = case_sim.get_mass_flow("302")
+    prod_compare[case_name]["water"] = case_sim.get_mass_flow("301")
+    prod_compare[case_name]["saf"] = case_sim.get_mass_flow("326")
