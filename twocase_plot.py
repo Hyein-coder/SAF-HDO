@@ -67,6 +67,15 @@ xl = pd.read_excel('results/TwoCase_TEA.xlsx', sheet_name=None)
 capex = xl['CAPEX ($MM)'].set_index('Case')
 opex  = xl['OPEX ($MMperyear)'].set_index('Case')
 
+name_to_replace = {
+    'CC process': 'Carbon Capture',
+    'Catalyst CAPEX': 'Catalyst',
+    'HeatX': 'Heat Exchanger',
+    'Flash': 'Flash Drum'
+}
+capex.rename(columns=name_to_replace, inplace=True)
+opex.rename(columns=name_to_replace, inplace=True)
+
 scenarios   = ['Peak-shifted', 'Heavy-end']
 scen_labels = ['Best', 'Worst']
 
@@ -147,7 +156,7 @@ top = max(capex.loc[scenarios].sum(axis=1).max(),
           opex.loc[scenarios].sum(axis=1).max()) * 1.18
 ax.set_ylim(0., top)
 
-ax.set_ylabel(r'Minimum Selling Price (\$ kg$^{-1}$ SAF)')
+ax.set_ylabel(r'Minimum Selling Price (\$ kg$^{-1}$)')
 # ax.spines['top'].set_visible(False)
 # ax.spines['right'].set_visible(False)
 

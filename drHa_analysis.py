@@ -4,10 +4,12 @@ import pandas as pd
 file_res = r"D:\SAF_Nurul\20260330_NewSim\SAF_Sensitivity_Analysis_260401_mjsp_detail.xlsx"
 xl = pd.read_excel(file_res, sheet_name=None)
 
-#%% TEA
 xl['TEA'].columns = ['ComponentGroup', 'Category', 'C2', 'C1']
 xl['TEA'] = xl['TEA'][['ComponentGroup', 'Category', 'C1', 'C2']]
+xl['LCA'].index = ['C2', 'C1']
+xl['LCA'] = xl['LCA'].reindex(['C1', 'C2'])
 
+#%% TEA
 equipments = xl['TEA'].query("ComponentGroup == 'Equipment'").copy()
 equipments = equipments[equipments['Category'] != 'total equipment cost']
 equipments = equipments.sort_values(equipments.columns.tolist()[-1], ascending=False)
@@ -153,26 +155,35 @@ TWOCASE_RC = {
 plt.rcParams.update(TWOCASE_RC)
 
 # CAPEX: cool blue-teal family
+# capex_colors = [
+#     '#C4E0D4',  # pale teal (Lightest Green)
+#     '#B8D4E8',  # light steel blue (Lightest Blue)
+#     '#CDE3B2',  # soft chartreuse (Green)
+#     '#90C4D8',  # medium sky blue (Blue)
+#     '#B4D4CC',  # light sage-teal (Green)
+#     '#7AB8D0',  # muted cyan (Blue)
+#     '#AED6C4',  # soft mint (Green)
+#     '#6AAEC4',  # medium teal-blue (Blue)
+#     '#A8D8B8',  # soft seafoam (Green)
+#     '#5898B4',  # deeper blue (Blue)
+#     '#88C0B8',  # medium aquamarine (Green)
+#     '#4A88A4',  # slate blue (Blue)
+#     '#5F8C6E'   # deep juniper green (Darkest Green)
+# ]
 capex_colors = [
-    '#C4E0D4',  # pale teal (Lightest Green)
-    '#B8D4E8',  # light steel blue (Lightest Blue)
-
-    '#CDE3B2',  # soft chartreuse (Green)
-    '#90C4D8',  # medium sky blue (Blue)
-
-    '#B4D4CC',  # light sage-teal (Green)
-    '#7AB8D0',  # muted cyan (Blue)
-
-    '#AED6C4',  # soft mint (Green)
-    '#6AAEC4',  # medium teal-blue (Blue)
-
-    '#A8D8B8',  # soft seafoam (Green)
-    '#5898B4',  # deeper blue (Blue)
-
-    '#88C0B8',  # medium aquamarine (Green)
-    '#4A88A4',  # slate blue (Blue)
-
-    '#5F8C6E'   # deep juniper green (Darkest Green)
+    '#C3E3D5',  # L: 83.0% (Lightest Green)
+    '#B1CFE5',  # L: 79.8% (Blue)
+    '#C6DFA7',  # L: 76.7% (Green)
+    '#9BC9DB',  # L: 73.5% (Blue)
+    '#9BCBBF',  # L: 70.3% (Green)
+    '#84BCD1',  # L: 67.2% (Blue)
+    '#83C3A6',  # L: 64.0% (Green)
+    '#71B0C4',  # L: 60.8% (Blue)
+    '#6ABB85',  # L: 57.7% (Green)
+    '#5F9BB6',  # L: 54.5% (Blue)
+    '#5BAA9E',  # L: 51.3% (Green)
+    '#4E8BA7',  # L: 48.2% (Blue)
+    '#598C6A'   # L: 45.0% (Darkest Green)
 ]
 
 # OPEX: warm pink-peach-gold family
@@ -272,23 +283,32 @@ plt.savefig('figures/drHa_TEA_plot.png', dpi=150, bbox_inches='tight')
 plt.savefig('figures/drHa_TEA_plot.svg', dpi=150, bbox_inches='tight', format='svg')
 print("TEA plot saved.")
 
-#%%
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import matplotlib.patches as mpatches
-# import numpy as np
+#%% LCA
+prod_saf = xl['TEA'].query("ComponentGroup == 'SAF production [kg/hr]'").copy().iloc[:,2:].reset_index(drop=True)
+prod_gas = xl['TEA'].query("ComponentGroup == 'Gasoline production [kg/hr]'").copy().iloc[:,2:].reset_index(drop=True)
+prod_total = prod_saf + prod_gas
+nhv_saf = 48.168
 
-# 1. Load Data
-df = pd.read_excel('results/TwoCase_LCA.xlsx')
-first_col = df.columns[0]
-df.set_index(first_col, inplace=True)
-df.index = df.index.astype(str).str.strip()
+lca_map = {
+    'NG': 'NG',
+    'WWT': 'WWT',
+    'Biomass': 'BM',
+    'Electricity': 'elec_GRID',
+    'Steam': 'steam',
+    'Refrigerant': 'ref',
+}
+lca_res = []
+for k, v in lca_map.items():
+    lca_comps = xl['LCA'].loc[:, xl['LCA'].columns.str.contains(f'_{v}_')].copy()
+    lca_sum = pd.DataFrame(lca_comps.sum(axis=1)).transpose()
+    lca_converted = lca_sum / prod_total / nhv_saf * 1000
+    lca_converted.index = [k]
+    lca_res.append(lca_converted)
+lca_plot = pd.concat(lca_res).transpose()
 
-# 2. Filter Scenarios
-scenarios   = ['Peak-shifted', 'Heavy-end', 'CAF']
-scen_labels = ['Best', 'Worst', 'CAF']
-df_plot = df.loc[scenarios].drop(columns=['Emission'], errors='ignore')
-components = df_plot.columns.tolist()
+scenarios   = lca_plot.index.tolist()
+scen_labels = scenarios
+components = lca_plot.columns.tolist()
 
 # 3. Apply your CAPEX color family to the LCA components
 lca_colors = [
@@ -312,7 +332,7 @@ tallest_val = 0
 for si, scen in enumerate(scenarios):
     bottom = 0
     for ci, comp in enumerate(components):
-        val = df_plot.loc[scen, comp]
+        val = lca_plot.loc[scen, comp]
         if val > 0:
             ax.bar(x_centers[si], val, bar_width, bottom=bottom,
                    color=lca_colors[ci],
@@ -349,6 +369,6 @@ for patch in leg.get_patches():
     patch.set_linewidth(0.7)
 
 plt.tight_layout()
-plt.savefig('figures/TwoCase_LCA_plot.png', dpi=150, bbox_inches='tight')
-plt.savefig('figures/TwoCase_LCA_plot.svg', dpi=150, bbox_inches='tight', format='svg')
+plt.savefig('figures/drHa_LCA_plot.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/drHa_LCA_plot.svg', dpi=150, bbox_inches='tight', format='svg')
 print("LCA plot saved.")
