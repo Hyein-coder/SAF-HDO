@@ -1,13 +1,14 @@
 #%%
 import pandas as pd
 
-file_res = r"D:\SAF_Nurul\20260330_NewSim\SAF_Sensitivity_Analysis_260401_mjsp_detail.xlsx"
-xl = pd.read_excel(file_res, sheet_name=None)
+file_res = r"D:\SAF_Nurul\20260330_NewSim\SAF_Sensitivity_Analysis_260401_mjsp_combined.xlsx"
+xl_all = pd.read_excel(file_res, sheet_name=None)
 
-xl['TEA'].columns = ['ComponentGroup', 'Category', 'C2', 'C1']
-xl['TEA'] = xl['TEA'][['ComponentGroup', 'Category', 'C1', 'C2']]
-xl['LCA'].index = ['C2', 'C1']
-xl['LCA'] = xl['LCA'].reindex(['C1', 'C2'])
+xl = {}
+xl_all['TEA'].columns = ['ComponentGroup', 'Category', 'C2', 'C1', 'A1', 'B1', 'B4']
+xl['TEA'] = xl_all['TEA'][['ComponentGroup', 'Category', 'C2', 'B4', 'C1']]
+xl_all['LCA'].index = ['C2', 'C1', 'A1', 'B1', 'B4']
+xl['LCA'] = xl_all['LCA'].loc[['C2', 'B4', 'C1']]
 
 #%% TEA
 equipments = xl['TEA'].query("ComponentGroup == 'Equipment'").copy()
@@ -62,6 +63,8 @@ opex = opex[opex['Category'] != 'Total OPEX']
 opex = opex.sort_values(opex.columns.tolist()[-1], ascending=False)
 
 opex_name_map = {
+    'Feed Cost': 'Feedstock',
+    'Utility Cost': 'Utility',
     'Catalyst OPEX': 'Catalyst',
     'Capture OPEX': 'Carbon Capture',
     'Property Taxes & Insurance': 'Taxes',
@@ -155,36 +158,6 @@ TWOCASE_RC = {
 plt.rcParams.update(TWOCASE_RC)
 
 # CAPEX: cool blue-teal family
-# capex_colors = [
-#     '#C4E0D4',  # pale teal (Lightest Green)
-#     '#B8D4E8',  # light steel blue (Lightest Blue)
-#     '#CDE3B2',  # soft chartreuse (Green)
-#     '#90C4D8',  # medium sky blue (Blue)
-#     '#B4D4CC',  # light sage-teal (Green)
-#     '#7AB8D0',  # muted cyan (Blue)
-#     '#AED6C4',  # soft mint (Green)
-#     '#6AAEC4',  # medium teal-blue (Blue)
-#     '#A8D8B8',  # soft seafoam (Green)
-#     '#5898B4',  # deeper blue (Blue)
-#     '#88C0B8',  # medium aquamarine (Green)
-#     '#4A88A4',  # slate blue (Blue)
-#     '#5F8C6E'   # deep juniper green (Darkest Green)
-# ]
-# capex_colors = [
-#     "#DFF4F3",  # light aqua
-#     "#D6EAF8",  # light blue
-#     "#BFE7E3",
-#     "#C5DCF3",
-#     "#9FDAD3",
-#     "#B3CEF0",
-#     "#7FCFC3",
-#     "#A1C1EC",
-#     "#63C3B5",
-#     "#8FB5E8",
-#     "#4FB8A8",
-#     "#7DA9E3",
-#     "#3BAE9B"
-# ]
 
 capex_colors = [
     "#DFF4F3",  # aqua
