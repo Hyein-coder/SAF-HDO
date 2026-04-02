@@ -170,20 +170,41 @@ plt.rcParams.update(TWOCASE_RC)
 #     '#4A88A4',  # slate blue (Blue)
 #     '#5F8C6E'   # deep juniper green (Darkest Green)
 # ]
+# capex_colors = [
+#     "#DFF4F3",  # light aqua
+#     "#D6EAF8",  # light blue
+#     "#BFE7E3",
+#     "#C5DCF3",
+#     "#9FDAD3",
+#     "#B3CEF0",
+#     "#7FCFC3",
+#     "#A1C1EC",
+#     "#63C3B5",
+#     "#8FB5E8",
+#     "#4FB8A8",
+#     "#7DA9E3",
+#     "#3BAE9B"
+# ]
+
 capex_colors = [
-    '#C3E3D5',  # L: 83.0% (Lightest Green)
-    '#B1CFE5',  # L: 79.8% (Blue)
-    '#C6DFA7',  # L: 76.7% (Green)
-    '#9BC9DB',  # L: 73.5% (Blue)
-    '#9BCBBF',  # L: 70.3% (Green)
-    '#84BCD1',  # L: 67.2% (Blue)
-    '#83C3A6',  # L: 64.0% (Green)
-    '#71B0C4',  # L: 60.8% (Blue)
-    '#6ABB85',  # L: 57.7% (Green)
-    '#5F9BB6',  # L: 54.5% (Blue)
-    '#5BAA9E',  # L: 51.3% (Green)
-    '#4E8BA7',  # L: 48.2% (Blue)
-    '#598C6A'   # L: 45.0% (Darkest Green)
+    "#DFF4F3",  # aqua
+    "#D6EAF8",  # blue
+    "#E6E0F8",  # lavender
+
+    "#BFE7E3",
+    "#C5DCF3",
+    "#D6CCF5",
+
+    "#9FDAD3",
+    "#B3CEF0",
+    "#C7B8F2",
+
+    "#7FCFC3",
+    "#A1C1EC",
+    "#B8A4EF",
+
+    "#63C3B5",
+    "#8FB5E8"
 ]
 
 # OPEX: warm pink-peach-gold family
