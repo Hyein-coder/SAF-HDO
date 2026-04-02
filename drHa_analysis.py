@@ -366,3 +366,34 @@ plt.tight_layout()
 plt.savefig('figures/drHa_LCA_plot.png', dpi=150, bbox_inches='tight')
 plt.savefig('figures/drHa_LCA_plot.svg', dpi=150, bbox_inches='tight', format='svg')
 print("LCA plot saved.")
+
+#%% Compare with references in (Watson, 2024, JCP)
+density_saf = 0.8   # kg/L
+data = {    # (MSP $/L, GWP gCO2e/MJ)
+    'FT': (2.08, 7.84),
+    'HEFA': (1.12, 65.22),
+    'ATJ': (1.69, 38.67),
+    # 'HFS': (3.99, 42.02),
+    'CHJ': (1.30, 20.58),
+}
+data_kg = {
+    k: (v[0] / density_saf, v[1]) for k, v in data.items()
+}
+
+for k in scenarios:
+    data_kg[f'HDO-{k}'] = (msp[k].values[0], lca_plot.loc[k].sum())
+
+markers = ['o', 's', '^', 'D', 'v', 'p', '*', 'X']
+plt.figure()
+
+for (label, (x, y)), marker in zip(data_kg.items(), markers):
+    plt.scatter(x, y, marker=marker, label=label, s=150)
+
+plt.xlabel(r'MSP [\$ kg$^{-1}$]', fontsize=12)
+plt.ylabel(r'GHG Emission (g CO$_2$e MJ$^{-1}$)', fontsize=12)
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=12)
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.savefig('figures/drHa_compare_summary.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/drHa_compare_summary.svg', dpi=150, bbox_inches='tight', format='svg')
+plt.show()
