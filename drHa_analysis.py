@@ -247,17 +247,19 @@ for si in range(len(scenarios)):
             ha='center', va='top', fontsize=8, color='#B71C1C', fontweight='500')
 
 # Highlight the conventional method's metric range
+msp_caf = [0.74, 1.61]
+label_caf = 'CAF (3 months)'
+
 portion_opex_avg = ((opex_plot.sum(axis=1) / msp).sum(axis=1)).values[0] / 3
-msp_caf = [0.15, 1.52]
 caf_opex = ax.axhspan(msp_caf[0] * portion_opex_avg, msp_caf[1] * portion_opex_avg,
-                      facecolor='#FFB2B2', alpha=0.3, lw=0, zorder=0, label='CAF (5 years)')
+                      facecolor='#FFB2B2', alpha=0.3, lw=0, zorder=0, label=label_caf)
 caf_capex = ax.axhspan(msp_caf[0] * (1-portion_opex_avg), msp_caf[1] * (1-portion_opex_avg),
-                       facecolor='gray', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)')
+                       facecolor='gray', alpha=0.2, lw=0, zorder=0, label=label_caf)
 
 for val in msp_caf:
-    caf_border_opex = ax.axhline(val * portion_opex_avg, color='#FF4C4C', lw=0.8, linestyle=':', zorder=0, label='CAF (5 years)')
+    caf_border_opex = ax.axhline(val * portion_opex_avg, color='#FF4C4C', lw=0.8, linestyle=':', zorder=0, label=label_caf)
 for val in msp_caf:
-    caf_border_capex = ax.axhline(val * (1-portion_opex_avg), color='#444444', lw=0.8, linestyle='--', zorder=0, label='CAF (5 years)')
+    caf_border_capex = ax.axhline(val * (1-portion_opex_avg), color='#444444', lw=0.8, linestyle='--', zorder=0, label=label_caf)
 
 ax.set_xlim(-0.6, len(scenarios) - 0.4)
 top = max(capex_plot.loc[scenarios].sum(axis=1).max(),
@@ -293,7 +295,7 @@ plt.savefig('figures/drHa_TEA_plot_3.svg', dpi=150, bbox_inches='tight', format=
 print("TEA plot saved.")
 
 #%% Summary in one bar
-summary_size = 5
+summary_size = 6
 
 capex_sorted = capex_msp.sort_values(by='C1', ascending=False).transpose().copy()
 capex_summary = pd.concat([
@@ -309,8 +311,13 @@ opex_summary = pd.concat([
 ], axis=1)
 opex_summary.rename(columns={'Carbon Capture': 'Carbon Capture (OPEX)'}, inplace=True)
 
+capex_colors_sorted = []
+for offset in range(3):
+    for item in capex_colors[offset::3]:
+        capex_colors_sorted.append(item)
+
 summary = pd.concat([capex_summary, opex_summary], axis=1)
-summary_colors = capex_colors[3:4+summary_size] + opex_colors[1:2+summary_size]
+summary_colors = capex_colors_sorted[5:6+summary_size] + opex_colors[1:2+summary_size]
 summary_components = summary.columns.tolist()
 
 bar_width = 0.45
@@ -339,10 +346,10 @@ for label in ax.get_xticklabels():
 
 # Highlight the conventional method's metric range
 caf_msp = ax.axhspan(msp_caf[0], msp_caf[1],
-                     facecolor='gray', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)')
+                     facecolor='gray', alpha=0.2, lw=0, zorder=0, label=label_caf)
 
 for val in msp_caf:
-    caf_border = ax.axhline(val, color='gray', lw=1, linestyle='--', zorder=0, label='CAF (5 years)')
+    caf_msp_border = ax.axhline(val, color='gray', lw=1, linestyle='--', zorder=0, label=label_caf)
 
 ax.set_xlim(-0.6, len(scenarios) - 0.4)
 top = summary.loc[scenarios].sum(axis=1).max() * 1.18
@@ -350,15 +357,24 @@ ax.set_ylim(0., top)
 
 ax.set_ylabel(r'Minimum Selling Price (\$ kg$^{-1}$)')
 
-summary_patches = [mpatches.Patch(color=summary_colors[i], label=comp)
-                   for i, comp in enumerate(summary_components)]
-summary_patches.append(caf_border)
+sum_cap_patches = [mpatches.Patch(color=summary_colors[i], label=comp)
+                 for i, comp in enumerate(summary_components[:summary_size+1])]
+sum_op_patches = [mpatches.Patch(color=summary_colors[summary_size+1+i], label=comp)
+                 for i, comp in enumerate(summary_components[summary_size+1:])]
+sum_caf_patches = [caf_msp_border]
 
-leg0 = ax.legend(handles=summary_patches, title='TEA Components',
+leg3 = ax.legend(handles=sum_caf_patches, bbox_to_anchor=(1.01, 0.9), loc='upper left')
+ax.add_artist(leg3)
+leg1 = ax.legend(handles=sum_cap_patches, title='CAPEX Components',
                  bbox_to_anchor=(1.01, 0.8), loc='upper left',
                  title_fontproperties={'weight': '500'})
+ax.add_artist(leg1)
+leg2 = ax.legend(handles=sum_op_patches, title='OPEX Components',
+          bbox_to_anchor=(1.01, 0.4), loc='upper left', borderaxespad=0.01,
+          title_fontproperties={'weight': '500'})
+# ax.add_artist(leg2)
 
-for patch in leg0.get_patches():
+for patch in leg1.get_patches() + leg2.get_patches():
     patch.set_edgecolor('#444444')
     patch.set_linewidth(0.7)
 
