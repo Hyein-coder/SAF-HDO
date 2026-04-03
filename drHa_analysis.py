@@ -249,14 +249,12 @@ for si in range(len(scenarios)):
 # Highlight the conventional method's metric range
 portion_opex_avg = ((opex_plot.sum(axis=1) / msp).sum(axis=1)).values[0] / 3
 msp_caf = [0.15, 1.52]
-ax.axhspan(msp_caf[0] * portion_opex_avg, msp_caf[1] * portion_opex_avg,
-           color='gray', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)')
-ax.axhspan(msp_caf[0] * (1-portion_opex_avg), msp_caf[1] * (1-portion_opex_avg),
-           color='gray', alpha=0.5, lw=0, zorder=0, label='CAF (5 years)')
-
-# Optional: Add a text label within or next to the span
-# ax.text(ax.get_xlim()[1] * 1.01, 2, 'Conventional\nMethod',
-#         va='center', ha='left', fontsize=9, color='gray', fontweight='500')
+caf_opex = ax.axhspan(msp_caf[0] * portion_opex_avg, msp_caf[1] * portion_opex_avg,
+                      facecolor='#FFB2B2', alpha=0.3, lw=0, zorder=0, label='CAF (5 years)',
+                      edgecolor='#FF0000', linewidth=2, linestyle='--')
+caf_capex = ax.axhspan(msp_caf[0] * (1-portion_opex_avg), msp_caf[1] * (1-portion_opex_avg),
+                       facecolor='gray', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)',
+                       edgecolor='#000000', linewidth=2, linestyle=':')
 
 ax.set_xlim(-0.6, len(scenarios) - 0.4)
 top = max(capex_plot.loc[scenarios].sum(axis=1).max(),
@@ -269,8 +267,10 @@ ax.set_ylabel(r'Minimum Selling Price (\$ kg$^{-1}$)')
 
 capex_patches = [mpatches.Patch(color=capex_colors[i], label=comp)
                  for i, comp in enumerate(capex_components)]
+capex_patches.append(caf_opex)
 opex_patches  = [mpatches.Patch(color=opex_colors[i], label=comp)
                  for i, comp in enumerate(opex_components)]
+opex_patches.append(caf_capex)
 
 leg1 = ax.legend(handles=capex_patches, title='CAPEX Components', ncol=2,
                  bbox_to_anchor=(1.01, 0.8), loc='upper left',
