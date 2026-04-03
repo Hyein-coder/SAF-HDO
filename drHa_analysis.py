@@ -248,9 +248,10 @@ for si in range(len(scenarios)):
 
 # Highlight the conventional method's metric range
 portion_opex_avg = ((opex_plot.sum(axis=1) / msp).sum(axis=1)).values[0] / 3
-ax.axhspan(0.15 * portion_opex_avg, 1.52 * portion_opex_avg,
+msp_caf = [0.15, 1.52]
+ax.axhspan(msp_caf[0] * portion_opex_avg, msp_caf[1] * portion_opex_avg,
            color='gray', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)')
-ax.axhspan(0.15 * (1-portion_opex_avg), 1.52 * (1-portion_opex_avg),
+ax.axhspan(msp_caf[0] * (1-portion_opex_avg), msp_caf[1] * (1-portion_opex_avg),
            color='gray', alpha=0.5, lw=0, zorder=0, label='CAF (5 years)')
 
 # Optional: Add a text label within or next to the span
