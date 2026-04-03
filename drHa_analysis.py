@@ -6,9 +6,9 @@ xl_all = pd.read_excel(file_res, sheet_name=None)
 
 xl = {}
 xl_all['TEA'].columns = ['ComponentGroup', 'Category', 'C2', 'C1', 'A1', 'B1', 'B4']
-xl['TEA'] = xl_all['TEA'][['ComponentGroup', 'Category', 'C2', 'B4', 'C1']]
+xl['TEA'] = xl_all['TEA'][['ComponentGroup', 'Category', 'B4', 'C1', 'C2']]
 xl_all['LCA'].index = ['C2', 'C1', 'A1', 'B1', 'B4']
-xl['LCA'] = xl_all['LCA'].loc[['C2', 'B4', 'C1']]
+xl['LCA'] = xl_all['LCA'].loc[['B4', 'C1', 'C2']]
 
 #%% TEA
 equipments = xl['TEA'].query("ComponentGroup == 'Equipment'").copy()
@@ -209,7 +209,7 @@ opex_pos  = x_centers + bar_width/2 + gap/2
 capex_components = capex_plot.columns.tolist()
 opex_components  = opex_plot.columns.tolist()
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(7,4))
 
 for si, scen in enumerate(scenarios):
     # CAPEX stacked bar
@@ -246,6 +246,17 @@ for si in range(len(scenarios)):
     ax.text(opex_pos[si]+0.02,  -0.025, 'OPEX',
             ha='center', va='top', fontsize=8, color='#B71C1C', fontweight='500')
 
+# Highlight the conventional method's metric range
+portion_opex_avg = ((opex_plot.sum(axis=1) / msp).sum(axis=1)).values[0] / 3
+ax.axhspan(0.15 * portion_opex_avg, 1.52 * portion_opex_avg,
+           color='gray', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)')
+ax.axhspan(0.15 * (1-portion_opex_avg), 1.52 * (1-portion_opex_avg),
+           color='gray', alpha=0.5, lw=0, zorder=0, label='CAF (5 years)')
+
+# Optional: Add a text label within or next to the span
+# ax.text(ax.get_xlim()[1] * 1.01, 2, 'Conventional\nMethod',
+#         va='center', ha='left', fontsize=9, color='gray', fontweight='500')
+
 ax.set_xlim(-0.6, len(scenarios) - 0.4)
 top = max(capex_plot.loc[scenarios].sum(axis=1).max(),
           opex_plot.loc[scenarios].sum(axis=1).max()) * 1.18
@@ -261,7 +272,7 @@ opex_patches  = [mpatches.Patch(color=opex_colors[i], label=comp)
                  for i, comp in enumerate(opex_components)]
 
 leg1 = ax.legend(handles=capex_patches, title='CAPEX Components', ncol=2,
-                 bbox_to_anchor=(1.01, 1), loc='upper left',
+                 bbox_to_anchor=(1.01, 0.8), loc='upper left',
                  title_fontproperties={'weight': '500'})
 ax.add_artist(leg1)
 lef2 = ax.legend(handles=opex_patches, title='OPEX Components', ncol=2,
@@ -273,8 +284,8 @@ for patch in leg1.get_patches() + lef2.get_patches():
     patch.set_linewidth(0.7)
 
 plt.tight_layout()
-plt.savefig('figures/drHa_TEA_plot.png', dpi=150, bbox_inches='tight')
-plt.savefig('figures/drHa_TEA_plot.svg', dpi=150, bbox_inches='tight', format='svg')
+plt.savefig('figures/drHa_TEA_plot_3.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/drHa_TEA_plot_3.svg', dpi=150, bbox_inches='tight', format='svg')
 print("TEA plot saved.")
 
 #%% LCA
@@ -299,6 +310,9 @@ for k, v in lca_map.items():
     lca_converted.index = [k]
     lca_res.append(lca_converted)
 lca_plot = pd.concat(lca_res).transpose()
+
+caf_row = pd.DataFrame({"CAF": 89}, index=["CAF"])
+lca_plot = pd.concat([lca_plot, caf_row])
 
 scenarios   = lca_plot.index.tolist()
 scen_labels = scenarios
@@ -363,8 +377,8 @@ for patch in leg.get_patches():
     patch.set_linewidth(0.7)
 
 plt.tight_layout()
-plt.savefig('figures/drHa_LCA_plot.png', dpi=150, bbox_inches='tight')
-plt.savefig('figures/drHa_LCA_plot.svg', dpi=150, bbox_inches='tight', format='svg')
+plt.savefig('figures/drHa_LCA_plot_3.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/drHa_LCA_plot_3.svg', dpi=150, bbox_inches='tight', format='svg')
 print("LCA plot saved.")
 
 #%% Compare with references in (Watson, 2024, JCP)
