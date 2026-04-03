@@ -292,6 +292,81 @@ plt.savefig('figures/drHa_TEA_plot_3.png', dpi=150, bbox_inches='tight')
 plt.savefig('figures/drHa_TEA_plot_3.svg', dpi=150, bbox_inches='tight', format='svg')
 print("TEA plot saved.")
 
+#%% Summary in one bar
+summary_size = 5
+
+capex_sorted = capex_msp.sort_values(by='C1', ascending=False).transpose().copy()
+capex_summary = pd.concat([
+    capex_sorted.iloc[:,:summary_size],
+    pd.DataFrame(capex_sorted.iloc[:,summary_size:].sum(axis=1), columns=['CAPEX Others'])
+], axis=1)
+capex_summary.rename(columns={'Carbon Capture': 'Carbon Capture (CAPEX)'}, inplace=True)
+
+opex_sorted = opex_msp.sort_values(by='C1', ascending=False).transpose().copy()
+opex_summary = pd.concat([
+    opex_sorted.iloc[:,:summary_size],
+    pd.DataFrame(opex_sorted.iloc[:,summary_size:].sum(axis=1), columns=['OPEX Others'])
+], axis=1)
+opex_summary.rename(columns={'Carbon Capture': 'Carbon Capture (OPEX)'}, inplace=True)
+
+summary = pd.concat([capex_summary, opex_summary], axis=1)
+summary_colors = capex_colors[3:4+summary_size] + opex_colors[1:2+summary_size]
+summary_components = summary.columns.tolist()
+
+bar_width = 0.45
+gap       = 0.08
+x_centers = np.arange(len(scenarios))
+
+fig, ax = plt.subplots()
+
+for si, scen in enumerate(scenarios):
+    # CAPEX stacked bar
+    bottom = 0
+    for ci, comp in enumerate(summary_components):
+        val = summary.loc[scen, comp]
+        ax.bar(x_centers[si], val, bar_width, bottom=bottom,
+               color=summary_colors[ci % len(summary_colors)],
+               edgecolor='#444444',  # Dark grey border for better segment separation
+               )
+        bottom += val
+
+    ax.text(x_centers[si]+0.02, bottom + 0.035, rf'\${bottom:.2f} kg$^{{\mathbf{{-1}}}}$',
+            ha='center', va='bottom', fontsize=9, fontweight='500', color='#444444')
+ax.set_xticks(x_centers)
+ax.set_xticklabels(scen_labels)
+for label in ax.get_xticklabels():
+    label.set_fontweight('500')
+
+# Highlight the conventional method's metric range
+caf_msp = ax.axhspan(msp_caf[0], msp_caf[1],
+                     facecolor='#FBB4AE', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)')
+
+for val in msp_caf:
+    caf_border = ax.axhline(val, color='#FBB4AE', lw=1, linestyle='--', zorder=0, label='CAF (5 years)')
+
+ax.set_xlim(-0.6, len(scenarios) - 0.4)
+top = summary.loc[scenarios].sum(axis=1).max() * 1.18
+ax.set_ylim(0., top)
+
+ax.set_ylabel(r'Minimum Selling Price (\$ kg$^{-1}$)')
+
+summary_patches = [mpatches.Patch(color=summary_colors[i], label=comp)
+                   for i, comp in enumerate(summary_components)]
+summary_patches.append(caf_border)
+
+leg0 = ax.legend(handles=summary_patches, title='TEA Components',
+                 bbox_to_anchor=(1.01, 0.8), loc='upper left',
+                 title_fontproperties={'weight': '500'})
+
+for patch in leg0.get_patches():
+    patch.set_edgecolor('#444444')
+    patch.set_linewidth(0.7)
+
+plt.tight_layout()
+plt.savefig('figures/drHa_TEA_summary_3.png', dpi=150, bbox_inches='tight')
+plt.savefig('figures/drHa_TEA_summary_3.svg', dpi=150, bbox_inches='tight', format='svg')
+print("TEA summary plot saved.")
+
 #%% LCA
 prod_saf = xl['TEA'].query("ComponentGroup == 'SAF production [kg/hr]'").copy().iloc[:,2:].reset_index(drop=True)
 prod_gas = xl['TEA'].query("ComponentGroup == 'Gasoline production [kg/hr]'").copy().iloc[:,2:].reset_index(drop=True)
@@ -336,7 +411,7 @@ lca_colors = [
 
 # 4. Setup Plot matching your specified dimensions
 fig, ax = plt.subplots(figsize=(6,4))
-bar_width = 0.45
+bar_width = 0.55
 x_centers = np.arange(len(scenarios))
 
 # 5. Build Stacked Bars with Borders
