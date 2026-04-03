@@ -339,10 +339,10 @@ for label in ax.get_xticklabels():
 
 # Highlight the conventional method's metric range
 caf_msp = ax.axhspan(msp_caf[0], msp_caf[1],
-                     facecolor='#FBB4AE', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)')
+                     facecolor='gray', alpha=0.2, lw=0, zorder=0, label='CAF (5 years)')
 
 for val in msp_caf:
-    caf_border = ax.axhline(val, color='#FBB4AE', lw=1, linestyle='--', zorder=0, label='CAF (5 years)')
+    caf_border = ax.axhline(val, color='gray', lw=1, linestyle='--', zorder=0, label='CAF (5 years)')
 
 ax.set_xlim(-0.6, len(scenarios) - 0.4)
 top = summary.loc[scenarios].sum(axis=1).max() * 1.18
