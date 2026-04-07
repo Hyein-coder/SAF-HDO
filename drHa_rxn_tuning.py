@@ -11,7 +11,7 @@ matplotlib.use('TkAgg') # Or 'Agg' for no window at all
 import matplotlib.pyplot as plt
 import pandas as pd
 
-aspen_path = r"D:\SAF_Nurul\20260330_NewSim\260401_pyrolysis_oil_CC_case_k_6.bkp"
+aspen_path = r"D:\SAF_Nurul\20260330_NewSim\260406_rxn_step_woCC_v3_k.bkp"
 case_target = "k"
 
 target_criteria = {
@@ -21,7 +21,7 @@ target_criteria = {
 }
 
 # sim = AspenSim(aspen_path)
-sim = AspenSim(aspen_path, from_directory=False)
+sim = AspenSim(aspen_path)
 
 def plot_sim_summary():
     sim_label = f'sim ({case_target})'
@@ -92,7 +92,7 @@ def plot_sim_summary():
     return draw_criteria
 
 res = plot_sim_summary()
-print(res[f"sim ({case_target})"])
+print(pd.DataFrame(res))
 # sim.terminate()
 
 #=======================================================================================================================
@@ -112,3 +112,39 @@ for case_name, case_item in prod_compare.items():
     prod_compare[case_name]["oil"] = case_sim.get_mass_flow("302")
     prod_compare[case_name]["water"] = case_sim.get_mass_flow("301")
     prod_compare[case_name]["saf"] = case_sim.get_mass_flow("326")
+
+
+#========================================================================================================================
+import time
+aspen_dir = r"D:\SAF_Nurul\20260330_NewSim"
+
+aspen_in_results = {
+    'k': '260401_pyrolysis_oil_CC_case_k_6_non_CC_recovered.bkp',
+    'i': '260120_pyrolysis_oil_CC_case_i_non_CC.bkp',
+    'j': '260401_pyrolysis_oil_CC_case_j_HOadjustment3_non_CC.bkp'
+}
+supp_info = target_criteria.copy()
+for symbol, path in aspen_in_results.items():
+    aspen_path = os.path.join(aspen_dir, path)
+    print(f"Sim: {symbol}")
+    sim = AspenSim(aspen_path, case_target=symbol)
+    sim_label = f'sim ({symbol})'
+
+    cc = sim.get_carbon_number_composition(sim.prod_stream)
+    elemental_composition = sim.get_elemental_composition("302")
+    product = sim.get_mass_flow(sim.prod_stream)
+    oil = sim.get_mass_flow("302")
+    water = sim.get_mass_flow("301")
+    sim_criteria = {
+        "H": elemental_composition["H"] / (elemental_composition["C"] / 12),
+        "O": (elemental_composition["O"] / 16) / (elemental_composition["C"] / 12),
+        "liquid": (oil + water) / product,
+        "oil": oil / product,
+    }
+
+    supp_info[sim_label] = sim_criteria
+sim.terminate()
+time.sleep(3)
+
+df_supp_info = pd.DataFrame(supp_info)
+df_supp_info.to_csv(f"{aspen_dir}\\supp_info_results.csv", index=True)
