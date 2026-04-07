@@ -1,13 +1,15 @@
 #%%
 import pandas as pd
+import os
+from pathlib import Path
 
-file_res = r"D:\SAF_Nurul\20260330_NewSim\SAF_Sensitivity_Analysis_260401_mjsp_combined.xlsx"
+file_res = r"D:\SAF_Nurul\20260330_NewSim\SAF_Sensitivity_Analysis_260403_non_CC_all.xlsx"
 xl_all = pd.read_excel(file_res, sheet_name=None)
 
 xl = {}
-xl_all['TEA'].columns = ['ComponentGroup', 'Category', 'C2', 'C1', 'A1', 'B1', 'B4']
+xl_all['TEA'].columns = ['ComponentGroup', 'Category', 'C2', 'C1', 'B4']
 xl['TEA'] = xl_all['TEA'][['ComponentGroup', 'Category', 'B4', 'C1', 'C2']]
-xl_all['LCA'].index = ['C2', 'C1', 'A1', 'B1', 'B4']
+xl_all['LCA'].index = ['C2', 'C1', 'B4']
 xl['LCA'] = xl_all['LCA'].loc[['B4', 'C1', 'C2']]
 
 #%% TEA
@@ -94,6 +96,14 @@ capex_msp = capex / total_capex * cf_ratio_capex * msp.iloc[0,:]
 total_opex = opex.sum(axis=0)
 cf_ratio_opex = msp_breakdown.loc['OPEX'] / msp_breakdown.loc['Sales']
 opex_msp = opex / total_opex * cf_ratio_opex * msp.iloc[0,:]
+
+capex_for_SI = pd.concat([capex, pd.DataFrame(total_capex, columns=['Total']).transpose()])
+opex_for_SI = pd.concat([opex, pd.DataFrame(total_opex, columns=['Total']).transpose()])
+res_path = os.path.join(os.path.dirname(file_res), Path(file_res).stem + '_for_SI.xlsx')
+with pd.ExcelWriter(res_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+    capex_for_SI.to_excel(writer, sheet_name='CAPEX', index=True)
+    opex_for_SI.to_excel(writer, sheet_name='OPEX', index=True)
+
 
 #%%
 import matplotlib.pyplot as plt
@@ -194,6 +204,10 @@ opex_colors = [
     '#B56565'   # Deep Coral Rose
 ]
 
+# Highlight the conventional method's metric range
+msp_caf = [0.63, 1.03]
+label_caf = 'CAF (2 years)'
+
 capex_plot = capex_msp.transpose()
 opex_plot = opex_msp.transpose()
 scenarios = capex_plot.index.tolist()
@@ -245,10 +259,6 @@ for si in range(len(scenarios)):
             ha='center', va='top', fontsize=8, color='#1565C0', fontweight='500')
     ax.text(opex_pos[si]+0.02,  -0.025, 'OPEX',
             ha='center', va='top', fontsize=8, color='#B71C1C', fontweight='500')
-
-# Highlight the conventional method's metric range
-msp_caf = [0.74, 1.61]
-label_caf = 'CAF (3 months)'
 
 portion_opex_avg = ((opex_plot.sum(axis=1) / msp).sum(axis=1)).values[0] / 3
 caf_opex = ax.axhspan(msp_caf[0] * portion_opex_avg, msp_caf[1] * portion_opex_avg,
@@ -337,7 +347,7 @@ for si, scen in enumerate(scenarios):
                )
         bottom += val
 
-    ax.text(x_centers[si]+0.02, bottom + 0.035, rf'\${bottom:.2f} kg$^{{\mathbf{{-1}}}}$',
+    ax.text(x_centers[si]+0.02, bottom + 0.001, rf'\${bottom:.2f} kg$^{{\mathbf{{-1}}}}$',
             ha='center', va='bottom', fontsize=9, fontweight='500', color='#444444')
 ax.set_xticks(x_centers)
 ax.set_xticklabels(scen_labels)
@@ -383,7 +393,8 @@ plt.savefig('figures/drHa_TEA_summary_3.png', dpi=150, bbox_inches='tight')
 plt.savefig('figures/drHa_TEA_summary_3.svg', dpi=150, bbox_inches='tight', format='svg')
 print("TEA summary plot saved.")
 
-#%% LCA
+#%% ====================================================================================================================
+""" LCA """
 prod_saf = xl['TEA'].query("ComponentGroup == 'SAF production [kg/hr]'").copy().iloc[:,2:].reset_index(drop=True)
 prod_gas = xl['TEA'].query("ComponentGroup == 'Gasoline production [kg/hr]'").copy().iloc[:,2:].reset_index(drop=True)
 prod_total = prod_saf + prod_gas
@@ -408,6 +419,8 @@ lca_plot = pd.concat(lca_res).transpose()
 
 caf_row = pd.DataFrame({"CAF": 89}, index=["CAF"])
 lca_plot = pd.concat([lca_plot, caf_row])
+with pd.ExcelWriter(res_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+    lca_plot.to_excel(writer, sheet_name='LCA', index=True)
 
 scenarios   = lca_plot.index.tolist()
 scen_labels = scenarios
