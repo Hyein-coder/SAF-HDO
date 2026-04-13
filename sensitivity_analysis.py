@@ -96,7 +96,7 @@ from matplotlib import rcParams
 import numpy as np
 fs = 10
 dpi = 200
-config_figure = {'figure.figsize': (4, 2.5), 'figure.titlesize': fs,
+config_figure = {'figure.figsize': (4.2, 3.2), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'font.sans-serif': ['Helvetica Neue LT Pro'],
                  'font.weight': '300', 'axes.titleweight': '400', 'axes.labelweight': '300',
@@ -107,7 +107,7 @@ config_figure = {'figure.figsize': (4, 2.5), 'figure.titlesize': fs,
                  'lines.linewidth': 1, 'hatch.linewidth': 0.5, 'hatch.color': 'w',
                  'figure.subplot.left': 0.15, 'figure.subplot.right': 0.93,
                  'figure.subplot.top': 0.95, 'figure.subplot.bottom': 0.15,
-                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': False,  # change here True if you want transparent background
+                 'figure.dpi': dpi, 'savefig.dpi': dpi*5, 'savefig.transparent': True,  # change here True if you want transparent background
                  'text.usetex': False, 'mathtext.default': 'regular',
                  'text.latex.preamble': r'\usepackage{amsmath,amssymb,bm,physics,lmodern,cmbright}'}
 rcParams.update(config_figure)
@@ -150,7 +150,8 @@ for t, l in zip(target_to_draw, label_to_draw):
 
     fig.tight_layout()
     plt.savefig(os.path.join(r'D:\saf_hdo\figures', f'experimental_validation_{l}.png'))
-    plt.show()
+    plt.savefig(os.path.join(r'D:\saf_hdo\figures', f'experimental_validation_{l}.svg'), format='svg', bbox_inches='tight')
+# plt.show()
 
 #%%
 from matplotlib import rcParams

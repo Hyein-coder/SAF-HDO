@@ -123,7 +123,7 @@ params = ['param_0', 'param_1']
 
 #%% TRI-AXIS PLOT
 output_data = [saf, msp, lca]
-output_label = ['SAF Production [t h$^{-1}$]', 'MSP [\$ kg$^{-1}$]', 'GWP [gCO$_2$e MJ$^{-1}$]']
+output_label = ['SAF Production (t h$^{-1}$)', 'MSP (\$ kg$^{-1}$)', 'GWP (gCO$_2$e MJ$^{-1}$)']
 output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)) for x in output_data]
 # output_scale = [(min(x.iloc[:,0])*0.95, max(x.iloc[:,0])*1.05) for x in output_data]
 
@@ -192,7 +192,7 @@ for i, idx_param in enumerate(params):
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_label = [pretty_names[0], pretty_names[1]]
 output_data = [ng, msp]
-output_label = ['NG Consumption [t h$^{-1}$]', 'MSP [\$ kg$^{-1}$]']
+output_label = ['NG Consumption (t h$^{-1}$)', 'MSP (\$ kg$^{-1}$)']
 for z_val, z_name in zip(output_data, output_label):
     fig, ax = plt.subplots(1, 1)
     # sc = ax.scatter(input_data[0].iloc[:,0], input_data[1].iloc[:,0], c=z_val.iloc[:,0], cmap='viridis', s=50, alpha=0.8)
@@ -200,7 +200,7 @@ for z_val, z_name in zip(output_data, output_label):
     cbar = fig.colorbar(sc, ax=ax, label=z_name)
     ax.set_xlabel(input_label[0])
     ax.set_ylabel(input_label[1])
-    z_name_wo_unit = z_name.split('[')[0].strip()
+    z_name_wo_unit = z_name.split('(')[0].strip()
     plt.savefig(os.path.join(dir_save, f"random_{timestamp}_heat_{z_name_wo_unit}.png"))
     plt.savefig(os.path.join(dir_save, f"random_{timestamp}_heat_{z_name_wo_unit}.svg"), format='svg', bbox_inches='tight')
     # plt.show()
@@ -221,7 +221,7 @@ input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
 output_data = [h2, msp.iloc[:,0], lca.iloc[:,0]]
-output_label = ["H2 Consumption [t h$^{-1}$]", "MSP [\$ kg$^{-1}$]", r"GWP [gCO$_2$e MJ$^{-1}$]"]
+output_label = ["H2 Consumption (t h$^{-1}$)", "MSP (\$ kg$^{-1}$)", r"GWP (gCO$_2$e MJ$^{-1}$)"]
 output_cmap = ['viridis', 'magma_r', 'magma_r']
 # 1. Helper function for coordinates
 def ternary_to_cartesian(a, b, c):
@@ -253,7 +253,7 @@ for data, label, cmap in zip(output_data, output_label, output_cmap):
     cb1.set_label(label)
 
     plt.tight_layout()
-    label_wo_unit = label.split('[')[0].strip()
+    label_wo_unit = label.split('(')[0].strip()
     plt.savefig(os.path.join(dir_save, f"random_{timestamp}_ternary_{label_wo_unit}.png"))
     plt.savefig(os.path.join(dir_save, f"random_{timestamp}_ternary_{label_wo_unit}.svg"), format='svg', bbox_inches='tight')
     # plt.show()
@@ -264,7 +264,8 @@ import datetime
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_label = pretty_names
 output_data = [h2, saf, ng]
-output_label = [r'H$_2$ Consumption [t h$^{-1}$]', 'SAF Production [t h$^{-1}$]', r'NG Consumption [t h$^{-1}$]']
+output_label = [r'H$_2$ Consumption (t h$^{-1}$)', 'SAF Production (t h$^{-1}$)', r'NG Consumption (t h$^{-1}$)']
+output_label_wo_unit = [l.split('(')[0].strip() for l in output_label]
 output_scale = [(np.floor(min(x.iloc[:,0])*0.99), np.ceil(max(x.iloc[:,0])*1.01)) for x in output_data]
 # output_scale = [(min(x.iloc[:,0])*0.95, max(x.iloc[:,0])*1.05) for x in output_data]
 
@@ -273,7 +274,7 @@ colormaps = ["#004166", "#e95924", "#198747"]
 
 fs = 10
 config_custom = config_figure.copy()
-config_custom.update({'figure.figsize': (4.3, 3), 'figure.titlesize': fs,
+config_custom.update({'figure.figsize': (4.3, 3.2), 'figure.titlesize': fs,
                  'font.size': fs, 'font.family': 'sans-serif', 'font.serif': ['computer modern roman'],
                  'axes.xmargin': 0, 'axes.titlesize': fs, 'axes.labelsize': fs, 'axes.labelpad': 2,
                  'xtick.labelsize': fs-2, 'ytick.labelsize': fs-2, 'xtick.major.pad': 0, 'ytick.major.pad': 0,
@@ -283,24 +284,29 @@ rcParams.update(config_custom)
 
 for i, input_i in enumerate(input_data):
     fig, ax = plt.subplots(1, 1)
-    ax.plot(input_i, output_data[0], 'o', c=colormaps[0], markersize=5, linewidth=2, alpha=0.5)
+    ax.plot(input_i, output_data[0], 'o', c=colormaps[0], markersize=5, linewidth=2, alpha=0.5, label=output_label_wo_unit[0])
     # ax.tick_params(axis='y', labelcolor='blue', colors='blue')
     # ax.spines['left'].set_color("blue")
 
     ax2 = ax.twinx()
-    ax2.plot(input_i, output_data[1], 'o', c=colormaps[1], markersize=5, linewidth=2, alpha=0.5)
+    ax2.plot(input_i, output_data[1], 'o', c=colormaps[1], markersize=5, linewidth=2, alpha=0.5, label=output_label_wo_unit[1])
     ax2.tick_params(axis='y', labelcolor=colormaps[1], colors=colormaps[1])
     ax2.spines['right'].set_color(colormaps[1])
     ax2.set_ylim(output_scale[1])
 
     ax3 = ax.twinx()
     ax3.spines["right"].set_position(("outward", 35))
-    ax3.plot(input_i, output_data[2], 'o', c=colormaps[2], markersize=5, linewidth=2, alpha=0.5)
+    ax3.plot(input_i, output_data[2], 'o', c=colormaps[2], markersize=5, linewidth=2, alpha=0.5, label=output_label_wo_unit[2])
 
     ax3.tick_params(axis='y', labelcolor=colormaps[2], color=colormaps[2])
     ax3.spines['right'].set_color(colormaps[2])
     ax3.set_ylim(output_scale[2])
-    axs3.append(ax3)
+
+    h1, l1 = ax.get_legend_handles_labels()
+    h2, l2 = ax2.get_legend_handles_labels()
+    h3, l3 = ax3.get_legend_handles_labels()
+    ax.legend(h1 + h2 + h3, l1 + l2 + l3, loc='lower center', bbox_to_anchor=(0.5, 1.02),
+              ncol=3, borderaxespad=0)
 
     ax.set_xlabel(input_label[i])
     ax.set_ylabel(output_label[0])
@@ -333,9 +339,9 @@ rcParams.update(config_custom)
 input_data = [sim_selected['param_0'], sim_selected['param_1']]
 input_data.append(1 - input_data[0] - input_data[1])
 input_label = [pretty_names[0], pretty_names[1], 'Base']
-output_data = [h2.values[:,0], msp.iloc[:,0], lca.iloc[:,0]]
-output_label = [r"H2 Consumption [t h$^{-1}$]",
-                "MSP [\$ kg$^{-1}$]", r"GWP [gCO$_2$e MJ$^{-1}$]"]
+output_data = [h2, msp.iloc[:,0], lca.iloc[:,0]]
+output_label = [r"H2 Consumption (t h$^{-1}$)",
+                "MSP (\$ kg$^{-1}$)", r"GWP (gCO$_2$e MJ$^{-1}$)"]
 output_cmap = ['viridis', 'magma_r', 'magma_r']
 
 def ternary_to_cartesian(a, b, c):
@@ -365,15 +371,16 @@ tx, ty = ternary_to_cartesian(np.array(input_data[0]),
 for data, label, cmap in zip(output_data, output_label, output_cmap):
     fig, ax = plt.subplots(1, 1)
     draw_ternary_frame(ax)
+    z = np.array(data).reshape(-1, )
 
     # 1. Create Filled Contours (The main heat map)
     # levels=14 determines how smooth the gradients look.
     # Use extend='both' to capture min/max outliers nicely.
-    contour_filled = ax.tricontourf(tx, ty, data, levels=14, cmap=cmap, extend='both')
+    contour_filled = ax.tricontourf(tx, ty, z, levels=14, cmap=cmap, extend='both')
 
     # 2. (Optional) Create Contour Lines
     # This draws thin lines between color changes to define boundaries clearly
-    contour_lines = ax.tricontour(tx, ty, data, levels=14, colors=['k'],
+    contour_lines = ax.tricontour(tx, ty, z, levels=14, colors=['k'],
                                   linewidths=0.5, alpha=0.3)
 
     # 3. Add Colorbar
@@ -383,7 +390,7 @@ for data, label, cmap in zip(output_data, output_label, output_cmap):
     cb.ax.tick_params(labelsize=fs-2)
 
     plt.tight_layout(pad=1.0)
-    label_wo_unit = label.split('[')[0].strip()
+    label_wo_unit = label.split('(')[0].strip()
     plt.savefig(os.path.join(dir_save, f"random_{timestamp}_contour_{label_wo_unit}.png"))
     plt.savefig(os.path.join(dir_save, f"random_{timestamp}_contour_{label_wo_unit}.svg"), format='svg', bbox_inches='tight')
 plt.show()
