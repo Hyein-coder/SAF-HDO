@@ -6,13 +6,13 @@ Date: 2026-07-31.
 
 ## Variables IN USE
 
-| # | Variable (code) | Rationale | Range | Citations |
-|---|---|---|---|---|
-| 1 | Feedstock GWP — `GWP_biomass` (0.1772), `LCA.BM` | Biomass cultivation/collection often top GHG contributor | ±20–50% | D'Ascenzo 2024; Fitriasari 2023; Arfan 2023 |
-| 3 | Electricity grid factor — `EL_GRID` (0.674) + scenario factors (`EL_FUTURE/NUCLEAR/WIND/PHOTO`) | Drives GWP; grid decarbonization lever already built as scenarios | grid ↔ renewable (0.016–0.674 kg/kWh) | Rojas-Michaga 2023 (Monte Carlo); npj Sust. Mobility 2026 |
-| 5 | Natural gas — `GWP_NG` (0.2221), `NG_kg` | Process heat / feed | ±20% | Almena 2024 |
-| 6 | Co-product allocation method — mass vs energy (`ratio_SAF`, /42, /48.168) | Method choice shifts SAF burden materially | energy ↔ mass ↔ system expansion | Batten 2024; Osman 2024 (review) |
-| 7 | Utility emission factors — `STEAM` (0.1186), `COOL` (7.05e-5), `WWT` (0.431) | Secondary but cheap to test | ±20% | Fitriasari 2023 |
+| #   | Variable (code)                                                                                 | Rationale                                                         | Range                                 | Citations                                                 |
+| --- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------- | --------------------------------------------------------- |
+| 1   | Feedstock GWP — `GWP_biomass` (0.1772), `LCA.BM`                                                | Biomass cultivation/collection often top GHG contributor          | ±20–50%                               | D'Ascenzo 2024; Fitriasari 2023; Arfan 2023               |
+| 3   | Electricity grid factor — `EL_GRID` (0.674) ✅ integrated into OAT (`LCA_OAT_SAF.m`), replaces old 5-scenario structure | Drives GWP; grid decarbonization lever | grid ↔ renewable (0.016–0.674 kg/kWh) | Rojas-Michaga 2023 (Monte Carlo); npj Sust. Mobility 2026 |
+| 5   | Natural gas — `GWP_NG` (0.2221), `NG_kg`                                                        | Process heat / feed                                               | ±20%                                  | Almena 2024                                               |
+| 6   | Co-product allocation method — mass vs energy (`ratio_SAF`, /42, /48.168)                       | Method choice shifts SAF burden materially                        | energy ↔ mass ↔ system expansion      | Batten 2024; Osman 2024 (review)                          |
+| 7   | Utility emission factors — `STEAM` (0.1186), `COOL` (7.05e-5), `WWT` (0.431)                    | Secondary but cheap to test                                       | ±20%                                  | Fitriasari 2023                                           |
 
 ## Variables ON HOLD
 
@@ -43,3 +43,23 @@ Date: 2026-07-31.
 
 1. **OAT tornado** — perturb each IN-USE variable ±10–20%, rank by ΔGWP.
 2. **Monte Carlo** — distributions on background EFs (electricity, feedstock, NG, utilities), 10,000 runs, report 95% CI (per Rojas-Michaga 2023).
+
+## Implementation & results
+
+- Script: `lca_oat_from_excel.py` — reads EF-scaled contribution columns (`Scenario_*`) straight from the SA Excel and scales each group; **no Aspen/MATLAB re-run needed**. (`LCA_OAT_SAF.m` = MATLAB variant that re-runs Aspen, for pipeline integration.)
+- Baseline data: `data/SAF_Sensitivity_Analysis_260403_non_CC.xlsx`, case `260401_pyrolysis_oil_CC_case_j_HOadjustment3_non_CC` = **manuscript baseline 32.32 gCO₂/MJ** (mass-basis allocation). Utility EFs split into steam / cooling / WWT.
+- Perturbations: biomass ±30%, elec/NG/steam/cool/WWT ±20%, allocation = energy-vs-mass discrete.
+
+OAT swing (base 32.32 gCO₂/MJ; contribution share of S₀ in parens):
+
+| Variable | ±% | Swing | Note |
+|---|---|---|---|
+| WWT EF | ±20% | 17.3% | dominant (43% of S₀) |
+| Feedstock GWP (biomass) | ±30% | 13.6% | (23%) |
+| Natural gas GWP | ±20% | 7.4% | |
+| Electricity grid factor | ±20% | 6.3% | (16%) |
+| Allocation (energy vs mass) | — | 1.6% | energy = 32.85 g/MJ |
+| Steam EF | ±20% | 0.004% | negligible |
+| Cooling EF | ±20% | ~0% | negligible |
+
+Outputs: `lca_oat_results.csv`, `lca_oat_tornado.png`.
