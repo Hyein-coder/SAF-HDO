@@ -39,7 +39,6 @@ fig.tight_layout(); fig.savefig(os.path.join(SADIR,'tornado_ijk.png'),dpi=150); 
 fig,axs=plt.subplots(1,3,figsize=(16,4.5))
 for ax,c in zip(axs,CASES):
     for name,pts in oat[c].items():
-        if name.startswith('Hydrogen'): continue  # inert, flat
         pts=sorted(pts)
         xs=[p[0] for p in pts]; ys=[p[1] for p in pts]
         # x as % deviation from central grid value

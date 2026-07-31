@@ -1,9 +1,4 @@
 case,parameter,value,msp
-j,Hydrogen price ($/kg),1.0,1.085054
-j,Hydrogen price ($/kg),1.5,1.085054
-j,Hydrogen price ($/kg),2.0,1.085054
-j,Hydrogen price ($/kg),2.5,1.085054
-j,Hydrogen price ($/kg),3.34,1.085054
 j,Feedstock cost (x),0.5,0.735967
 j,Feedstock cost (x),0.75,0.91051
 j,Feedstock cost (x),1.0,1.085054
@@ -35,11 +30,6 @@ j,Natural gas price (x),0.75,1.077064
 j,Natural gas price (x),1.0,1.085054
 j,Natural gas price (x),1.25,1.093043
 j,Natural gas price (x),1.5,1.101032
-k,Hydrogen price ($/kg),1.0,0.949921
-k,Hydrogen price ($/kg),1.5,0.949921
-k,Hydrogen price ($/kg),2.0,0.949921
-k,Hydrogen price ($/kg),2.5,0.949921
-k,Hydrogen price ($/kg),3.34,0.949921
 k,Feedstock cost (x),0.5,0.644818
 k,Feedstock cost (x),0.75,0.797369
 k,Feedstock cost (x),1.0,0.949921
@@ -71,11 +61,6 @@ k,Natural gas price (x),0.75,0.942206
 k,Natural gas price (x),1.0,0.949921
 k,Natural gas price (x),1.25,0.957635
 k,Natural gas price (x),1.5,0.96535
-i,Hydrogen price ($/kg),1.0,1.406612
-i,Hydrogen price ($/kg),1.5,1.406612
-i,Hydrogen price ($/kg),2.0,1.406612
-i,Hydrogen price ($/kg),2.5,1.406612
-i,Hydrogen price ($/kg),3.34,1.406612
 i,Feedstock cost (x),0.5,0.983776
 i,Feedstock cost (x),0.75,1.195194
 i,Feedstock cost (x),1.0,1.406612

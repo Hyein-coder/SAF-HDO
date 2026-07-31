@@ -5,6 +5,9 @@ annualized OPEX = C_inventory / lifetime, in `C_util`/`COM`). Frozen Aspen
 results reused (no re-run); cash-flow ported from `sa/cash_flow_SA.m` and
 validated to reproduce each published MSP to 0.000%.
 
+## Decision log
+- **2026-07-31 — Hydrogen price sensitivity DISCARDED.** No external H₂ source: H₂ is produced internally by SMR of light process gases, so the cash-flow model carries no H₂ purchase cost (`C_feed` = biomass + NG only) and MSP swing is exactly 0.000 $/kg across 1.0–3.34 $/kg. Removed from the sweep (`run_sa_ijk.py`, `SA_driver.m`) rather than reported as a null result.
+
 ## Base MSP ($/kg)
 | case | published (no catalyst OPEX) | this TEA (catalyst replacement) | Δ |
 |---|---|---|---|
@@ -23,12 +26,11 @@ Catalyst OPEX raises MSP by ~0.03–0.04 % — negligible.
 | Plant life | 10–20 yr | 0.117 | 0.096 | 0.085 |
 | Natural gas price | ×0.5–1.5 | 0.043 | 0.032 | 0.031 |
 | Catalyst lifetime | 1–5 yr | 0.0012 | 0.0010 | 0.0009 |
-| Hydrogen price | 1.0–3.34 | 0.000 | 0.000 | 0.000 |
 
 ## Findings
 - **Feedstock cost dominates**, then discount rate ≈ CAPEX, then plant life. Same ranking all three cases.
 - **Catalyst lifetime is a live but tiny lever**: shorter life → higher MSP (correct direction), swing ~0.001 $/kg. Catalyst is ~0.05 % of OPEX.
-- **Hydrogen price has ZERO effect** — the published cash-flow model has **no H₂ purchase cost** (H₂ is produced internally by SMR of light gases; `C_feed` = biomass + NG only). The reviewer's H₂-price sensitivity cannot be answered without first adding an H₂ cost/credit term to the model. Flag for decision.
+- **Hydrogen price discarded** — the published cash-flow model has **no H₂ purchase cost** (H₂ is produced internally by SMR of light gases; `C_feed` = biomass + NG only), so H₂ price has zero effect on MSP. Removed from the sweep.
 
 ## Files
 - `sa_oat_ijk.csv`, `sa_tornado_ijk.csv` — data

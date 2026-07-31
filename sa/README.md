@@ -2,7 +2,8 @@
 
 Answers CEJ reviewer requests for a techno-economic sensitivity analysis of
 **MSP** (minimum selling price of SAF) w.r.t. **catalyst lifetime**,
-**hydrogen price**, **feedstock/pyrolysis-oil cost**, and general robustness.
+**feedstock/pyrolysis-oil cost**, and general robustness. (Hydrogen price
+discarded — model has no H₂ purchase term, so its MSP swing is zero.)
 
 ## Why this is separate from the existing SA
 `Sensitivity_1210/` and `to_Nurul_20260209/` sweep the *process/product
@@ -51,7 +52,6 @@ baseline (with replacement) so the delta is explicit.
 ## Parameters and ranges
 | Parameter | Base | Range | Basis |
 |---|---|---|---|
-| Hydrogen price | 1.3 $/kg | 1.0–3.34 $/kg | grey↔green literature spread (3.34 already cited in COST_PARAMETER) |
 | Feedstock cost | ~0.11 $/kg ($80/dry-ton) | ±50% | NREL feedstock, reviewer "feedstock variation" |
 | Catalyst lifetime | 3 yr | 1–5 yr | reviewer request |
 | Discount rate | 0.15 | 0.08–0.20 | standard TEA range |

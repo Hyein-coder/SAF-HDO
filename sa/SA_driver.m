@@ -56,10 +56,9 @@ fprintf('  delta from costing catalyst replacement:    %+.4f $/kg\n', MSP_base -
 %% ---- Parameter definitions --------------------------------------------
 % Each row: display name | override key | base value | grid (row vector)
 % Grids are chosen from the model's own base values and literature bounds.
-bBIO = baseCOST.BIOMASS;  bH2 = baseCOST.H2;  bNG = baseCOST.NG;
+bBIO = baseCOST.BIOMASS;  bNG = baseCOST.NG;
 P = {
 %   name                         key              base            grid
-   'Hydrogen price ($/kg)'      ,'H2'            , bH2           , [1.00 1.50 2.00 2.50 3.34]
    'Feedstock cost ($/kg)'      ,'BIOMASS'       , bBIO          , bBIO*[0.50 0.75 1.00 1.25 1.50]
    'Catalyst lifetime (yr)'     ,'catalyst_year' , baseCOST.catalyst.year , [1 2 3 4 5]
    'Discount rate (-)'          ,'irate'         , baseCOST.irate, [0.08 0.10 0.12 0.15 0.18 0.20]

@@ -7,7 +7,6 @@ cases=m.cases; solve=m.solve_msp
 # parameter grids (from sa/SA_driver.m)
 def sweeps():
     return [
-      ('Hydrogen price ($/kg)','H2',      [1.00,1.50,2.00,2.50,3.34], lambda v:{}),  # inert: no H2 term
       ('Feedstock cost (x)',   'bio_mult',[0.50,0.75,1.00,1.25,1.50], lambda v:{'bio_mult':v}),
       ('Catalyst lifetime (yr)','cat_year',[1,2,3,4,5],               lambda v:{'cat_year':v,'cat_replace':True}),
       ('Discount rate (-)',    'irate',   [0.08,0.10,0.12,0.15,0.18,0.20], lambda v:{'irate':v}),
