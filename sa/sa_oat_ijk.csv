@@ -1,0 +1,109 @@
+case,parameter,value,msp
+j,Hydrogen price ($/kg),1.0,1.085054
+j,Hydrogen price ($/kg),1.5,1.085054
+j,Hydrogen price ($/kg),2.0,1.085054
+j,Hydrogen price ($/kg),2.5,1.085054
+j,Hydrogen price ($/kg),3.34,1.085054
+j,Feedstock cost (x),0.5,0.735967
+j,Feedstock cost (x),0.75,0.91051
+j,Feedstock cost (x),1.0,1.085054
+j,Feedstock cost (x),1.25,1.259597
+j,Feedstock cost (x),1.5,1.43414
+j,Catalyst lifetime (yr),1,1.08586
+j,Catalyst lifetime (yr),2,1.085255
+j,Catalyst lifetime (yr),3,1.085054
+j,Catalyst lifetime (yr),4,1.084953
+j,Catalyst lifetime (yr),5,1.084892
+j,Discount rate (-),0.08,0.974329
+j,Discount rate (-),0.1,1.003866
+j,Discount rate (-),0.12,1.035101
+j,Discount rate (-),0.15,1.085054
+j,Discount rate (-),0.18,1.138599
+j,Discount rate (-),0.2,1.17622
+j,Plant life (yr),10,1.155259
+j,Plant life (yr),12,1.117382
+j,Plant life (yr),15,1.085054
+j,Plant life (yr),18,1.067137
+j,Plant life (yr),20,1.059494
+j,CAPEX multiplier (-),0.7,0.998712
+j,CAPEX multiplier (-),0.85,1.041883
+j,CAPEX multiplier (-),1.0,1.085054
+j,CAPEX multiplier (-),1.15,1.128225
+j,CAPEX multiplier (-),1.3,1.171396
+j,Natural gas price (x),0.5,1.069075
+j,Natural gas price (x),0.75,1.077064
+j,Natural gas price (x),1.0,1.085054
+j,Natural gas price (x),1.25,1.093043
+j,Natural gas price (x),1.5,1.101032
+k,Hydrogen price ($/kg),1.0,0.949921
+k,Hydrogen price ($/kg),1.5,0.949921
+k,Hydrogen price ($/kg),2.0,0.949921
+k,Hydrogen price ($/kg),2.5,0.949921
+k,Hydrogen price ($/kg),3.34,0.949921
+k,Feedstock cost (x),0.5,0.644818
+k,Feedstock cost (x),0.75,0.797369
+k,Feedstock cost (x),1.0,0.949921
+k,Feedstock cost (x),1.25,1.102472
+k,Feedstock cost (x),1.5,1.255023
+k,Catalyst lifetime (yr),1,0.950626
+k,Catalyst lifetime (yr),2,0.950097
+k,Catalyst lifetime (yr),3,0.949921
+k,Catalyst lifetime (yr),4,0.949832
+k,Catalyst lifetime (yr),5,0.949779
+k,Discount rate (-),0.08,0.851385
+k,Discount rate (-),0.1,0.877668
+k,Discount rate (-),0.12,0.905464
+k,Discount rate (-),0.15,0.949921
+k,Discount rate (-),0.18,0.997579
+k,Discount rate (-),0.2,1.031066
+k,Plant life (yr),10,1.012501
+k,Plant life (yr),12,0.978738
+k,Plant life (yr),15,0.949921
+k,Plant life (yr),18,0.933949
+k,Plant life (yr),20,0.927137
+k,CAPEX multiplier (-),0.7,0.873216
+k,CAPEX multiplier (-),0.85,0.911568
+k,CAPEX multiplier (-),1.0,0.949921
+k,CAPEX multiplier (-),1.15,0.988273
+k,CAPEX multiplier (-),1.3,1.026625
+k,Natural gas price (x),0.5,0.934491
+k,Natural gas price (x),0.75,0.942206
+k,Natural gas price (x),1.0,0.949921
+k,Natural gas price (x),1.25,0.957635
+k,Natural gas price (x),1.5,0.96535
+i,Hydrogen price ($/kg),1.0,1.406612
+i,Hydrogen price ($/kg),1.5,1.406612
+i,Hydrogen price ($/kg),2.0,1.406612
+i,Hydrogen price ($/kg),2.5,1.406612
+i,Hydrogen price ($/kg),3.34,1.406612
+i,Feedstock cost (x),0.5,0.983776
+i,Feedstock cost (x),0.75,1.195194
+i,Feedstock cost (x),1.0,1.406612
+i,Feedstock cost (x),1.25,1.61803
+i,Feedstock cost (x),1.5,1.829448
+i,Catalyst lifetime (yr),1,1.40759
+i,Catalyst lifetime (yr),2,1.406857
+i,Catalyst lifetime (yr),3,1.406612
+i,Catalyst lifetime (yr),4,1.40649
+i,Catalyst lifetime (yr),5,1.406417
+i,Discount rate (-),0.08,1.271241
+i,Discount rate (-),0.1,1.307351
+i,Discount rate (-),0.12,1.345539
+i,Discount rate (-),0.15,1.406612
+i,Discount rate (-),0.18,1.472081
+i,Discount rate (-),0.2,1.518082
+i,Plant life (yr),10,1.492518
+i,Plant life (yr),12,1.446171
+i,Plant life (yr),15,1.406612
+i,Plant life (yr),18,1.384688
+i,Plant life (yr),20,1.375337
+i,CAPEX multiplier (-),0.7,1.301647
+i,CAPEX multiplier (-),0.85,1.35413
+i,CAPEX multiplier (-),1.0,1.406612
+i,CAPEX multiplier (-),1.15,1.459095
+i,CAPEX multiplier (-),1.3,1.511577
+i,Natural gas price (x),0.5,1.385199
+i,Natural gas price (x),0.75,1.395905
+i,Natural gas price (x),1.0,1.406612
+i,Natural gas price (x),1.25,1.417319
+i,Natural gas price (x),1.5,1.428026
