@@ -47,11 +47,13 @@ MSP_NAMES = ["bio_mult", "ng_mult", "capex_mult", "irate", "plife", "cat_year"]
 MSP_LO    = [0.50, 0.50, 0.70, 0.08, 10, 1]
 MSP_HI    = [1.50, 1.50, 1.30, 0.20, 20, 5]
 MSP_BASE  = [1.00, 1.00, 1.00, 0.15, 15, 3]
-def f_msp(X):
-    d = M.cases["j"]
-    return np.array([M.solve_msp(d, bio_mult=r[0], ng_mult=r[1], capex_mult=r[2],
-                                 irate=r[3], plife=r[4], cat_year=r[5], cat_replace=True)
-                     for r in np.atleast_2d(X)])
+def make_f_msp(case):
+    d = M.cases[case]
+    def f(X):
+        return np.array([M.solve_msp(d, bio_mult=r[0], ng_mult=r[1], capex_mult=r[2],
+                                     irate=r[3], plife=r[4], cat_year=r[5], cat_replace=True)
+                         for r in np.atleast_2d(X)])
+    return f
 
 # ---------------- GWP (linear EF scaling) ----------------
 # ponytail: replicated from lca_oat_from_excel.py rather than refactor that working
@@ -83,8 +85,25 @@ GWP_HI    = [1 + p for p in GWP_PCT]
 GWP_BASE  = [1.0] * 6
 
 if __name__ == "__main__":
-    sv_m, _, _ = run_shap(f_msp, MSP_NAMES, MSP_LO, MSP_HI, MSP_BASE,
-                          "msp_casej", "MSP SHAP (case j)", "$/kg SAF")
+    # MSP SHAP per base scenario i, j, k
+    msp_imp = {}
+    for c in ("i", "j", "k"):
+        sv, _, _ = run_shap(make_f_msp(c), MSP_NAMES, MSP_LO, MSP_HI, MSP_BASE,
+                            f"msp_case{c}", f"MSP SHAP (case {c})", "$/kg SAF")
+        msp_imp[c] = np.abs(sv).mean(0)
+    # cross-case comparison: mean|SHAP| per feature, grouped bars
+    cmp = pd.DataFrame(msp_imp, index=MSP_NAMES)
+    cmp = cmp.loc[cmp.mean(1).sort_values(ascending=False).index]
+    cmp.to_csv(os.path.join(HERE, "shap_msp_compare.csv"))
+    print("\n== MSP mean|SHAP| across cases ==")
+    print(cmp.to_string())
+    ax = cmp.plot.barh(figsize=(7.2, 4.0), width=0.8)
+    ax.invert_yaxis(); ax.set_xlabel("mean|SHAP|  ($/kg SAF)")
+    ax.set_title("MSP feature importance across base scenarios i/j/k")
+    ax.legend(title="case"); plt.tight_layout()
+    plt.savefig(os.path.join(HERE, "shap_msp_compare.png"), dpi=150); plt.close()
+    print("saved: shap_msp_compare.csv, shap_msp_compare.png")
+
     sv_g, Xg, _ = run_shap(f_gwp, GWP_NAMES, GWP_LO, GWP_HI, GWP_BASE,
                            "lca", "LCA GWP SHAP", "gCO2/MJ")
     # linearity check: KernelSHAP must recover analytic contribution shares k*c*(x-1)
