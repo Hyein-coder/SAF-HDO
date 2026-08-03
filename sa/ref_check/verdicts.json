@@ -1,0 +1,211 @@
+[
+  {
+    "param": "feedstock_cost",
+    "source_id": "inl_feedstock_2016",
+    "value_used": 0.06923,
+    "unit": "$/kg (2016$ basis, raw)",
+    "value_in_source": "$69.23/dry ton (2016$)",
+    "location": "INL Woody Feedstocks 2022 State of Technology Report (Sort_63795.pdf), cited p.16; OSTI biblio 2438337",
+    "quote": "The nth-plant analysis estimated the delivered cost for the feedstock at $69.23/dry ton (2016$).",
+    "verdict": "match",
+    "note": "0.06923 $/kg x 1000 = $69.23/dry ton = exact match. SA escalates to 0.104286 $/kg via CEPCI separately. source_id misnomer: the doc is the 2022 SOT report (pub. 2024); '2016' = dollar-year basis. Confirmed via OSTI snippet, not direct page render."
+  },
+  {
+    "param": "ng_price",
+    "source_id": "nrel_jones_2013",
+    "value_used": 0.0363,
+    "unit": "$/kg (76.57 c/MMBtu, per code comment)",
+    "value_in_source": "$5.1 per 1000 scf (EIA 2011 Industrial Natural Gas Prices)",
+    "location": "Jones et al. 2013 (PNNL/NREL fast-pyrolysis + hydrotreating pathway), Table 14 Variable Operating Costs, ~p.23; EIA source cited in ref list line 'Energy Information Administration, 2011 Industrial Natural Gas Prices'",
+    "quote": "Utilities Natural Gas, $/1000 scf ... Value 5.1 ... Source EIA 2011",
+    "verdict": "mismatch",
+    "note": "Report gives NG = $5.1/1000 scf ~ $4.95/MMBtu ~ 0.245 $/kg. Code uses 0.0363 $/kg (76.57 c/MMBtu) ~ 6.7x LOWER. The string '76.57' does not appear anywhere in this report, and the code-cited 'p.71' does not hold the NG value (it is in Table 14, ~p.23). Either a unit/derivation error in the code or a citation to a different NREL edition. NEEDS human reconciliation of the ~6.7x gap."
+  },
+  {
+    "param": "biomass_gwp",
+    "source_id": "fitriasari_2023",
+    "value_used": 0.1772,
+    "unit": "kgCO2e/kg",
+    "value_in_source": null,
+    "location": "Fitriasari et al. 2023, Sustainable Energy & Fuels 7(15):3625-3636, doi:10.1039/d3se00468f",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "RSC + ResearchGate return HTTP 403; WebSearch surfaced only abstract-level figures (95.27% GHG reduction, MFSP $1.03/L), not the LCI table. Also: CEJ manuscript attributes 0.1772 to GREET 2024, not to this paper."
+  },
+  {
+    "param": "biomass_gwp",
+    "source_id": "dascenzo_2024",
+    "value_used": 0.1772,
+    "unit": "kgCO2e/kg",
+    "value_in_source": null,
+    "location": "D'Ascenzo et al. 2024, Sustainability 16(16):6875, doi:10.3390/su16166875",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "MDPI page + PDF + ResearchGate all HTTP 403. Caveat from verifier: this paper covers lipid/HEFA feedstocks (soybean, palm, WCO, tallow), so a fast-pyrolysis biomass GWP of 0.1772 may not correspond to any figure in it."
+  },
+  {
+    "param": "biomass_gwp",
+    "source_id": "arfan_2023",
+    "value_used": 0.1772,
+    "unit": "kgCO2e/kg",
+    "value_in_source": null,
+    "location": "Arfan et al. 2023, Energy Conversion and Management 291:117262, doi:10.1016/j.enconman.2023.117262",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "Elsevier/ScienceDirect 403; DOI redirect renders only a stub. Search surfaced LCC 0.54-3.31 EUR/kg biomass (CML-IA), no readable 0.1772 kgCO2e/kg GWP."
+  },
+  {
+    "param": "steam_ef",
+    "source_id": "fitriasari_2023",
+    "value_used": 0.11859247,
+    "unit": "kg/MJ",
+    "value_in_source": null,
+    "location": "Fitriasari et al. 2023, doi:10.1039/d3se00468f (LCI table, likely SI)",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "Paywalled/403; LCI unit-process EFs not exposed by search."
+  },
+  {
+    "param": "cooling_ef",
+    "source_id": "fitriasari_2023",
+    "value_used": 7.04808e-05,
+    "unit": "kg/kg",
+    "value_in_source": null,
+    "location": "Fitriasari et al. 2023, doi:10.1039/d3se00468f (LCI table, likely SI)",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "Paywalled/403; cooling-water EF not readable."
+  },
+  {
+    "param": "wwt_ef",
+    "source_id": "fitriasari_2023",
+    "value_used": 0.431,
+    "unit": "kg/kg",
+    "value_in_source": null,
+    "location": "Fitriasari et al. 2023, doi:10.1039/d3se00468f (LCI table, likely SI)",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "Paywalled/403; wastewater-treatment EF not readable. This is the dominant LCA contributor (~43% of S0), so worth confirming manually."
+  },
+  {
+    "param": "electricity_grid_factor",
+    "source_id": "rojas_michaga_2023",
+    "value_used": 0.67420026,
+    "unit": "kgCO2e/kWh",
+    "value_in_source": null,
+    "location": "Rojas-Michaga et al. 2023, Energy Conversion and Management 292:117427, doi:10.1016/j.enconman.2023.117427",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "White Rose OA PDF returns undecoded compressed streams via WebFetch; ScienceDirect/ResearchGate 403. A ~300 gCO2e/kWh EU-grid figure found in a DIFFERENT 2025 follow-up paper, not usable here."
+  },
+  {
+    "param": "electricity_grid_factor",
+    "source_id": "npj_sust_mobility_2026",
+    "value_used": 0.67420026,
+    "unit": "kgCO2e/kWh",
+    "value_in_source": null,
+    "location": "npj Sustainable Mobility 2026 (no DOI/URL in design-md)",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "Second md-only citation for grid factor; unresolvable (no locator provided)."
+  },
+  {
+    "param": "gwp_ng",
+    "source_id": "commsearth_ng_2024",
+    "value_used": 0.2221,
+    "unit": "kgCO2e/kg",
+    "value_in_source": "0.220 tonnes CO2e/tonne (Sabine Pass liquefaction)",
+    "location": "Mukherjee et al., Communications Earth & Environment 6:16 (2025), doi:10.1038/s43247-024-01988-2, Abstract/Results",
+    "quote": "the average gate-to-gate emissions for US liquefied gas exported from Sabine Pass and Cove Point liquefaction terminals were estimated at 0.220 and 0.269 tonnes of CO2e/tonne gas liquefied, respectively",
+    "verdict": "match",
+    "note": "Units consistent (t/t = kg/kg). 0.2221 matches the 0.220 t/t liquefaction figure within rounding. IMPORTANT: the code comment's basis '0.021 t/t' is the REGASIFICATION figure (different life-cycle stage) - a misattribution in the code, though the value used is right. Paper year is 2025, not 2024. Exact 4th digit (0.2221 vs 0.220) not confirmable from abstract."
+  },
+  {
+    "param": "gwp_ng",
+    "source_id": "almena_2024",
+    "value_used": 0.2221,
+    "unit": "kgCO2e/kg",
+    "value_in_source": null,
+    "location": "Almena et al. 2024, Energy Conversion and Management 303:118186, doi:10.1016/j.enconman.2024.118186",
+    "quote": null,
+    "verdict": "source_unavailable",
+    "note": "Elsevier paywall/JS-gate. Only headline LCA results visible (WtW 21.6 gCO2e/MJ FT-SPK; net -20.0), no per-kg NG GWP. This is the md citation; code instead cites commsearth (which matched)."
+  },
+  {
+    "param": "allocation_method",
+    "source_id": "batten_2024",
+    "value_used": "mass (baseline) vs energy",
+    "unit": "categorical",
+    "value_in_source": "system expansion / substitution credits - NO mass or energy allocation applied",
+    "location": "Batten et al. 2024, Sustainable Energy & Fuels 8:1924-1935, doi:10.1039/d3se01470c; Sec 2.2 p.1927, Sec 2.3 p.1928, Table 3 p.1929",
+    "quote": "a surplus of electricity supply to the grid has been calculated, which is assumed to offset emissions using system expansion credits.",
+    "verdict": "not_found",
+    "note": "Paper does NOT use mass or energy co-product allocation - it uses system expansion/substitution credits (electricity credit -47.1, jet-fuel credit -7.9 gCO2e/MJ, Table 3). The word 'allocation' does not appear in the co-product sense. Citation does NOT substantiate the SA's mass-vs-energy allocation framing."
+  },
+  {
+    "param": "allocation_method",
+    "source_id": "osman_2024",
+    "value_used": "mass (baseline) vs energy",
+    "unit": "categorical",
+    "value_in_source": "co-product allocation is a critical LCA choice; names mass-based vs value-based allocation",
+    "location": "Osman et al. 2024, Environ. Chem. Lett., doi:10.1007/s10311-023-01694-z; Bioethanol sec p.8, Fig.2 p.4, LCA conclusion p.12",
+    "quote": "...split between the two acetone-butanol-ethanol fermentation solutions, depending on whether a mass-based or value-based allocation method is employed (Ingrao et al. 2021).",
+    "verdict": "match",
+    "note": "Supports 'allocation method matters' + mass-based allocation as a recognized choice. CAVEAT: names mass vs VALUE (economic), not mass vs ENERGY; energy appears only as a functional-unit basis. The exact mass-vs-energy pairing is the SA's framing, not verbatim in this review."
+  },
+  {
+    "param": "catalyst_lifetime",
+    "source_id": "standard_tea",
+    "value_used": 3,
+    "unit": "yr",
+    "value_in_source": null,
+    "location": null,
+    "quote": null,
+    "verdict": "not_verified",
+    "note": "No literature citation in code; SA grid [1 2 3 4 5] yr is a standard robustness range (reviewer-requested). A nearby Perez-Fortes et al. 2016 note backs catalyst mass/cost (30 kg/yr), NOT the replacement-interval years. UN-SOURCED range by design."
+  },
+  {
+    "param": "discount_rate",
+    "source_id": "standard_tea",
+    "value_used": 0.15,
+    "unit": "-",
+    "value_in_source": null,
+    "location": null,
+    "quote": null,
+    "verdict": "not_verified",
+    "note": "No citation; SA grid [0.08..0.20] is a standard TEA robustness range. UN-SOURCED by design."
+  },
+  {
+    "param": "plant_life",
+    "source_id": "standard_tea",
+    "value_used": 15,
+    "unit": "yr",
+    "value_in_source": null,
+    "location": null,
+    "quote": null,
+    "verdict": "not_verified",
+    "note": "No citation; SA grid [10 12 15 18 20] yr standard range. UN-SOURCED by design."
+  },
+  {
+    "param": "capex_mult",
+    "source_id": "standard_tea",
+    "value_used": 1.0,
+    "unit": "-",
+    "value_in_source": null,
+    "location": null,
+    "quote": null,
+    "verdict": "not_verified",
+    "note": "SA-only multiplier (+/-30% engineering cost-estimate uncertainty), not a costed literature value. UN-SOURCED by design."
+  },
+  {
+    "param": "h2_price",
+    "source_id": "discarded_h2",
+    "value_used": 1.3,
+    "unit": "$/kg",
+    "value_in_source": null,
+    "location": null,
+    "quote": null,
+    "verdict": "not_verified",
+    "note": "Discarded from SA (H2 produced internally, no external source). Out of scope - not swept."
+  }
+]

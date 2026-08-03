@@ -1,0 +1,282 @@
+{
+  "generated": "2026-08-03",
+  "sources": [
+    {
+      "source_id": "inl_feedstock_2016",
+      "source_hint": "https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_63795.pdf p.16",
+      "source_type": "url",
+      "resolved": { "kind": "url", "ref": "https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_63795.pdf" },
+      "in_cej_refs": false,
+      "note": "INL feedstock report; not found in reference-PDF folders or CEJ ref list. Alt basis in same code line: NREL '$80/dry ton' (BIOMASS_2011=0.08) is commented-out, INL 2016 value is the live one.",
+      "params": [
+        {
+          "param": "feedstock_cost",
+          "value_used": 0.104286,
+          "unit": "$/kg",
+          "sa_range": "bBIO*[0.50 0.75 1.00 1.25 1.50]",
+          "code_vs_md_only": false,
+          "note": "escalated from BIOMASS_2016=0.06923 $/kg via CEPCI 816/541.7=1.50637"
+        }
+      ]
+    },
+    {
+      "source_id": "nrel_jones_2013",
+      "source_hint": "NREL report p.71, 76.57 \u00a2/MMBtu",
+      "source_type": "disk_pdf",
+      "resolved": { "kind": "disk_pdf", "path": "D:\\SAF_Nurul\\20260304_Nurul_manuscript_and_references\\260304\\SAF references_manuscript\\27. Process design and economics for the conversion of lignocellulosic biomass to hydrocarbon fuels Fast pyrolysis and hydrotreating bio-oil pathway.pdf" },
+      "in_cej_refs": true,
+      "note": "Jones et al. 2013, PNNL-23053/NREL-TP-5100-61178. CEJ ref [37]. Same p.71 also cites electricity 5.85 \u00a2/kWh and gasoline (not SA-swept). Duplicate on disk: SI references_SI\\2. ...",
+      "params": [
+        {
+          "param": "ng_price",
+          "value_used": 0.054681,
+          "unit": "$/kg",
+          "sa_range": "bNG*[0.50 0.75 1.00 1.25 1.50]",
+          "code_vs_md_only": false,
+          "note": "escalated from NG_2011=0.0363 $/kg (76.57 \u00a2/MMBtu) via CEPCI 816/541.7=1.50637"
+        }
+      ]
+    },
+    {
+      "source_id": "standard_tea",
+      "source_hint": "no literature citation in code; standard TEA sweep ranges",
+      "source_type": "standard",
+      "resolved": { "kind": "unresolved" },
+      "in_cej_refs": "unknown",
+      "note": "Values set in COST_PARAMETER.m with no citation; SA grids are standard robustness ranges. catalyst.year sits near a Perez-Fortes et al. 2016 note, but that cite backs catalyst mass/cost (30 kg/yr), not the replacement-interval years being swept.",
+      "params": [
+        {
+          "param": "catalyst_lifetime",
+          "value_used": 3,
+          "unit": "yr",
+          "sa_range": "[1 2 3 4 5]",
+          "code_vs_md_only": false,
+          "note": "COST.catalyst.year=3 'replacement interval of major components'"
+        },
+        {
+          "param": "discount_rate",
+          "value_used": 0.15,
+          "unit": "-",
+          "sa_range": "[0.08 0.10 0.12 0.15 0.18 0.20]",
+          "code_vs_md_only": false,
+          "note": "COST.irate=0.15 nominal interest rate"
+        },
+        {
+          "param": "plant_life",
+          "value_used": 15,
+          "unit": "yr",
+          "sa_range": "[10 12 15 18 20]",
+          "code_vs_md_only": false,
+          "note": "COST.plant_life=15"
+        },
+        {
+          "param": "capex_mult",
+          "value_used": 1.0,
+          "unit": "-",
+          "sa_range": "[0.70 0.85 1.00 1.15 1.30]",
+          "code_vs_md_only": false,
+          "note": "SA-only multiplier (baseCOST.capex_mult=1.0 in SA_driver), not a costed literature value"
+        }
+      ]
+    },
+    {
+      "source_id": "discarded_h2",
+      "source_hint": "H2 price discarded in SA (no external H2; produced internally)",
+      "source_type": "discarded",
+      "resolved": { "kind": "unresolved" },
+      "in_cej_refs": "unknown",
+      "note": "COST.H2=1.3 $/kg present in code but excluded from the SA per task scope.",
+      "params": [
+        {
+          "param": "h2_price",
+          "value_used": 1.3,
+          "unit": "$/kg",
+          "sa_range": "discarded",
+          "code_vs_md_only": false,
+          "note": "not swept"
+        }
+      ]
+    },
+    {
+      "source_id": "fitriasari_2023",
+      "source_hint": "Fitriasari 2023; doi:10.1039/d3se00468f (Sustainable Energy & Fuels)",
+      "source_type": "doi",
+      "resolved": { "kind": "doi", "ref": "10.1039/d3se00468f" },
+      "in_cej_refs": false,
+      "note": "Cited in LCA_sensitivity_variables.md for both biomass GWP and utility EFs; not in code, not in CEJ refs (CEJ attributes 0.1772 to GREET 2024).",
+      "params": [
+        {
+          "param": "biomass_gwp",
+          "value_used": 0.1772,
+          "unit": "kgCO2e/kg",
+          "sa_range": "\u00b130% (md lit \u00b120\u201350%)",
+          "code_vs_md_only": true,
+          "note": "GWP_biomass local const in LCA_analysis_SAF.m (no code cite); LCA.BM=0.4 co-factor"
+        },
+        {
+          "param": "steam_ef",
+          "value_used": 0.11859247,
+          "unit": "kg/MJ",
+          "sa_range": "\u00b120%",
+          "code_vs_md_only": true,
+          "note": "LCA.STEAM"
+        },
+        {
+          "param": "cooling_ef",
+          "value_used": 7.04808e-05,
+          "unit": "kg/kg",
+          "sa_range": "\u00b120%",
+          "code_vs_md_only": true,
+          "note": "LCA.COOL"
+        },
+        {
+          "param": "wwt_ef",
+          "value_used": 0.431,
+          "unit": "kg/kg",
+          "sa_range": "\u00b120%",
+          "code_vs_md_only": true,
+          "note": "LCA.WWT=4.31e-1"
+        }
+      ]
+    },
+    {
+      "source_id": "dascenzo_2024",
+      "source_hint": "D'Ascenzo 2024; doi:10.3390/su16166875 (Sustainability)",
+      "source_type": "doi",
+      "resolved": { "kind": "doi", "ref": "10.3390/su16166875" },
+      "in_cej_refs": false,
+      "params": [
+        {
+          "param": "biomass_gwp",
+          "value_used": 0.1772,
+          "unit": "kgCO2e/kg",
+          "sa_range": "\u00b130% (md lit \u00b120\u201350%)",
+          "code_vs_md_only": true,
+          "note": "md citation for biomass GWP range"
+        }
+      ]
+    },
+    {
+      "source_id": "arfan_2023",
+      "source_hint": "Arfan 2023; doi:10.1016/j.enconman.2023.117262 (Energy Conversion and Management)",
+      "source_type": "doi",
+      "resolved": { "kind": "doi", "ref": "10.1016/j.enconman.2023.117262" },
+      "in_cej_refs": false,
+      "params": [
+        {
+          "param": "biomass_gwp",
+          "value_used": 0.1772,
+          "unit": "kgCO2e/kg",
+          "sa_range": "\u00b130% (md lit \u00b120\u201350%)",
+          "code_vs_md_only": true,
+          "note": "md citation for biomass GWP range"
+        }
+      ]
+    },
+    {
+      "source_id": "rojas_michaga_2023",
+      "source_hint": "Rojas-Michaga 2023 (Monte Carlo); doi:10.1016/j.enconman.2023.117427 (Energy Conversion and Management)",
+      "source_type": "doi",
+      "resolved": { "kind": "doi", "ref": "10.1016/j.enconman.2023.117427" },
+      "in_cej_refs": false,
+      "params": [
+        {
+          "param": "electricity_grid_factor",
+          "value_used": 0.67420026,
+          "unit": "kg/kWh",
+          "sa_range": "\u00b120% (md grid\u2194renewable 0.016\u20130.674 kg/kWh)",
+          "code_vs_md_only": true,
+          "note": "LCA.EL_GRID; md cite only"
+        }
+      ]
+    },
+    {
+      "source_id": "npj_sust_mobility_2026",
+      "source_hint": "npj Sustainable Mobility 2026 (no DOI given in md)",
+      "source_type": "url",
+      "resolved": { "kind": "unresolved" },
+      "in_cej_refs": false,
+      "note": "md-only citation for electricity grid factor; no DOI/URL provided.",
+      "params": [
+        {
+          "param": "electricity_grid_factor",
+          "value_used": 0.67420026,
+          "unit": "kg/kWh",
+          "sa_range": "\u00b120% (md grid\u2194renewable 0.016\u20130.674 kg/kWh)",
+          "code_vs_md_only": true,
+          "note": "second md citation for grid factor"
+        }
+      ]
+    },
+    {
+      "source_id": "commsearth_ng_2024",
+      "source_hint": "0.021 tonnes CO2e/tonne (https://doi.org/10.1038/s43247-024-01988-2)",
+      "source_type": "doi",
+      "resolved": { "kind": "doi", "ref": "10.1038/s43247-024-01988-2" },
+      "in_cej_refs": false,
+      "note": "Inline code citation in LCA_analysis_SAF.m for GWP_NG=0.2221 (Communications Earth & Environment 2024). Differs from md's Almena 2024.",
+      "params": [
+        {
+          "param": "gwp_ng",
+          "value_used": 0.2221,
+          "unit": "kgCO2e/kg",
+          "sa_range": "\u00b120%",
+          "code_vs_md_only": false,
+          "note": "GWP_NG local const; NG_kg=3 co-factor. Code cite (DOI) present."
+        }
+      ]
+    },
+    {
+      "source_id": "almena_2024",
+      "source_hint": "Almena 2024; doi:10.1016/j.enconman.2024.118186 (Energy Conversion and Management)",
+      "source_type": "doi",
+      "resolved": { "kind": "doi", "ref": "10.1016/j.enconman.2024.118186" },
+      "in_cej_refs": false,
+      "params": [
+        {
+          "param": "gwp_ng",
+          "value_used": 0.2221,
+          "unit": "kgCO2e/kg",
+          "sa_range": "\u00b120%",
+          "code_vs_md_only": true,
+          "note": "md citation for NG GWP; code instead cites doi:10.1038/s43247-024-01988-2"
+        }
+      ]
+    },
+    {
+      "source_id": "batten_2024",
+      "source_hint": "Batten 2024; doi:10.1039/d3se01470c (Sustainable Energy & Fuels), allocation methods",
+      "source_type": "disk_pdf",
+      "resolved": { "kind": "disk_pdf", "path": "D:\\SAF_Nurul\\20260304_Nurul_manuscript_and_references\\260304\\SAF references_manuscript\\5. A sustainable aviation fuel pathway from biomass life cycle environmental and cost evaluation for dimethylcyclooctane jet fuel.pdf" },
+      "in_cej_refs": false,
+      "note": "On disk as manuscript ref 5; md-only citation; not in CEJ ref list.",
+      "params": [
+        {
+          "param": "allocation_method",
+          "value_used": "mass",
+          "unit": "categorical",
+          "sa_range": "mass (baseline) vs energy-basis",
+          "code_vs_md_only": true,
+          "note": "co-product allocation; baseline mass-basis (/48.168), energy alt across SAF+gasoline LHV"
+        }
+      ]
+    },
+    {
+      "source_id": "osman_2024",
+      "source_hint": "Osman 2024 (review); doi:10.1007/s10311-023-01694-z (Environmental Chemistry Letters)",
+      "source_type": "doi",
+      "resolved": { "kind": "doi", "ref": "10.1007/s10311-023-01694-z" },
+      "in_cej_refs": false,
+      "params": [
+        {
+          "param": "allocation_method",
+          "value_used": "mass",
+          "unit": "categorical",
+          "sa_range": "mass (baseline) vs energy-basis",
+          "code_vs_md_only": true,
+          "note": "second md citation for allocation method"
+        }
+      ]
+    }
+  ]
+}

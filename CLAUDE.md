@@ -56,3 +56,15 @@ Process chain: biomass → fast pyrolysis → pyrolysis oil → 3-stage HDO reac
 - Aspen `.bkp`/`.apw` and Office `.docx`/`.pptx`/`.xlsx` are **binary** — don't cat them; extract via the appropriate tool/library or ask the user. `.zip` archives usually duplicate an adjacent unzipped folder.
 - Many hard-coded absolute paths in the code (`D:\SAF-HDO py\...`, `D:\523506\...`) point to the author's original machine — verify/repoint before running.
 - When writing manuscript content, a `kan-manuscript` skill exists but targets a **different** (KAN sensitivity-analysis) paper — do not use it for SAF work unless the user asks.
+
+## Harness: SA reference verification
+
+**Goal:** confirm that TEA/LCA sensitivity-analysis parameter values match their cited literature sources, and record where each number lives (paper · page · section).
+
+**Trigger:** when the user wants to check / verify / audit / re-run reference checks on SA parameter values, use the `verify-sa-refs` skill. Simple lookups can be answered directly.
+
+**Change history:**
+| Date | Change | Target | Reason |
+|------|--------|--------|--------|
+| 2026-08-03 | Initial build (mapper + verifier agents, orchestrator skill) | `.claude/agents/`, `.claude/skills/verify-sa-refs/` | Verify SA parameter citations for CEJ reviewer response |
+| 2026-08-03 | Gave verifier Bash + `pdftotext` for disk PDFs | `.claude/agents/sa-ref-verifier.md` | First run: Read tool's PDF renderer (pdftoppm) missing on path; disk PDFs came back source_unavailable though poppler exists on the Bash path |
