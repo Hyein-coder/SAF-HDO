@@ -8,7 +8,7 @@
 
 ### Notion access scope (firm)
 
-- **Write/edit only** within the **Dashboard** page and its descendants — `https://app.notion.com/p/3adf9a841fe1805582d5fa6c429e58ad` (incl. the nested **Tasks** database `collection://08879e7e-e5f0-40bb-b869-82bb39f8b57c` and its views).
+- **Write/edit only** within the **Dashboard** page and its descendants — `https://app.notion.com/p/3adf9a841fe1805582d5fa6c429e58ad`. Current children: the nested **Tasks** database `collection://08879e7e-e5f0-40bb-b869-82bb39f8b57c` (and its views), and the page **🧪 Catalyst-lifetime TEA sensitivity (CEJ reviewer response)** `https://app.notion.com/p/3adf9a841fe18165a919f6da644f30e4`. Any future descendant is in scope automatically.
 - **Everything else** in the KIST Pico-to-Giga Lab workspace is **read-only.** No create/update/move/delete/comment outside the Dashboard subtree without an explicit one-time override from the user.
 - Before any Notion write, confirm the target resolves inside the Dashboard subtree; if not, refuse and ask. (Harness permissions can't page-scope Notion MCP tools — this rule is the enforcement.)
 
