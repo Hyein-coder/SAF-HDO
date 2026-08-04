@@ -6,13 +6,13 @@ Date: 2026-07-31.
 
 ## Variables IN USE
 
-| #   | Variable (code)                                                                                 | Rationale                                                         | Range                                 | Citations                                                 |
-| --- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------- | --------------------------------------------------------- |
-| 1   | Feedstock GWP — `GWP_biomass` (0.1772), `LCA.BM`                                                | Biomass cultivation/collection often top GHG contributor          | ±20–50%                               | D'Ascenzo 2024; Fitriasari 2023; Arfan 2023               |
-| 3   | Electricity grid factor — `EL_GRID` (0.674) ✅ integrated into OAT (`LCA_OAT_SAF.m`), replaces old 5-scenario structure | Drives GWP; grid decarbonization lever | grid ↔ renewable (0.016–0.674 kg/kWh) | Rojas-Michaga 2023 (Monte Carlo); npj Sust. Mobility 2026 |
-| 5   | Natural gas — `GWP_NG` (0.2221), `NG_kg`                                                        | Process heat / feed                                               | ±20%                                  | Almena 2024                                               |
-| 6   | Co-product allocation method — mass vs energy (`ratio_SAF`, /42, /48.168)                       | Method choice shifts SAF burden materially                        | energy ↔ mass ↔ system expansion      | Batten 2024; Osman 2024 (review)                          |
-| 7   | Utility emission factors — `STEAM` (0.1186), `COOL` (7.05e-5), `WWT` (0.431)                    | Secondary but cheap to test                                       | ±20%                                  | Fitriasari 2023                                           |
+| #   | Variable (code)                                                                                                        | Rationale                                                | Range                                 | Citations                                                 |
+| --- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------- | --------------------------------------------------------- |
+| 1   | Feedstock GWP — `GWP_biomass` (0.1772), `LCA.BM`                                                                       | Biomass cultivation/collection often top GHG contributor | ±20–50%                               | D'Ascenzo 2024; Fitriasari 2023; Arfan 2023               |
+| 3   | Electricity grid factor — `EL_GRID` (0.674) ✅ integrated into OAT (`LCA_OAT_SAF.m`), replaces old 5-scenario structure | Drives GWP; grid decarbonization lever                   | grid ↔ renewable (0.016–0.674 kg/kWh) | Rojas-Michaga 2023 (Monte Carlo); npj Sust. Mobility 2026 |
+| 5   | Natural gas — `GWP_NG` (0.2221), `NG_kg`                                                                               | Process heat / feed                                      | ±20%                                  | Almena 2024                                               |
+| 6   | Co-product allocation method — mass vs energy (`ratio_SAF`, /42, /48.168)                                              | Method choice shifts SAF burden materially               | energy ↔ mass ↔ system expansion      | Batten 2024; Osman 2024 (review)                          |
+| 7   | Utility emission factors — `STEAM` (0.1186), `COOL` (7.05e-5), `WWT` (0.431)                                           | Secondary but cheap to test                              | ±20%                                  | Fitriasari 2023                                           |
 
 ## Variables ON HOLD
 

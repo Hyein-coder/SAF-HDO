@@ -18,14 +18,14 @@ validated to reproduce each published MSP to 0.000%.
 Catalyst OPEX raises MSP by ~0.03–0.04 % — negligible.
 
 ## Tornado swing (|MSP_high − MSP_low|, $/kg), ranked
-| parameter | range | i | j | k |
-|---|---|---|---|---|
-| Feedstock cost | ×0.5–1.5 | 0.846 | 0.698 | 0.610 |
-| Discount rate | 0.08–0.20 | 0.247 | 0.202 | 0.180 |
-| CAPEX multiplier | ×0.7–1.3 | 0.210 | 0.173 | 0.153 |
-| Plant life | 10–20 yr | 0.117 | 0.096 | 0.085 |
-| Natural gas price | ×0.5–1.5 | 0.043 | 0.032 | 0.031 |
-| Catalyst lifetime | 1–5 yr | 0.0012 | 0.0010 | 0.0009 |
+| parameter         | range     | i      | j      | k      |
+| ----------------- | --------- | ------ | ------ | ------ |
+| Feedstock cost    | ×0.5–1.5  | 0.846  | 0.698  | 0.610  |
+| Discount rate     | 0.08–0.20 | 0.247  | 0.202  | 0.180  |
+| CAPEX multiplier  | ×0.7–1.3  | 0.210  | 0.173  | 0.153  |
+| Plant life        | 10–20 yr  | 0.117  | 0.096  | 0.085  |
+| Natural gas price | ×0.5–1.5  | 0.043  | 0.032  | 0.031  |
+| Catalyst lifetime | 1–5 yr    | 0.0012 | 0.0010 | 0.0009 |
 
 ## Findings
 - **Feedstock cost dominates**, then discount rate ≈ CAPEX, then plant life. Same ranking all three cases.
