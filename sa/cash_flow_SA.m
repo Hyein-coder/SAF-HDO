@@ -12,6 +12,9 @@ function processData = cash_flow_SA(processData, COST, x)
 %        lifetime => higher annual cost => higher MSP, so lifetime is a live
 %        lever. Enable with COST.catalyst.replace = true. Default false =>
 %        original behaviour (lifetime has NO effect, matching as-published).
+%     4) COST.contingency - contingency fraction of C_DPI (tech-maturity /
+%        FOAK risk premium). Default 0.15 (as published). Emerging bioconversion
+%        (AACE Class 5 / pioneer plant) -> 0.30-0.50.
 %   SAF is priced at x (the decision variable) so the MSP solver can drive
 %   NPV(x) = 0. See msp_npv_SA.m.
 %
@@ -25,6 +28,7 @@ option.FIGURE    = false;
 if isfield(COST,'capex_mult'),                 capex_mult = COST.capex_mult; else, capex_mult = 1.0; end
 if isfield(COST,'catalyst') && isfield(COST.catalyst,'C_inventory'), C_catalyst = COST.catalyst.C_inventory; else, C_catalyst = 59707.35; end
 if isfield(COST,'catalyst') && isfield(COST.catalyst,'replace'),     cat_replace = COST.catalyst.replace; else, cat_replace = false; end
+if isfield(COST,'contingency'),                cont_frac  = COST.contingency; else, cont_frac  = 0.15; end
 
 CC = processData.CapitalCost;
 OC = processData.OperatingCost;
@@ -63,7 +67,7 @@ sum_alloc      = C_alloc_steam + C_alloc_elec + C_alloc_cw + C_alloc_pw + C_allo
 C_alloc        = 0.05*C_TBM + sum_alloc;
 
 C_DPI     = C_TBM + C_site + C_serv + C_alloc;
-C_cont    = 0.15*C_DPI;
+C_cont    = cont_frac*C_DPI;                 % SA lever (default 0.15)
 C_TDC     = C_DPI + C_cont;
 C_land    = 0.02*C_TDC;
 C_royal   = 0;

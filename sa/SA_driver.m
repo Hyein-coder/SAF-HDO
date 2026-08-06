@@ -65,6 +65,7 @@ P = {
    'Plant life (yr)'            ,'plant_life'    , baseCOST.plant_life , [10 12 15 18 20]
    'CAPEX multiplier (-)'       ,'capex_mult'    , 1.0           , [0.70 0.85 1.00 1.15 1.30]
    'Natural gas price ($/kg)'   ,'NG'            , bNG           , bNG*[0.50 0.75 1.00 1.25 1.50]
+   'Contingency (-)'            ,'contingency'   , 0.15          , [0.10 0.15 0.20 0.30 0.40]
 };
 
 %% ---- One-at-a-time sweeps ---------------------------------------------

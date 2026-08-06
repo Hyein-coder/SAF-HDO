@@ -30,7 +30,7 @@ cases={
 }
 
 def npv(x, d, *, capex_mult=1.0, cat_replace=True, cat_year=3, C_cat_inv=C_CAT_INV,
-        bio_mult=1.0, ng_mult=1.0, irate=IRATE0, plife=PLIFE0):
+        bio_mult=1.0, ng_mult=1.0, irate=IRATE0, plife=PLIFE0, cont_frac=0.15):
     S = d['mSAF']*TOP*x + d['mGAS']*TOP*P_GAS
     # CAPEX buildup (matches cash_flow_SA)
     C_EQP=(d['EQ']-C_CAT_INV)*capex_mult
@@ -39,7 +39,7 @@ def npv(x, d, *, capex_mult=1.0, cat_replace=True, cat_year=3, C_cat_inv=C_CAT_I
     sum_alloc=  d['sum_alloc']
     C_alloc=0.05*C_TBM+sum_alloc
     C_DPI=C_TBM+C_site+0+C_alloc
-    C_cont=0.15*C_DPI
+    C_cont=cont_frac*C_DPI
     C_TDC=C_DPI+C_cont
     # operating
     C_feed=np.array([34442096.91430799*bio_mult, d['mNG']*TOP*NG_PRICE0*ng_mult])
