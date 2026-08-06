@@ -1,0 +1,142 @@
+[
+  {
+    "code": "SI4",
+    "their_var": "Feedstock cost ($ per bushel dry mill; $ per dry ton corn stover)",
+    "our_param": "feedstock_cost",
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Dry mill 3.6 / 2.6-4.6 / -28 and +28 ; Corn stover 80 / 60-100 / -25 and +25. Intro (p.1093): 'A single-point sensitivity analysis... Reasonable minima and maxima for each variable were chosen'",
+    "note": "Baseline (3.6 $/bushel; 80 $/dry ton) and ranges match Table 9 verbatim. SA intro quote lives in Section 3.3.1 on p.1093 (facing column); Table 9 values on p.1094."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Upgrading catalyst costs ($ lb-1)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Upgrading catalyst costs ($ lb-1): 52.3 / 26.2-78.5 / -50 and +50 (dry mill); 36.9 / 18.5-55.4 / -50 and +50 (corn stover)",
+    "note": "Listed and perturbed SA input; baseline 52.3/36.9 and -50/+50 range match table."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Upgrading catalyst loss (lb h-1)",
+    "our_param": "catalyst_lifetime",
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Upgrading catalyst loss (lb h-1): 348 / 174-522 / -50 and +50 (dry mill); 625 / 313-938 / -50 and +50 (corn stover)",
+    "note": "Baseline (348 dry; 625 stover) and -50/+50 range match table verbatim."
+  },
+  {
+    "code": "SI4",
+    "their_var": "TCI ($MM) (total capital investment)",
+    "our_param": "capex_mult",
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": "base value printed as '10%'",
+    "evidence_quote": "TCI ($MM): 10% / 5-20 / -50 and +100. Text: 'total capital costs installed... have the largest impact on MJSP and are positively correlated to cost'",
+    "note": "Range -50/+100 confirmed. Extract left baseline 'not recoverable'; table prints '10%'. Perturbed SA input confirmed."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Internal rate of return (%)",
+    "our_param": "discount_rate",
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Internal rate of return (%): 40% / 10-100 / -75 and +150. Baseline (p.1093): 'Using a 10% discount rate... an MJSP can be estimated'",
+    "note": "Printed baseline 40% and -75/+150 range match Table 9. Baseline DCFROR discount rate 10% confirmed at p.1093 Sec 3.2.5."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Interest rate (%)",
+    "our_param": "discount_rate",
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Interest rate (%): 84 / 42-126 / -50 and +50 (dry mill); 68 / 34-102 / -50 and +50 (corn stover)",
+    "note": "Baseline 84 (dry) / 68 (stover) and -50/+50 range match table verbatim; no column misalignment."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Equity (%)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Equity (%): 90% / 70-100 / -22 and +11",
+    "note": "Listed and perturbed SA input; baseline 90% and range match table."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Process efficiency (%)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": "base value printed as '8%'",
+    "evidence_quote": "Process efficiency (%): 8% / 4-12 / -50 and +50",
+    "note": "Listed SA input; table prints baseline '8%' (extract flagged as misaligned), range -50/+50 match."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Upgrading reactor ($MM installed)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Upgrading reactor ($MM installed): 61 / 30-90 / -50 and +50 (dry mill); 29 / 15-43 / -50 and +50 (corn stover)",
+    "note": "Baseline 61/29 and -50/+50 range match table."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Coproduct credit ($MM per year)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Coproduct credit ($MM per year): 2000 / 500-3000 / -75 and +50",
+    "note": "Listed SA input; baseline 2000 and -75/+50 range match table as printed."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Plant capacity (dry metric ton per day)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Plant capacity (dry metric ton per day): 113 / 102-113 / -10 and 0 (dry mill); 79 / 71-79 / -10 and 0 (corn stover)",
+    "note": "Baseline 113/79 and -10/0 range match table."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Ethanol yield (gal per dry ton biomass)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Ethanol yield: 60 / 48-60 / -20 and 0 (dry); 38 / 31-38 / -20 and 0 (stover). Text: 'The ethanol yield reduction by 10% could impact overall hydrocarbon yield by 10%'",
+    "note": "Baseline 60/38 and -20/0 range match; narrative quote verbatim on p.1094."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Jet yield (gal per dry ton biomass)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "Jet yield: 100% / 0-100 / 0 and +100. Text: 'jet yield is reduced by 20%, by shifting those hydrocarbons to gasoline blends when assuming different reaction kinetics'",
+    "note": "Baseline 100% and 0/+100 range match; narrative quote verbatim on p.1094."
+  },
+  {
+    "code": "SI4",
+    "their_var": "Combustion LPG (%)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1094, Table 9",
+    "corrected": null,
+    "evidence_quote": "'Combustion LPG (%)' listed as final row of Table 9 (both dry mill and corn stover) with no base value or range printed",
+    "note": "Listed as an SA variable but Table 9 prints no base/range for it (blank in both sub-tables); extract's 'not recoverable' is correct."
+  }
+]

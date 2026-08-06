@@ -1,0 +1,93 @@
+[
+  {
+    "code": "SI1",
+    "study": "TEA & environmental assessment of BECCS for FT-fuel, bioSNG and OMEx (Sustainable Energy & Fuels, 2021)",
+    "our_param": "feedstock_cost",
+    "their_var": "biomass cost",
+    "their_baseline": "woody biomass feedstock cost (base-case value not tabulated in main text)",
+    "their_range": "±30%",
+    "range_justification": "Grouped with CAPEX/plant-life/CCS, changed by ±30% of base case 'based on previous studies86,87'. Paper notes at 30% feedstock-price uncertainty, production-cost swing is -6% to +10%.",
+    "justification_type": "citation",
+    "location": "Section 3.10 Sensitivity analysis, Fig. 8",
+    "quote": "based on previous studies86,87 the parameters (CAPEX, plant life, biomass cost, CCS) are changed by ±30% of the base case scenario",
+    "status": "ok"
+  },
+  {
+    "code": "SI1",
+    "study": "TEA & environmental assessment of BECCS for FT-fuel, bioSNG and OMEx (Sustainable Energy & Fuels, 2021)",
+    "our_param": "capex_mult",
+    "their_var": "CAPEX / capital investment (TCI)",
+    "their_baseline": "TCI from factorial estimation + Aspen APEA (overall installation factor 3.02); base value not a single figure",
+    "their_range": "±30%",
+    "range_justification": "Changed ±30% of base case 'based on previous studies86,87'. ±30% CAPEX gives -15% to +15% production-cost swing.",
+    "justification_type": "citation",
+    "location": "Section 3.10 Sensitivity analysis, Fig. 8 (baselines Table 5, TCI methodology)",
+    "quote": "the parameters (CAPEX, plant life, biomass cost, CCS) are changed by ±30% ... Fluctuations of -15% to +15% in production cost are seen for an uncertainty of 30% in the capital investment",
+    "status": "ok"
+  },
+  {
+    "code": "SI1",
+    "study": "TEA & environmental assessment of BECCS for FT-fuel, bioSNG and OMEx (Sustainable Energy & Fuels, 2021)",
+    "our_param": "plant_life",
+    "their_var": "plant life / project lifetime",
+    "their_baseline": "20 years",
+    "their_range": "±30%",
+    "range_justification": "Changed ±30% of base case 'based on previous studies86,87'. Paper states plant life has minimal effect on production cost.",
+    "justification_type": "citation",
+    "location": "Section 3.10 Sensitivity analysis, Fig. 8 (baseline Table 4, Project lifetime = 20 yr)",
+    "quote": "the parameters (CAPEX, plant life, biomass cost, CCS) are changed by ±30% of the base case scenario",
+    "status": "ok"
+  },
+  {
+    "code": "SI1",
+    "study": "TEA & environmental assessment of BECCS for FT-fuel, bioSNG and OMEx (Sustainable Energy & Fuels, 2021)",
+    "our_param": "discount_rate",
+    "their_var": "interest rate (discount rate)",
+    "their_baseline": "10% (discount rate, Table 4)",
+    "their_range": "±20%",
+    "range_justification": "Treated as an exception to the ±30% set; perturbed at ±20%. No explicit reference or reasoning given for the ±20% choice.",
+    "justification_type": "reasoning",
+    "location": "Section 3.10 Sensitivity analysis, Fig. 8 (baseline Table 4, Discount rate = 10%)",
+    "quote": "with the exceptions of the fuel output at ±10%, the interest rate at ±20% and the operating hours",
+    "status": "ok"
+  },
+  {
+    "code": "SI1",
+    "study": "TEA & environmental assessment of BECCS for FT-fuel, bioSNG and OMEx (Sustainable Energy & Fuels, 2021)",
+    "our_param": null,
+    "their_var": "operating hours / capacity factor",
+    "their_baseline": "85% capacity factor (Table 4)",
+    "their_range": "70% to 90% capacity factor",
+    "range_justification": "Range bounded so as not to exceed the maximum hours in a year (8766 h). Identified as the most significant parameter: +90% CF cuts cost 6%; 70% CF raises cost 21%.",
+    "justification_type": "reasoning",
+    "location": "Section 3.10 Sensitivity analysis, Fig. 8 (baseline Table 4, Capacity factor = 85%)",
+    "quote": "the operating hours where the capacity factor is between 70% and 90% as not to exceed the maximum hours in a year",
+    "status": "ok"
+  },
+  {
+    "code": "SI1",
+    "study": "TEA & environmental assessment of BECCS for FT-fuel, bioSNG and OMEx (Sustainable Energy & Fuels, 2021)",
+    "our_param": null,
+    "their_var": "fuel output",
+    "their_baseline": "plant fuel energy output (route-specific, not a single figure)",
+    "their_range": "±10%",
+    "range_justification": "Treated as an exception to the ±30% set; perturbed at ±10%. ±10% fuel output gives -9% to +11% production-cost swing. No explicit reference cited for the ±10%.",
+    "justification_type": "reasoning",
+    "location": "Section 3.10 Sensitivity analysis, Fig. 8",
+    "quote": "with the exceptions of the fuel output at ±10% ... fluctuations of -9% to +11% are seen for an uncertainty of 10% in the fuel output",
+    "status": "ok"
+  },
+  {
+    "code": "SI1",
+    "study": "TEA & environmental assessment of BECCS for FT-fuel, bioSNG and OMEx (Sustainable Energy & Fuels, 2021)",
+    "our_param": null,
+    "their_var": "CCS costs (CO2 compression, transport & storage)",
+    "their_baseline": "CO2 compression/transport/storage cost (base value not tabulated in main text)",
+    "their_range": "±30%",
+    "range_justification": "Changed ±30% of base case 'based on previous studies86,87'. Paper states CO2 compression/transport/storage and plant life have minimal effect on production cost.",
+    "justification_type": "citation",
+    "location": "Section 3.10 Sensitivity analysis, Fig. 8",
+    "quote": "the parameters (CAPEX, plant life, biomass cost, CCS) are changed by ±30% ... CO2 compression, transport & storage costs, and plant life - have minimal effect on the production cost",
+    "status": "ok"
+  }
+]

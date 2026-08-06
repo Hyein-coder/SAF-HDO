@@ -1,0 +1,80 @@
+[
+  {
+    "code": "m5",
+    "study": "Corn-stover to DMCO jet fuel: LCA + TEA (Sustainable Energy Fuels 2024)",
+    "our_param": "feedstock_cost",
+    "their_var": "feedstock price and handling",
+    "their_baseline": "feedstock variable-cost contribution $0.36 per litre; single most influential MFSP parameter",
+    "their_range": "single-variable sweep in $5/tonne increments (each +$5 adds ~9 cents to MFSP); full upper/lower bounds given in ESI Tables S1-S2",
+    "range_justification": "Upper and lower bounds in the sensitivity analysis chosen using prior literature (refs 68 Davis et al. 2018, 71 GREET 2022) and engineering logic; full numeric range in ESI Tables S1/S2",
+    "justification_type": "citation",
+    "location": "p.1931, sec 3.3 & Fig. 6/Fig. 7; ranges in ESI Tables S1-S2",
+    "quote": "For every $5 increment added to the feedstock price, an addition of 9 cents to the MFSP can be seen.",
+    "status": "ok"
+  },
+  {
+    "code": "m5",
+    "study": "Corn-stover to DMCO jet fuel: LCA + TEA (Sustainable Energy Fuels 2024)",
+    "our_param": null,
+    "their_var": "annual (dimerization) catalyst cost",
+    "their_baseline": "Fe catalyst $10.26 per kg (optimal case, 13% wt); RANEY Ni $14.5 per kg",
+    "their_range": "single-variable sweep of catalyst cost (highest MFSP impact of the nine params); full bounds in ESI Tables S1-S2",
+    "range_justification": "Bounds chosen using prior literature (refs 68, 71) and engineering logic; catalyst costs from Baral et al. 2021 (ref 36); full range in ESI Tables S1/S2",
+    "justification_type": "citation",
+    "location": "p.1931, sec 3.3 & Fig. 6; ranges in ESI Tables S1-S2",
+    "quote": "Fig. 6 shows that the annual catalyst cost has the greatest effect on the MFSP.",
+    "status": "ok"
+  },
+  {
+    "code": "m5",
+    "study": "Corn-stover to DMCO jet fuel: LCA + TEA (Sustainable Energy Fuels 2024)",
+    "our_param": null,
+    "their_var": "hydrogen supply for hydrogenation step (TEA cost sensitivity)",
+    "their_baseline": "H2 $0.5 per kmol (min H2 req.) / conservative $1.61 per kg; projected green-H2 $0.65-$1.25 per kg by 2050",
+    "their_range": "single-point sweep: +5% additional H2 supply in hydrogenation stage raises MFSP by 2 cents per litre",
+    "range_justification": "Engineering logic / prior literature; green-H2 optimistic-pessimistic $0.65-$1.25/kg from ref 80",
+    "justification_type": "reasoning",
+    "location": "p.1931, sec 3.3",
+    "quote": "The sensitivity analysis showed that an additional 5% of hydrogen supplied in the hydrogenation stage affects the MFSP with an increase of 2 cents per L.",
+    "status": "ok"
+  },
+  {
+    "code": "m5",
+    "study": "Corn-stover to DMCO jet fuel: LCA + TEA (Sustainable Energy Fuels 2024)",
+    "our_param": null,
+    "their_var": "hydrogen supply GHG intensity (SMR) - LCA scenario",
+    "their_baseline": "SMR hydrogen GHG intensity 8.2 to 11 g CO2e per kg H2",
+    "their_range": "H2-supply LCA scenario shifts total from 7.2 to 15.6 gCO2e/MJ (approx +-1.4 gCO2e/MJ effect)",
+    "range_justification": "Hydrogen produced from steam methane reforming with GHG intensity range 8.2-11 gCO2e/kg H2 evaluated from GaBi Professional database (refs 72, 73)",
+    "justification_type": "citation",
+    "location": "p.1928-1929, sec 2.5 & Table 3",
+    "quote": "Hydrogen supply for the hydrogenation step is produced from steam methane reforming with a GHG intensity that ranges from 8.2 to 11 g CO2e kg-1 H2 evaluated from the GaBi Professional database.",
+    "status": "ok"
+  },
+  {
+    "code": "m5",
+    "study": "Corn-stover to DMCO jet fuel: LCA + TEA (Sustainable Energy Fuels 2024)",
+    "our_param": "catalyst_lifetime",
+    "their_var": "catalyst recovery loading / make-up rate (LCA scenario)",
+    "their_baseline": "base case 1 g catalyst loss per kg DMCO",
+    "their_range": "best 0.1 g/kg DMCO (low loss), worst 5 g/kg DMCO (high loss), base 1 g/kg DMCO; total GHG 7.2->16.3 gCO2e/MJ for high make-up",
+    "range_justification": "Best/worst/base catalyst recovery-loading sensitivities based on Dros et al. (2015) (ref 67); catalyst make-up varied per GREET 2022 (ref 71)",
+    "justification_type": "citation",
+    "location": "p.1928, sec 2.4-2.5 & Table 3",
+    "quote": "Based on Dros et al.(2015) the following best, worst and base case sensitivities were considered for the catalyst recovery loading: (1) Best case: low catalyst loss 0.1 g per kg DMCO. (2) Worst case: high catalyst loss 5 g per kg DMCO. (3) Base case: 1 g per kg DMCO.",
+    "status": "ok"
+  },
+  {
+    "code": "m5",
+    "study": "Corn-stover to DMCO jet fuel: LCA + TEA (Sustainable Energy Fuels 2024)",
+    "our_param": null,
+    "their_var": "nine model parameters tested on MFSP (full single-variable set)",
+    "their_baseline": null,
+    "their_range": null,
+    "range_justification": "Full list and numeric upper/lower bounds of all nine TEA MFSP parameters and the LCA SA parameters are deferred to ESI Tables S1 and S2 (disk PDF is main text only)",
+    "justification_type": "in_SI",
+    "location": "p.1928 sec 2.5 & p.1931 sec 3.3; ESI Tables S1-S2",
+    "quote": "data were gathered from several sources... to delineate the upper and lower limits of these parameters (Tables S1 and S2).",
+    "status": "ok"
+  }
+]

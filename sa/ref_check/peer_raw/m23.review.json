@@ -1,0 +1,62 @@
+[
+  {
+    "code": "m23",
+    "their_var": "Total capital investment (TCI)",
+    "our_param": "capex_mult",
+    "verdict": "CONFIRMED",
+    "found_at": "p.296, Sec 3.3 / Fig. 4",
+    "corrected": null,
+    "evidence_quote": "the most sensitive variables for jet fuel production in Scenario 1 was TCI, as varying the TCI to ±20% of its base value resulted in a ±$0.50/Gallon change in the MSP",
+    "note": "TCI is top perturbed SA input; ±20% span verbatim. Baseline $285.51M confirmed p.297 conclusions ('total capital investment of $285.51 million')."
+  },
+  {
+    "code": "m23",
+    "their_var": "Internal rate of return (IRR) / interest rate",
+    "our_param": "discount_rate",
+    "verdict": "CONFIRMED",
+    "found_at": "p.296, Sec 3.3 / Fig. 4; baseline Table 2 (IRR=10)",
+    "corrected": null,
+    "evidence_quote": "The interest rate was found to be more impactful for the MSP of jet fuel in Scenario 1 (10%, $0.16/Gallon) than that in Scenario 2 (10%, $0.10/Gallon)",
+    "note": "IRR is perturbed SA input; baseline 'Internal rate of return (IRR) 10' confirmed in Table 2. Swept span only in Fig. 4 (range legitimately null)."
+  },
+  {
+    "code": "m23",
+    "their_var": "Feedstock (woody biomass) price",
+    "our_param": "feedstock_cost",
+    "verdict": "CONFIRMED",
+    "found_at": "p.296, Sec 3.3 / Fig. 4",
+    "corrected": null,
+    "evidence_quote": "The IRR and feedstock price were other two parameters that significantly controlled the expense ... it is not surprising that its cost had a significant impact on the MSP",
+    "note": "Feedstock price is perturbed SA input. Both quote fragments present (lines 480-484/537). Table 2 baseline value garbled by two-column layout extraction; range only in Fig. 4 (null)."
+  },
+  {
+    "code": "m23",
+    "their_var": "H2 market (co-product) price",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.296, Sec 3.3 / Fig. 4",
+    "corrected": null,
+    "evidence_quote": "When H2 market price increased from $2.7/kg to $3.9/kg, the MSP of jet fuel decreased from $4.17 to $3.46/Gallon",
+    "note": "Light check: H2 market price is plausibly a perturbed SA input; $2.7-$3.9/kg span verbatim."
+  },
+  {
+    "code": "m23",
+    "their_var": "Electricity price",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.296, Sec 3.3",
+    "corrected": null,
+    "evidence_quote": "MSP of hydrocarbon fuel ... increased only by 8 cents (compared to 12e16 cents in this study) when electricity price increased by 0.1 $",
+    "note": "Light check: electricity price perturbed by +0.1$/kWh; '12-16 cents in this study' = their own SA effect. Baseline $0.06/kwh present in Table 2 (layout scrambled)."
+  },
+  {
+    "code": "m23",
+    "their_var": "Co-product credit price (char / syngas)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.296, Sec 3.3 / Fig. 4",
+    "corrected": null,
+    "evidence_quote": "the market price of coproducts (char or/and syngas) in both designs did not show significant impacts",
+    "note": "Light check: coproduct market price is a perturbed SA input, found insignificant. Syngas credit $33/metric ton present in Table 2."
+  }
+]

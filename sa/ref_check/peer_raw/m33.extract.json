@@ -1,0 +1,67 @@
+[
+  {
+    "code": "m33",
+    "study": "TEA/LCA of SAF via catalytic deoxygenation + hydrothermal gasification (Umenweke et al., CEJ 2023)",
+    "our_param": "feedstock_cost",
+    "their_var": "Total raw material cost (TRMC)",
+    "their_baseline": "nominal; baseline MFSP US$0.62/L (Sc.1), US$0.39/L (Sc.2)",
+    "their_range": "±30%",
+    "range_justification": "OAT local sensitivity, each parameter varied ±30% of nominal; no cited source for the range",
+    "justification_type": "reasoning",
+    "location": "p.12, Section 4.4.1 + Fig. 14a/b",
+    "quote": "A 30 % increase of the total raw material cost in scenario 1 increased the MFSP of SAF from US$ 0.62 to US$ 0.76 ... A 30 % decrease in the TRMC reduced the MFSP to US$ 0.47",
+    "status": "ok"
+  },
+  {
+    "code": "m33",
+    "study": "TEA/LCA of SAF via catalytic deoxygenation + hydrothermal gasification (Umenweke et al., CEJ 2023)",
+    "our_param": "capex_mult",
+    "their_var": "Equipment purchase cost (EPC)",
+    "their_baseline": "nominal (value not stated in SA section)",
+    "their_range": "±30%",
+    "range_justification": "OAT local sensitivity, varied ±30% of nominal; no cited source for the range",
+    "justification_type": "reasoning",
+    "location": "p.12, Section 4.4.1 + Fig. 14a/b",
+    "quote": "a 30 % increase of EPC increased the MFSP to US$ 0.65 and US$ 0.43 for scenario 1 and 2, respectively",
+    "status": "ok"
+  },
+  {
+    "code": "m33",
+    "study": "TEA/LCA of SAF via catalytic deoxygenation + hydrothermal gasification (Umenweke et al., CEJ 2023)",
+    "our_param": null,
+    "their_var": "Tax rate",
+    "their_baseline": "nominal (value not stated in SA section)",
+    "their_range": "±30%",
+    "range_justification": "OAT local sensitivity, varied ±30% of nominal; no cited source",
+    "justification_type": "reasoning",
+    "location": "p.12, Section 4.4.1 + Fig. 14a/b",
+    "quote": "a 30 % increase or decrease in other factors such as tax rate, fixed operating cost, and working capital had little or no effect on the MFSP of SAF",
+    "status": "ok"
+  },
+  {
+    "code": "m33",
+    "study": "TEA/LCA of SAF via catalytic deoxygenation + hydrothermal gasification (Umenweke et al., CEJ 2023)",
+    "our_param": null,
+    "their_var": "Fixed operating cost (FOC)",
+    "their_baseline": "nominal (value not stated in SA section)",
+    "their_range": "±30%",
+    "range_justification": "OAT local sensitivity, varied ±30% of nominal; no cited source",
+    "justification_type": "reasoning",
+    "location": "p.12, Section 4.4.1 + Fig. 14a/b",
+    "quote": "a 30 % increase or decrease in other factors such as tax rate, fixed operating cost, and working capital had little or no effect on the MFSP of SAF",
+    "status": "ok"
+  },
+  {
+    "code": "m33",
+    "study": "TEA/LCA of SAF via catalytic deoxygenation + hydrothermal gasification (Umenweke et al., CEJ 2023)",
+    "our_param": null,
+    "their_var": "Working capital (WC)",
+    "their_baseline": "nominal (value not stated in SA section)",
+    "their_range": "±30%",
+    "range_justification": "OAT local sensitivity, varied ±30% of nominal; no cited source",
+    "justification_type": "reasoning",
+    "location": "p.12, Section 4.4.1 + Fig. 14a/b",
+    "quote": "in scenario 2, a 30 % increase or decrease of the working capital kept the MFSP constant at US $ 0.39",
+    "status": "ok"
+  }
+]

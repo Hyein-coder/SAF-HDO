@@ -1,0 +1,80 @@
+[
+  {
+    "code": "SI11",
+    "study": "Winjobi et al. 2017 - Two-Step Torrefaction & Fast Pyrolysis of Pine, Part 1 TEA (ACS Sustain. Chem. Eng. 5, 4529-4540)",
+    "our_param": "feedstock_cost",
+    "their_var": "cost of feedstock (pine chips)",
+    "their_baseline": "$60/dry ton",
+    "their_range": "±15%",
+    "range_justification": "Single ±15% swing applied to all SA cost variables; stated, no reference for the range. Baseline pine chips cost cited to ref 10.",
+    "justification_type": "reasoning",
+    "location": "p.4539, Sensitivity Analysis section + Figures 6-8; baseline in Table 6 (p.4533-4534)",
+    "quote": "The impact of a change of ±15% in some of the cost variables was investigated for the heat-integrated processes.",
+    "status": "ok"
+  },
+  {
+    "code": "SI11",
+    "study": "Winjobi et al. 2017 - Two-Step Torrefaction & Fast Pyrolysis of Pine, Part 1 TEA (ACS Sustain. Chem. Eng. 5, 4529-4540)",
+    "our_param": "ng_price",
+    "their_var": "cost of natural gas",
+    "their_baseline": "$5.04/GJ",
+    "their_range": "±15%",
+    "range_justification": "Uniform ±15% swing; stated, no reference for the range. Baseline NG cost cited to ref 35.",
+    "justification_type": "reasoning",
+    "location": "p.4539, Sensitivity Analysis section + Figures 6-8; baseline in Table 6 (p.4533-4534)",
+    "quote": "sensitivity result for the natural gas costs are due to the cost of natural gas required for hydrogen production and revenue credits from the sale of off-gas.",
+    "status": "ok"
+  },
+  {
+    "code": "SI11",
+    "study": "Winjobi et al. 2017 - Two-Step Torrefaction & Fast Pyrolysis of Pine, Part 1 TEA (ACS Sustain. Chem. Eng. 5, 4529-4540)",
+    "our_param": "discount_rate",
+    "their_var": "internal rate of return (IRR)",
+    "their_baseline": "10%",
+    "their_range": "±15%",
+    "range_justification": "Uniform ±15% swing; stated, no reference for the range. Baseline IRR from Table 6 (no citation).",
+    "justification_type": "reasoning",
+    "location": "p.4539, Sensitivity Analysis section + Figures 6-8; baseline in Table 6 (p.4533-4534)",
+    "quote": "the more sensitive variables are the yield of hydrocarbon biofuel, total project investment cost, the assumed internal rate of return, and the cost of feedstock, in that order.",
+    "status": "ok"
+  },
+  {
+    "code": "SI11",
+    "study": "Winjobi et al. 2017 - Two-Step Torrefaction & Fast Pyrolysis of Pine, Part 1 TEA (ACS Sustain. Chem. Eng. 5, 4529-4540)",
+    "our_param": "capex_mult",
+    "their_var": "total project investment (TPI) cost",
+    "their_baseline": "computed via Peters et al. capital-cost methodology (Table 5); no single scalar value",
+    "their_range": "±15%",
+    "range_justification": "Uniform ±15% swing; stated, no reference for the range. Most sensitive TEA parameter after biofuel yield.",
+    "justification_type": "reasoning",
+    "location": "p.4539, Sensitivity Analysis section + Figures 6-8",
+    "quote": "the more sensitive variables are the yield of hydrocarbon biofuel, total project investment cost, the assumed internal rate of return, and the cost of feedstock",
+    "status": "ok"
+  },
+  {
+    "code": "SI11",
+    "study": "Winjobi et al. 2017 - Two-Step Torrefaction & Fast Pyrolysis of Pine, Part 1 TEA (ACS Sustain. Chem. Eng. 5, 4529-4540)",
+    "our_param": null,
+    "their_var": "yield of hydrocarbon biofuel",
+    "their_baseline": "scenario-dependent (e.g. 89.7-149.5 x10^6 kg/yr, Table 7)",
+    "their_range": "±15%",
+    "range_justification": "Uniform ±15% swing; stated. Chain effects on other variables deliberately not propagated. Most sensitive parameter overall.",
+    "justification_type": "reasoning",
+    "location": "p.4539, Sensitivity Analysis section + Figures 6-8; baseline yields in Table 7 (p.4534)",
+    "quote": "the yield of bio-oil is the most sensitive parameter.",
+    "status": "ok"
+  },
+  {
+    "code": "SI11",
+    "study": "Winjobi et al. 2017 - Two-Step Torrefaction & Fast Pyrolysis of Pine, Part 1 TEA (ACS Sustain. Chem. Eng. 5, 4529-4540)",
+    "our_param": null,
+    "their_var": "cost of electricity",
+    "their_baseline": "5.77 cents/kWh",
+    "their_range": "±15%",
+    "range_justification": "Electricity price appears as a cost variable in the tornado (Figures 6-8); ±15% uniform swing. Baseline cited to ref 34. Not matched to any of our params (electricity_grid_factor is a CI emission factor, not a price).",
+    "justification_type": "reasoning",
+    "location": "p.4539, Sensitivity Analysis section + Figures 6-8; baseline in Table 6 (p.4533-4534)",
+    "quote": "The impact of a change of ±15% in some of the cost variables was investigated for the heat-integrated processes.",
+    "status": "ok"
+  }
+]

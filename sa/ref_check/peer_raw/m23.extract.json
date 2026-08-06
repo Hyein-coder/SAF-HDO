@@ -1,0 +1,80 @@
+[
+  {
+    "code": "m23",
+    "study": "Conversion of lignocellulosic biomass into jet-fuel-range cycloalkanes (Yang et al., Energy 2018)",
+    "our_param": "capex_mult",
+    "their_var": "Total capital investment (TCI)",
+    "their_baseline": "$285.51 million (Scenario 1 TCI)",
+    "their_range": "±20%",
+    "range_justification": "Most sensitive variable; TCI varied to ±20% of base value giving ~±$0.50/Gallon MSP change. No cited source for the ±20% span (assumed swing shown in tornado plot).",
+    "justification_type": "reasoning",
+    "location": "p.296, Sec 3.3 / Fig. 4",
+    "quote": "the most sensitive variables for jet fuel production in Scenario 1 was TCI, as varying the TCI to ±20% of its base value resulted in a ±$0.50/Gallon change in the MSP",
+    "status": "ok"
+  },
+  {
+    "code": "m23",
+    "study": "Conversion of lignocellulosic biomass into jet-fuel-range cycloalkanes (Yang et al., Energy 2018)",
+    "our_param": "discount_rate",
+    "their_var": "Internal rate of return (IRR) / interest rate",
+    "their_baseline": "10% (IRR, Table 2)",
+    "their_range": null,
+    "range_justification": "IRR/interest rate perturbed in tornado plot; text reports impact ('interest rate ... Scenario 1 (10%, $0.16/Gallon)') but the numeric swept span is only in Fig. 4, not readable as text.",
+    "justification_type": "none",
+    "location": "p.296, Sec 3.3 / Fig. 4; baseline Table 2 (p.291)",
+    "quote": "The interest rate was found to be more impactful for the MSP of jet fuel in Scenario 1 (10%, $0.16/Gallon) than that in Scenario 2 (10%, $0.10/Gallon)",
+    "status": "ok"
+  },
+  {
+    "code": "m23",
+    "study": "Conversion of lignocellulosic biomass into jet-fuel-range cycloalkanes (Yang et al., Energy 2018)",
+    "our_param": "feedstock_cost",
+    "their_var": "Feedstock (woody biomass) price",
+    "their_baseline": "Table 2 'Feedstock price' (numeric value garbled in extract)",
+    "their_range": null,
+    "range_justification": "Feedstock price named as a significant MSP driver in tornado analysis, but the swept low/high span is shown only in Fig. 4 and not stated numerically in main text.",
+    "justification_type": "none",
+    "location": "p.296, Sec 3.3 / Fig. 4",
+    "quote": "The IRR and feedstock price were other two parameters that significantly controlled the expense ... its cost had a significant impact on the MSP",
+    "status": "ok"
+  },
+  {
+    "code": "m23",
+    "study": "Conversion of lignocellulosic biomass into jet-fuel-range cycloalkanes (Yang et al., Energy 2018)",
+    "our_param": null,
+    "their_var": "H2 market (co-product) price",
+    "their_baseline": "$3.3/kg",
+    "their_range": "$2.7/kg to $3.9/kg",
+    "range_justification": "H2 price swept over stated range in tornado plot; no cited source for the span (uncertain H2 market noted as a key concern).",
+    "justification_type": "reasoning",
+    "location": "p.296, Sec 3.3 / Fig. 4",
+    "quote": "When H2 market price increased from $2.7/kg to $3.9/kg, the MSP of jet fuel decreased from $4.17 to $3.46/Gallon",
+    "status": "ok"
+  },
+  {
+    "code": "m23",
+    "study": "Conversion of lignocellulosic biomass into jet-fuel-range cycloalkanes (Yang et al., Energy 2018)",
+    "our_param": null,
+    "their_var": "Electricity price",
+    "their_baseline": "$0.06/kWh (Table 2)",
+    "their_range": "+$0.1/kWh increment",
+    "range_justification": "Electricity price perturbed by +0.1 $/kWh (12-16 cents/Gallon MSP effect); increment stated as reasoning, no citation for the step.",
+    "justification_type": "reasoning",
+    "location": "p.296, Sec 3.3",
+    "quote": "increased only by 8 cents (compared to 12–16 cents in this study) when electricity price increased by 0.1 $",
+    "status": "ok"
+  },
+  {
+    "code": "m23",
+    "study": "Conversion of lignocellulosic biomass into jet-fuel-range cycloalkanes (Yang et al., Energy 2018)",
+    "our_param": null,
+    "their_var": "Co-product credit price (char / syngas)",
+    "their_baseline": "Syngas $33/metric ton; biochar credits (Table 2)",
+    "their_range": null,
+    "range_justification": "Co-product (char/syngas) market price varied in tornado plot but found insignificant; numeric span only in Fig. 4, not in text.",
+    "justification_type": "none",
+    "location": "p.296, Sec 3.3 / Fig. 4",
+    "quote": "the market price of coproducts (char or/and syngas) in both designs did not show significant impacts",
+    "status": "ok"
+  }
+]

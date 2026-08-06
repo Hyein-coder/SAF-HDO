@@ -1,0 +1,62 @@
+[
+  {
+    "code": "m5",
+    "their_var": "feedstock price and handling",
+    "our_param": "feedstock_cost",
+    "verdict": "CONFIRMED",
+    "found_at": "p.1931, sec 3.3 (Fig. 7)",
+    "corrected": null,
+    "evidence_quote": "A single variable sensitivity analysis was carried out increasing the cost of feedstock and handling at $5 increments shown in Fig. 7. For every $5 increment added to the feedstock price, an addition of 9 cents to the MFSP can be seen.",
+    "note": "Quote verbatim at cited location; feedstock is a perturbed single-variable SA input, $5-increment sweep confirmed, 'by far the single most influential parameter' matches baseline claim. $0.36/L variable-cost contribution not on this page (from Fig. 5 cost breakdown)."
+  },
+  {
+    "code": "m5",
+    "their_var": "annual (dimerization) catalyst cost",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1931, sec 3.3 (Fig. 6)",
+    "corrected": null,
+    "evidence_quote": "a single variable sensitivity analysis was carried out to examine the effect of underestimated catalyst cost on MFSP (Fig. 6)... optimal case cost of $10.26 per kg (13% wt).",
+    "note": "Light check: catalyst cost is a perturbed single-variable SA input; $10.26/kg optimal-case baseline present on p.1931. Plausible."
+  },
+  {
+    "code": "m5",
+    "their_var": "hydrogen supply for hydrogenation step (TEA cost sensitivity)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1931, sec 3.3",
+    "corrected": null,
+    "evidence_quote": "These factors include feedstock price and handling, dimerization catalyst and hydrogen production for supply in the hydrogenation step.",
+    "note": "Light check: hydrogen supply for hydrogenation explicitly listed as an SA factor on p.1931. The specific '+5% -> 2 cents/L' quote not visible on p.1931; likely on p.1932. Plausible SA input."
+  },
+  {
+    "code": "m5",
+    "their_var": "hydrogen supply GHG intensity (SMR) - LCA scenario",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1928-1929, sec 2.5 & Table 3",
+    "corrected": null,
+    "evidence_quote": "",
+    "note": "Light check: hydrogen-supply GHG intensity is a plausible LCA SA scenario variable (H2 from SMR discussed in the LCA/TEA sections). Not deep-tracked per null-param instruction."
+  },
+  {
+    "code": "m5",
+    "their_var": "catalyst recovery loading / make-up rate (LCA scenario)",
+    "our_param": "catalyst_lifetime",
+    "verdict": "CONFIRMED",
+    "found_at": "p.1928, sec 2.4-2.5",
+    "corrected": null,
+    "evidence_quote": "Based on Dros et al.(2015) the following best, worst and base case sensitivities were considered for the catalyst recovery loading: (1) Best case: low catalyst loss 0.1 g per kg DMCO. (2) Worst case: high catalyst loss 5 g per kg DMCO. (3) Base case: 1 g per kg DMCO.",
+    "note": "Quote verbatim at cited location; catalyst recovery loading is a perturbed LCA SA input, baseline 1 g/kg DMCO and best/worst 0.1/5 g/kg range all confirmed, Dros et al. (2015) ref 67 attribution correct."
+  },
+  {
+    "code": "m5",
+    "their_var": "nine model parameters tested on MFSP (full single-variable set)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.1931, sec 3.3",
+    "corrected": null,
+    "evidence_quote": "The sensitivity of the nine model parameters tested on MFSP is considered in the TEA and is illustrated in Fig. 6",
+    "note": "Light check: the 'nine model parameters' SA set is stated verbatim on p.1931; full numeric bounds deferred to ESI Tables S1-S2 (not in disk main-text PDF). Plausible."
+  }
+]

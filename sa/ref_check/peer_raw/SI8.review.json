@@ -1,0 +1,102 @@
+[
+  {
+    "code": "SI8",
+    "their_var": "oil (feedstock) price",
+    "our_param": "feedstock_cost",
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text; baseline Table 3 p.8 + p.7",
+    "corrected": null,
+    "evidence_quote": "Oil price ($/kg): Jatropha $0.40 ... Camelina $1.75; 'The oil price, plant capacity, total capital investment ... have the largest impact on MJSP. Therefore, they are key cost drivers.'",
+    "note": "Perturbed SA input, positively correlated. Baseline $0.40/kg jatropha and $0.40-1.75/kg range verbatim in Table 3 p.8 and text p.7. Range null (single-point min/max in Fig.7 graphic only)."
+  },
+  {
+    "code": "SI8",
+    "their_var": "total capital investment (TCI)",
+    "our_param": "capex_mult",
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text; baseline p.12",
+    "corrected": null,
+    "evidence_quote": "Capital investment is similar for all five processes ... ranging from $341 to $354 million for total capital investment and contributing 10-25% of overall jet production cost.",
+    "note": "Perturbed SA input, positively correlated. $341-354M range verbatim p.12. Jatropha ~$341M is the low end (plausible; not explicitly labelled jatropha). Range null."
+  },
+  {
+    "code": "SI8",
+    "their_var": "plant capacity / plant scale",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text",
+    "corrected": null,
+    "evidence_quote": "Most correlations are linear, except the correlation between plant scale and MJSP.",
+    "note": "Light check: listed as perturbed SA input (only non-linear one), negatively correlated."
+  },
+  {
+    "code": "SI8",
+    "their_var": "process efficiency (on-stream factor)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text; baseline p.7",
+    "corrected": null,
+    "evidence_quote": "process efficiency (or on-stream factor) is assumed to be 90% (7884 operating hours per year)",
+    "note": "Light check: perturbed SA input, negatively correlated. 90%/7884h baseline confirmed p.7."
+  },
+  {
+    "code": "SI8",
+    "their_var": "jet fuel yield",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text; baseline Table 3 p.8",
+    "corrected": null,
+    "evidence_quote": "Jet fuel yield (gal/dry ton oil): 170.0 (jatropha); 'jet fuel yields also have a strong impact on MJSP, but they are negatively correlated.'",
+    "note": "Light check: perturbed SA input, negatively correlated. Jatropha 170.0 gal/dry ton confirmed Table 3 p.8."
+  },
+  {
+    "code": "SI8",
+    "their_var": "H2 (hydrogen) price",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text",
+    "corrected": null,
+    "evidence_quote": "The feedstock (oil) price, catalysts loadings and prices, and H2 price are positively correlated to MJSP.",
+    "note": "Light check: perturbed SA input, positively correlated. H2=hydrogen, no matching our_param."
+  },
+  {
+    "code": "SI8",
+    "their_var": "oil upgrading catalyst loadings",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text",
+    "corrected": null,
+    "evidence_quote": "The oil price, plant capacity, total capital investment, oil upgrading catalyst loadings ... have the largest impact on MJSP.",
+    "note": "Light check: perturbed SA input, positively correlated. Loading (amount), not lifetime."
+  },
+  {
+    "code": "SI8",
+    "their_var": "catalyst prices (oil upgrading)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text",
+    "corrected": null,
+    "evidence_quote": "oil upgrading catalyst loadings, process efficiency and catalyst prices ... have the largest impact on MJSP.",
+    "note": "Light check: perturbed SA input, positively correlated."
+  },
+  {
+    "code": "SI8",
+    "their_var": "isomerization catalyst price",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text",
+    "corrected": null,
+    "evidence_quote": "The other parameters chosen for this study (such as isomerization and hydrocracking catalyst price) show minimal contribution to MJSP.",
+    "note": "Light check: perturbed SA input, minimal impact."
+  },
+  {
+    "code": "SI8",
+    "their_var": "hydrocracking catalyst price",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.13 Fig.7 text",
+    "corrected": null,
+    "evidence_quote": "The other parameters chosen for this study (such as isomerization and hydrocracking catalyst price) show minimal contribution to MJSP.",
+    "note": "Light check: perturbed SA input, minimal impact."
+  }
+]

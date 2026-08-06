@@ -1,0 +1,93 @@
+[
+  {
+    "code": "m10",
+    "study": "TEA & environmental assessment of SAF from forest residues (FT-SPK)",
+    "our_param": "feedstock_cost",
+    "their_var": "Cost of forest residues (feedstock supply cost at refinery)",
+    "their_baseline": "$12.6 million total (97% of material cost); MSP baseline $2.50/kg at 10% IRR",
+    "their_range": "$20-80 per tonne",
+    "range_justification": "Stated observed spread of feedstock price ('varies widely'), no cited source for the range; drives SAF production cost $1.41-2.27/kg",
+    "justification_type": "reasoning",
+    "location": "p.4610, Fig. 5 / Section 3.2",
+    "quote": "The cost of forest residues varies widely, ranging from $20 to $80 per tonne. This can cause the SAF production cost to increase from $1.41 per kg to $2.27 per kg.",
+    "status": "ok"
+  },
+  {
+    "code": "m10",
+    "study": "TEA & environmental assessment of SAF from forest residues (FT-SPK)",
+    "our_param": null,
+    "their_var": "Inflation rate",
+    "their_baseline": "not stated",
+    "their_range": "up to 4%",
+    "range_justification": "Illustrative example of cost-estimate uncertainty; no cited source",
+    "justification_type": "reasoning",
+    "location": "p.4610, Section 3.2 (Fig. 5)",
+    "quote": "if inflation increases up to 4%, it can increase the unit production cost to $1.93 per kg.",
+    "status": "ok"
+  },
+  {
+    "code": "m10",
+    "study": "TEA & environmental assessment of SAF from forest residues (FT-SPK)",
+    "our_param": null,
+    "their_var": "Steam usage (steam consumption, kg per kg SAF) — usage amount, not an emission factor",
+    "their_baseline": "0.35 kg kg-1 (implied; +20% = 0.42 kg kg-1)",
+    "their_range": "+/-20%",
+    "range_justification": "Assumed +/-20% perturbation on process steam demand; GW impact spans 6 to 42.7 gCO2eq/kg. No cited source",
+    "justification_type": "reasoning",
+    "location": "p.4612, Fig. 8 / Section 3.3.3",
+    "quote": "When steam usage is increased by 20% to 0.42 kg kg-1, the GW impact increases to 42.7 gCO2 eq. per kg... a 20% reduction in steam usage decreases the GW impact to 6 gCO2 eq. per kg.",
+    "status": "ok"
+  },
+  {
+    "code": "m10",
+    "study": "TEA & environmental assessment of SAF from forest residues (FT-SPK)",
+    "our_param": null,
+    "their_var": "Electricity usage (kW h per kg SAF) — usage amount, not grid CI",
+    "their_baseline": "~0.128 kW h kg-1 (implied; +20% = 0.154 kW h kg-1)",
+    "their_range": "+/-20%",
+    "range_justification": "Assumed +/-20% perturbation on electricity demand; GWP spans 6.89 to 41.9 gCO2eq/kg. No cited source",
+    "justification_type": "reasoning",
+    "location": "p.4612, Fig. 8 / Section 3.3.3",
+    "quote": "increasing electricity usage by 20% to 0.154 kW h kg results in a GWP impact of 41.9 gCO2 eq. per kg, while a 20% decrease reduces it to 6.89 gCO2 eq. per kg.",
+    "status": "ok"
+  },
+  {
+    "code": "m10",
+    "study": "TEA & environmental assessment of SAF from forest residues (FT-SPK)",
+    "our_param": null,
+    "their_var": "Fischer-Tropsch conversion efficiency",
+    "their_baseline": "100%",
+    "their_range": "100% -> 80% (decrease of 20 pts)",
+    "range_justification": "Assumed reduction to 80% to test sensitivity; GWP rises to 32.7 gCO2eq/kg. No cited source",
+    "justification_type": "reasoning",
+    "location": "p.4612, Fig. 8 / Section 3.3.3",
+    "quote": "a decrease in Fischer-Tropsch conversion efficiency to 80% from 100% shows an increase in GWP to 32.7 gCO2 eq. per kg of SAF.",
+    "status": "ok"
+  },
+  {
+    "code": "m10",
+    "study": "TEA & environmental assessment of SAF from forest residues (FT-SPK)",
+    "our_param": null,
+    "their_var": "Forest residue requirement (feedstock quantity, not price)",
+    "their_baseline": "not stated (baseline GW ~24.56 gCO2eq/MJ; 1.056 kgCO2eq/kg)",
+    "their_range": "+/-20%",
+    "range_justification": "Assumed +/-20% perturbation; GWP 23.8 to 25.3 gCO2eq/kg. No cited source",
+    "justification_type": "reasoning",
+    "location": "p.4612, Fig. 8 / Section 3.3.3",
+    "quote": "Variations in forest residue requirements by +/-20% lead to GWP values ranging from 23.8 to 25.3 gCO2 eq. per kg of SAF.",
+    "status": "ok"
+  },
+  {
+    "code": "m10",
+    "study": "TEA & environmental assessment of SAF from forest residues (FT-SPK)",
+    "our_param": null,
+    "their_var": "Diethanolamine requirement for gas treatment",
+    "their_baseline": "not stated",
+    "their_range": "not stated (minor variation)",
+    "range_justification": "Perturbation tested; minor impact, GWI 24.4 to 24.8 gCO2eq/kg. No cited source or explicit range",
+    "justification_type": "reasoning",
+    "location": "p.4612, Fig. 8 / Section 3.3.3",
+    "quote": "changes in diethanolamine requirements for gas treatment show a minor impact on GWI, varying from 24.4 to 24.8 gCO2 eq. per kg of SAF.",
+    "status": "ok"
+  }
+]

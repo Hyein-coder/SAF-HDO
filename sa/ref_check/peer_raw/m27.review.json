@@ -1,0 +1,112 @@
+[
+  {
+    "code": "m27",
+    "their_var": "Feedstock cost",
+    "our_param": "feedstock_cost",
+    "verdict": "CONFIRMED",
+    "found_at": "p.30 (Section 5.3 prose), Figure 11 on p.29; baseline Table 14 p.23",
+    "corrected": null,
+    "evidence_quote": "Use of a low ash feedstock such as pine (at approximately $120/ton) increases the production cost by 14%... Feedstock, $/dry ton 60 (Table 14)",
+    "note": "Quote verbatim; baseline $60/dry ton confirmed in Table 14 (doc p.23); range/+14% confirmed. Prose sits on p.30, Figure 11 on p.29 (section spans 29-30)."
+  },
+  {
+    "code": "m27",
+    "their_var": "Catalyst replacement rate / time on-stream before catalyst replacement",
+    "our_param": "catalyst_lifetime",
+    "verdict": "CONFIRMED",
+    "found_at": "p.30, Section 5.3 (Figure 11)",
+    "corrected": null,
+    "evidence_quote": "The base case catalyst replacement rate is assumed to be 1 year for each reactor. Increasing this to two years causes the MFSP to drop by 7%. Reducing the catalyst life to six months increases the MFSP by 9%.",
+    "note": "Verbatim at cited location; baseline 1 yr, range 6mo(+9%)/2yr(-7%) all confirmed."
+  },
+  {
+    "code": "m27",
+    "their_var": "Internal rate of return (IRR)",
+    "our_param": "discount_rate",
+    "verdict": "CONFIRMED",
+    "found_at": "p.30 (Section 5.3 prose), Figure 11 on p.29; baseline Table 1 p.2",
+    "corrected": null,
+    "evidence_quote": "Plant scale, capital investment and IRR are the largest market and financial type effects. ... Internal rate of return 10% (Table 1)",
+    "note": "IRR is a swept financial input; baseline 10% confirmed in Table 1 (doc p.2). Range not quantified in text (Figure 11 image) - consistent with their_range=null. Prose on p.30."
+  },
+  {
+    "code": "m27",
+    "their_var": "Total capital investment",
+    "our_param": "capex_mult",
+    "verdict": "CONFIRMED",
+    "found_at": "p.30 (Section 5.3 prose), Figure 11 on p.29; baseline Table 16 p.25 (and Table 19 p.28)",
+    "corrected": null,
+    "evidence_quote": "Plant scale, capital investment and IRR are the largest market and financial type effects. ... TCI, million $ 700 (Table 19)",
+    "note": "Capital investment is a swept input; $700M TCI baseline confirmed (Table 16 p.25 total 700; Table 19 p.28 'TCI 700'). Range only in Figure 11 image - consistent with null. Prose on p.30."
+  },
+  {
+    "code": "m27",
+    "their_var": "Plant scale (throughput)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.30, Section 5.3 (Figure 11)",
+    "corrected": null,
+    "evidence_quote": "Plant scale, capital investment and IRR are the largest market and financial type effects.",
+    "note": "Light check: plausibly a perturbed SA input (named largest tornado effect). Correctly flagged as plant SCALE not plant life."
+  },
+  {
+    "code": "m27",
+    "their_var": "Product yield (pyrolysis oil yield & hydrotreating oil yield)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.30, Section 5.3 (Figure 11)",
+    "corrected": null,
+    "evidence_quote": "pyrolysis oil yield and hydrotreating oil yields are 64% wt per dry wood and 44% per dry pyrolysis oil... Reduction of pyrolysis oil yield to 60%... will increase the selling price by 6%.",
+    "note": "Light check: verbatim; is a perturbed SA input."
+  },
+  {
+    "code": "m27",
+    "their_var": "Pyrolysis system capital cost (reactor, combustor, cyclones, quench)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.30, Section 5.3 (Figure 11)",
+    "corrected": null,
+    "evidence_quote": "The published capital costs for the pyrolysis system (reactor, combustor, cyclones and quench equipment) are reported as + 40% and this results in a 9% variation in the MFSP.",
+    "note": "Light check: verbatim; perturbed SA input."
+  },
+  {
+    "code": "m27",
+    "their_var": "Hydrotreater reactor conditions / capital (pressure & LHSV)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.30, Section 5.3 (Figure 11)",
+    "corrected": null,
+    "evidence_quote": "Reducing the first and second stage reactors pressure to 1200 psi and doubling the space velocity for the second stage results in a 7% reduction in the reactor costs and also reduces compression requirements.",
+    "note": "Light check: verbatim; perturbed SA input."
+  },
+  {
+    "code": "m27",
+    "their_var": "Hydrotreating catalyst price",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.30, Section 5.3 (Figure 11)",
+    "corrected": null,
+    "evidence_quote": "The base case catalyst is assumed to be $60/lb. ... Current costs for ruthernium are at $70 per troy ounce (PGM 2013). A 50% variation in the price causes a 3% variation in the MFSP.",
+    "note": "Light check: verbatim; perturbed SA input."
+  },
+  {
+    "code": "m27",
+    "their_var": "Biomass ash content scenario",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.28, Section 5.2, Table 19",
+    "corrected": null,
+    "evidence_quote": "The base case assumes an ash content of 0.9 wt%. ... effects of 1.9% ash ... derived from Oasmaa et al. (2010). Fuel yield 84 -> 75 gal/dry ton; MFSP 3.39 -> 3.55.",
+    "note": "Light check: verbatim at Table 19 (doc p.28); scenario input, values match."
+  },
+  {
+    "code": "m27",
+    "their_var": "Hydrogen generation method scenario (conventional fixed-bed vs CFB reformer)",
+    "our_param": null,
+    "verdict": "CONFIRMED",
+    "found_at": "p.28, Section 5.1, Table 18",
+    "corrected": null,
+    "evidence_quote": "The results are essentially identical from a MFSP standpoint and within the expected uncertainty of this work. (MFSP 3.35 conventional vs 3.45 CFB, Table 18)",
+    "note": "Light check: verbatim at Table 18 (doc p.28); scenario input. Table 18 layout scrambled but 3.35/3.45 MFSP present."
+  }
+]
