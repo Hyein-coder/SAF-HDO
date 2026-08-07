@@ -72,10 +72,11 @@ def stacked(ax, order, colors, values, credit_key=None):
 # ---------------- TEA: MSP cost-bucket composition ($/kg SAF) ----------------
 TEA_ORDER = ["Feedstock", "NG", "Utility", "Labor", "Maintenance", "Overhead",
              "General Expenses", "Catalyst", "Capital & financing", "Gasoline credit"]
-TEA_COLORS = {"Feedstock": "#FDD280", "NG": "#F5C270", "Utility": "#E4957D",
-              "Labor": "#F08080", "Maintenance": "#B56565", "Overhead": "#D4A870",
-              "General Expenses": "#C09763", "Catalyst": "#FADBC7",
-              "Capital & financing": "#A1C1EC", "Gasoline credit": "#9FDAD3"}
+# drHa_TEA_summary_3.png palette: warm (peach/gold/coral) OPEX, cool blue/teal CAPEX
+TEA_COLORS = {"Feedstock": "#FDD280", "NG": "#B56565", "Utility": "#FADBC7",
+              "Labor": "#F08080", "Maintenance": "#E4957D", "Overhead": "#D4A870",
+              "General Expenses": "#F5C270", "Catalyst": "#FEEBD6",
+              "Capital & financing": "#A1C1EC", "Gasoline credit": "#D6EAF8"}
 TEA_CREDIT = "Gasoline credit"   # drawn downward (negative); net stack = MSP
 _BIO_TON = M.BIO_PRICE0 * 1000
 # (group name, npv kwarg, lo value, hi value, lo label, hi label)
@@ -148,14 +149,19 @@ def build_lca():
     return vals, labels
 
 
-def draw(vals, labels, order, colors, ylabel, fname, credit_key=None):
+def draw(vals, labels, order, colors, ylabel, fname, credit_key=None,
+         base_fmt="{v:.2f}"):
     fig, ax = plt.subplots(figsize=(9, 4.2))
     x = stacked(ax, order, colors, vals, credit_key=credit_key)
+    base = sum(vals[0][c] for c in order if c != credit_key) \
+        - (vals[0][credit_key] if credit_key else 0.0)
+    base_line = ax.axhline(base, color="gray", lw=1.0, ls="--", zorder=0,
+                           label="Baseline (" + base_fmt.format(v=base) + ")")
     ax.set_xticks(x); ax.set_xticklabels(labels, fontsize=8)
     ax.set_ylabel(ylabel)
     ax.set_ylim(0, ax.get_ylim()[1] * 1.2)
     ax.set_xlim(-0.7, len(vals) - 0.3)
-    patches = [mpatches.Patch(color=colors[c], label=c) for c in order]
+    patches = [mpatches.Patch(color=colors[c], label=c) for c in order] + [base_line]
     leg = ax.legend(handles=patches, title="Components",
                     bbox_to_anchor=(1.01, 1), loc="upper left",
                     title_fontproperties={"weight": "500"})
@@ -169,9 +175,11 @@ def draw(vals, labels, order, colors, ylabel, fname, credit_key=None):
 if __name__ == "__main__":
     tv, tl = build_tea()
     draw(tv, tl, TEA_ORDER, TEA_COLORS,
-         r"MSP (\$ kg$^{-1}$ SAF)", "sa_composition_TEA.png", credit_key=TEA_CREDIT)
+         r"MSP (\$ kg$^{-1}$ SAF)", "sa_composition_TEA.png", credit_key=TEA_CREDIT,
+         base_fmt=r"\${v:.2f} kg$^{{-1}}$")
     print(f"  (TEA case {CASE}; hatched band = fixed gasoline co-product credit "
           f"{GAS_CREDIT/A:.3f} $/kg; tick line + label = net MSP)")
     lv, ll = build_lca()
     draw(lv, ll, LCA_ORDER, LCA_COLORS,
-         r"GHG (g CO$_2$e MJ$^{-1}$)", "sa_composition_LCA.png")
+         r"GHG (g CO$_2$e MJ$^{-1}$)", "sa_composition_LCA.png",
+         base_fmt=r"{v:.2f} g CO$_2$e MJ$^{{-1}}$")
