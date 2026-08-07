@@ -29,8 +29,11 @@ cases={
           EQ=25476761.16708133, MSP_pub=1.4061299773624727),
 }
 
-def npv(x, d, *, capex_mult=1.0, cat_replace=True, cat_year=3, C_cat_inv=C_CAT_INV,
-        bio_mult=1.0, ng_mult=1.0, irate=IRATE0, plife=PLIFE0, cont_frac=0.15):
+def _costs(x, d, *, capex_mult=1.0, cat_replace=True, cat_year=3, C_cat_inv=C_CAT_INV,
+           bio_mult=1.0, ng_mult=1.0, cont_frac=0.15):
+    """Cost buildup shared by npv() and the composition plot. GE depends on the
+    solved SAF price x (revenue), so x must be passed in. Returns a dict of the
+    annual cost buckets + the CAPEX/depreciation/working-capital terms."""
     S = d['mSAF']*TOP*x + d['mGAS']*TOP*P_GAS
     # CAPEX buildup (matches cash_flow_SA)
     C_EQP=(d['EQ']-C_CAT_INV)*capex_mult
@@ -53,9 +56,20 @@ def npv(x, d, *, capex_mult=1.0, cat_replace=True, cat_year=3, C_cat_inv=C_CAT_I
     COM=C_feed.sum()+C_util.sum()+C_O.sum()+C_M.sum()+C_OH.sum()+C_prop+C_D.sum()
     GE=(0.03+0.01+0.048+0.005+0.02+0.0125)*S
     C_cat_annual = C_cat_inv/cat_year if cat_replace else 0.0
+    C_WC=0.0833*COM+0.0192*S+0.0833*S-0.0833*C_feed.sum()
+    return dict(S=S, C_feed=C_feed, C_util=C_util, C_O=C_O, C_M=C_M, C_OH=C_OH,
+                C_prop=C_prop, C_D=C_D, C_TDC=C_TDC, COM=COM, GE=GE,
+                C_cat_annual=C_cat_annual, C_WC=C_WC)
+
+def npv(x, d, *, capex_mult=1.0, cat_replace=True, cat_year=3, C_cat_inv=C_CAT_INV,
+        bio_mult=1.0, ng_mult=1.0, irate=IRATE0, plife=PLIFE0, cont_frac=0.15):
+    c=_costs(x, d, capex_mult=capex_mult, cat_replace=cat_replace, cat_year=cat_year,
+             C_cat_inv=C_cat_inv, bio_mult=bio_mult, ng_mult=ng_mult, cont_frac=cont_frac)
+    S=c['S']; C_feed=c['C_feed']; C_TDC=c['C_TDC']; COM=c['COM']; GE=c['GE']
+    C_D=c['C_D']; C_cat_annual=c['C_cat_annual']
     n=int(round(plife))
     CF_TDC=np.zeros(n+1);CF_WC=np.zeros(n+1);CF_CD=np.zeros(n+1);CF_NE=np.zeros(n+1)
-    C_WC=0.0833*COM+0.0192*S+0.0833*S-0.0833*C_feed.sum()
+    C_WC=c['C_WC']
     for i in range(1,n+1):
         oy=i-CONSTR
         C = COM+GE+ (C_cat_annual if oy>=1 else 0.0)

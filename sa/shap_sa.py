@@ -85,9 +85,13 @@ def f_gwp(X):
     return _K * (_emi + X @ _C) * 1000.0                  # -> gCO2/MJ
 
 GWP_NAMES = list(_contrib)
-GWP_PCT   = [0.30, 0.20, 0.20, 0.20]                      # biomass +-30%, rest +-20%
-GWP_LO    = [1 - p for p in GWP_PCT]
-GWP_HI    = [1 + p for p in GWP_PCT]
+# asymmetric literature ranges (multiplier bounds around base=1.0); WWT unchanged +-20%
+_GWP_RANGE = {"Biomass feedstock": (0.52, 1.41),   # -48% / +41%
+              "Electricity":       (0.77, 1.46),   # -23% / +46%
+              "NG":                (0.57, 1.58),   # -43% / +58%
+              "WWT":               (0.80, 1.20)}   # +-20%
+GWP_LO    = [_GWP_RANGE[n][0] for n in GWP_NAMES]
+GWP_HI    = [_GWP_RANGE[n][1] for n in GWP_NAMES]
 GWP_BASE  = [1.0] * len(GWP_NAMES)
 
 if __name__ == "__main__":

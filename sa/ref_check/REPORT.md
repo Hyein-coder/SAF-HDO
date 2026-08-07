@@ -111,9 +111,9 @@ Text-keyword scan of the 260304 reference PDFs (`SAF references_manuscript\` + `
 
 ### Detail — per (study × variable), how the range was set + where it lives
 
-Verdict column: ✓ = CONFIRMED at cited location by reverse-track; ≈ = MISLOCATED (value correct, page off). Full quotes in `peer_sa.json`.
+Verdict column: ✓ = CONFIRMED at cited location by reverse-track; ≈ = MISLOCATED (value correct, page off). Full quotes in `peer_sa.json`. **Our baseline** = the value our SA perturbs around (from `ref_map.json`, extracted from code — see per-param note for the code location).
 
-**feedstock_cost**
+**feedstock_cost** — *our baseline: **0.104286 $/kg** (BIOMASS_2016=0.06923 escalated ×CEPCI 1.50637; SA grid ×[0.50…1.50] = ±50%)*
 
 | Study | Baseline | Range | How set | Location | ✓ |
 |---|---|---|---|---|---|
@@ -130,14 +130,14 @@ Verdict column: ✓ = CONFIRMED at cited location by reverse-track; ≈ = MISLOC
 | SI8 (HRJ) | $0.40/kg (jatropha) | min/max (Fig.7) | reasoning — single-point min/max, no % | p.13 Fig.7; base Table 3 | ✓ |
 | SI11 (torrefaction pine) | $60/dry ton | ±15% | reasoning — uniform ±15%, no cite | p.4539; base Table 6 | ✓ |
 
-**ng_price**
+**ng_price** — *our baseline: **0.054681 $/kg** (NG_2011=0.0363 = 76.57 ¢/MMBtu, escalated ×CEPCI 1.50637; SA grid ×[0.50…1.50] = ±50%)*
 
 | Study | Baseline | Range | How set | Location | ✓ |
 |---|---|---|---|---|---|
 | SI11 | $5.04/GJ | ±15% | reasoning — uniform ±15% | p.4539; base Table 6 | ✓ |
 | SI5 | in SI | distribution | **citation/in-SI** — U.S. EIA historical trends (refs 60,61), Table S7 | p.9; Table S7 | ✓ |
 
-**catalyst_lifetime**
+**catalyst_lifetime** — *our baseline: **3 yr** (COST.catalyst.year=3; SA grid [1 2 3 4 5])*
 
 | Study | Baseline | Range | How set | Location | ✓ |
 |---|---|---|---|---|---|
@@ -146,7 +146,7 @@ Verdict column: ✓ = CONFIRMED at cited location by reverse-track; ≈ = MISLOC
 | m27 | 1 yr/reactor | 6 mo (+9%) – 2 yr (−7%) | reasoning — plausible on-stream life | p.30 §5.3, Fig.11 | ✓ |
 | SI4 | 348 / 625 lb·h⁻¹ | ±50% (catalyst-loss proxy) | reasoning — "reasonable min/max" | p.1094 Table 9 | ✓ |
 
-**discount_rate**
+**discount_rate** — *our baseline: **0.15** (COST.irate=0.15; SA grid [0.08 0.10 0.12 0.15 0.18 0.20])*
 
 | Study | Baseline | Range | How set | Location | ✓ |
 |---|---|---|---|---|---|
@@ -159,13 +159,13 @@ Verdict column: ✓ = CONFIRMED at cited location by reverse-track; ≈ = MISLOC
 | m26 | 10% ROI | 0–30% | reasoning — plant-gate to high-return endpoints | Fig.7.2 §7.2 | ✓ |
 | m27 | 10% IRR | fig-only | reasoning — span only in Fig.11 | p.30 §5.3, Fig.11 | ✓ |
 
-**plant_life**
+**plant_life** — *our baseline: **15 yr** (COST.plant_life=15; SA grid [10 12 15 18 20])*
 
 | Study | Baseline | Range | How set | Location | ✓ |
 |---|---|---|---|---|---|
 | SI1 | 20 yr | ±30% | **citation** — refs 86,87; minimal effect noted | p.17 §3.10; base Table 4 | ✓ |
 
-**capex_mult**
+**capex_mult** — *our baseline: **1.0** (baseCOST.capex_mult=1.0 in SA_driver; SA grid [0.70 0.85 1.00 1.15 1.30] = ±30%)*
 
 | Study | Baseline | Range | How set | Location | ✓ |
 |---|---|---|---|---|---|
@@ -178,7 +178,7 @@ Verdict column: ✓ = CONFIRMED at cited location by reverse-track; ≈ = MISLOC
 | m27 | $700M TCI | fig-only | reasoning — span only in Fig.11 | p.30 §5.3, Fig.11 | ✓ |
 | m33 | nominal EPC | ±30% | reasoning — OAT ±30%, no cite | p.12 §4.4.1, Fig.14 | ✓ |
 
-**gwp_ng / electricity_grid_factor / allocation_method (LCA)**
+**gwp_ng / electricity_grid_factor / allocation_method (LCA)** — *our baselines: electricity_grid_factor **0.67420026 kg/kWh** (LCA.EL_GRID; ±20%) · allocation_method **mass-basis** (÷48.168; alt = energy-basis over SAF+gasoline LHV)*
 
 | Study | Our param | Baseline | Range | How set | Location | ✓ |
 |---|---|---|---|---|---|---|
@@ -188,6 +188,15 @@ Verdict column: ✓ = CONFIRMED at cited location by reverse-track; ≈ = MISLOC
 | SI21 | electricity_grid_factor | — | 72–676 kgCO₂/MWh | reasoning — three real grid mixes (NG/US-avg/coal) | p.12 Methods, Fig.6c | ✓ |
 | SI5 | electricity_grid_factor | — | distribution | citation — ecoinvent/GREET (Table S6/S7) | p.9; Table S6 | ✓ |
 | SI5 | allocation_method | displacement | displacement vs energy | reasoning — methodological choice | p.9 | ✓ |
+
+> **Note — effective LCA feed factors (downstream multiplier applies).** In `TEA_LCA_non_CC_260407/LCA_analysis_SAF.m` the biomass and NG feed GWPs are **not** used at their bare emission-factor value: each base factor (hardcoded in `LCA_analysis_SAF.m`) is multiplied by a scaling constant from `LCA_PARAMETER.m` at lines 49–50. So the *effective* baseline that the LCA actually sums is:
+>
+> | Feed | Base factor (LCA_analysis_SAF.m) | Multiplier (LCA_PARAMETER.m) | **Effective** |
+> |---|---|---|---|
+> | Biomass | 0.1772 kgCO₂e/kg (`GWP_biomass`, L3) | `LCA.BM = 0.4` (L6) | **0.07088 kgCO₂e/kg** |
+> | Natural gas | 0.2221 kgCO₂e/kg (`GWP_NG`, L7) | `LCA.NG_kg = 3` (L33) | **0.6663 kgCO₂e/kg** |
+>
+> Asymmetric: biomass scaled ×0.4, NG scaled ×3. The `gwp_ng` baseline cited above (0.2221) is the *base* constant, not the effective value the model uses. Confirm multipliers are intended before citing either number in the SA.
 
 ### Per-study summary + SI-to-fetch
 
