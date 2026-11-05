@@ -52,7 +52,7 @@ Process chain: biomass → fast pyrolysis → pyrolysis oil → 3-stage HDO reac
 
 ## Notes for working here
 
-- **Python env:** use the conda env **`saf_hdo`** (`conda run -n saf_hdo python ...`) — it has `pandas`, `scipy`, `openpyxl` (Excel), etc. The `base` env lacks `openpyxl` so `pd.read_excel` fails there. Don't `pip install` into `base`; if a package is missing, add it to `saf_hdo` (or clone it) rather than polluting `base`.
+- **Python env (default):** the uv venv at **`D:\saf_hdo\.venv`** (Python 3.11), shared by all worktrees. Run scripts with `D:\saf_hdo\.venv\Scripts\python.exe script.py` (Git Bash: `/d/saf_hdo/.venv/Scripts/python.exe`; set `PYTHONIOENCODING=utf-8` for Korean-locale stdout). Dependencies are listed in `requirements.txt` (pandas, scipy, openpyxl, matplotlib, pywin32 for Aspen COM, GPy/GPyOpt, shap, pygad). To add a package, add it to `requirements.txt` and run `uv pip install -p D:\saf_hdo\.venv\Scripts\python.exe -r requirements.txt`. Rebuild with `uv venv -p 3.11 D:\saf_hdo\.venv` followed by the same install. There is no conda on this machine (the older `saf_hdo` conda env no longer exists). Don't install into any global Python.
 - Aspen `.bkp`/`.apw` and Office `.docx`/`.pptx`/`.xlsx` are **binary** — don't cat them; extract via the appropriate tool/library or ask the user. `.zip` archives usually duplicate an adjacent unzipped folder.
 - Many hard-coded absolute paths in the code (`D:\SAF-HDO py\...`, `D:\523506\...`) point to the author's original machine — verify/repoint before running.
 - When writing manuscript content, a `kan-manuscript` skill exists but targets a **different** (KAN sensitivity-analysis) paper — do not use it for SAF work unless the user asks.

@@ -1,0 +1,12 @@
+numpy
+pandas
+scipy
+openpyxl
+matplotlib
+pywin32
+GPy
+GPyOpt
+shap
+pygad
+requests
+setuptools<81  # GPyOpt imports pkg_resources
