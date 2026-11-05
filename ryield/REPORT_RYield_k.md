@@ -109,7 +109,7 @@ Codex was run with `codex exec -s read-only`. On Windows the read-only sandbox b
 | `validate_k.py`, `val_k_rstoic.json`, `val_k_ryield.json`, `VALIDATION_k_tables.md` | key-stream, phase-fraction and experimental-validation comparison (§10) |
 | `PLAN_RYield_conversion.md` | earlier plan (single-reactor layout); replaced by the per-stage decision |
 
-Environment: Aspen Plus V14. Python with pywin32 from the hermes venv; the `saf_hdo` conda env was not found on this machine.
+Environment: Aspen Plus V14. Python 3.11 with pywin32 from the uv venv `D:\saf_hdo\.venv` (packages in `requirements.txt`).
 
 ## 10. Process and experimental-validation comparison (added 2026-10-22)
 
