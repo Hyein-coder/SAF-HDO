@@ -1,0 +1,5 @@
+TASK B — How HDO is represented inside process simulation / TEA / LCA for pyrolysis-to-fuels (esp. jet/SAF).
+1. Survey NREL/PNNL design reports (e.g., Jones et al. 2013 PNNL-23053, Dutta et al. 2015 ex-situ/in-situ CFP, 2020s updates), and peer-reviewed TEA/LCA papers on pyrolysis oil hydrotreating to jet/SAF. For each: how the HDO reactor is modeled (RStoic, RYield, kinetic RPlug/RCSTR, external yield correlation), what data it is anchored to, and how product distribution (carbon number / boiling range) is set.
+2. Papers that coupled a kinetic or lumped HDO model to Aspen/gPROMS/Python flowsheets, or used surrogates (GP, ANN, polynomial) of reactor models inside optimization/TEA; papers using Bayesian optimization or data reconciliation to fit reactor yields.
+3. Reported sensitivity of MSP/GHG to HDO parameters (H2 consumption, carbon yield, catalyst cost/lifetime, WHSV, pressure) and whether the sensitivity was computed with fixed yields or a predictive model.
+Output: table (paper | reactor representation | anchor data | predictive w.r.t. conditions? | key finding) + list of methods we could adopt.

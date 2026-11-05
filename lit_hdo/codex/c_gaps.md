@@ -1,0 +1,6 @@
+TASK C — Insights and gaps in the current landscape of HDO reaction modeling for bio-oil to SAF.
+1. What generalizable insights has the literature derived that are largely catalyst-independent? e.g., H2 consumption vs oxygen removal stoichiometry, carbon yield vs deoxygenation degree trade-off, functional-group reactivity ordering (carbonyl > ... > phenolic/furanic ether), stabilization (low-T stage) need, coking/polymerization, cracking vs hydrogenation selectivity drivers, role of water/ H2 partial pressure, multi-stage temperature staging rationale.
+2. Key unresolved gaps: kinetic parameter transferability across catalysts and real oils, lack of real-oil datasets with full carbon-number resolution, deactivation modeling, scale-up, uncertainty quantification, links between reaction model and TEA/LCA.
+3. Where the research activity is concentrated (groups/regions: e.g., PNNL/NREL USA, Groningen/Heeroes NL, Twente, Ghent LCT, KIST/Korea, China, etc.) and what each emphasizes — brief.
+4. Concrete opportunities a TEA/LCA group with Aspen + Bayesian-optimized stoichiometry fitted to carbon-number data could contribute (e.g., catalyst-agnostic severity-based yield model, UQ propagation to MSP, descriptor-based surrogate).
+Output: bullet lists per section + reference list.
