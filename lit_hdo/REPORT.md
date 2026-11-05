@@ -74,6 +74,44 @@ Research hubs: PNNL/NREL (process design, stabilization, deactivation); Groninge
 - Medium reasoning, ~1.5k words per run: survey is breadth-first, not exhaustive. Missing likely: Sheu 1988 lumped kinetics, Elliott 2007 review, Sharma & Bakhshi, Genesys/RMG bio-oil networks, recent (2024–26) ML on real-oil HDO. One follow-up Codex run could target those.
 - No full-text reading; claims summarize abstracts/landing pages.
 
+## Carbon-number distribution models (added 2026-11-05)
+
+Basis for re-framing the Weibull C#-distribution model (slides `바이오항공유_김경수_241217.pptx`): the distribution is an ensemble outcome of per-molecule growth/scission events, not a random C#.
+
+- **Direction 1 — reinterpret Weibull.** Hazard h(n) = probability chain terminates/cleaves at n. ASF/Flory = constant termination probability (geometric); Weibull = length-dependent termination. Brown & Wohletz 1995 derive Weibull from sequential fragmentation. θ = smallest surviving skeleton, λ = characteristic product size (severity), k = size dependence of cracking.
+- **Direction 2 — tie parameters to conditions.** Continuous lumping (Laxminarasimhan 1996) with k(n) rising with size and a split-yield kernel; Elizalde & Ancheyta 2010 makes those parameters functions of T and P. Same move for λ, k, θ.
+- No post-2000 paper found applying continuous lumping or a Weibull/ASF C# distribution to pyrolysis-oil HDO. Closest bio-side work: Kim 2025 (lignin population balance).
+
+### Classic (pre-2000)
+
+| Ref | Title | DOI | OA |
+|---|---|---|---|
+| Flory 1936 | Molecular size distribution in linear condensation polymers | [10.1021/ja01301a016](https://doi.org/10.1021/ja01301a016) | closed |
+| Anderson, Friedel & Storch 1951 | Fischer–Tropsch reaction mechanism involving stepwise growth of carbon chain | [10.1063/1.1748201](https://doi.org/10.1063/1.1748201) | closed |
+| Montroll & Simha 1940 | Theory of depolymerization of long chain molecules | [10.1063/1.1750807](https://doi.org/10.1063/1.1750807) | closed |
+| Brown & Wohletz 1995 | Derivation of the Weibull distribution based on physical principles and its connection to the Rosin–Rammler and lognormal distributions | [10.1063/1.360073](https://doi.org/10.1063/1.360073) | closed |
+| Chou & Ho 1988 | Continuum theory for lumping nonlinear reactions | [10.1002/aic.690340914](https://doi.org/10.1002/aic.690340914) | closed |
+| Laxminarasimhan, Verma & Ramachandran 1996 | Continuous lumping model for simulation of hydrocracking | [10.1002/aic.690420925](https://doi.org/10.1002/aic.690420925) | closed |
+
+### Post-2000
+
+| Ref | Title | Relevance | DOI | OA |
+|---|---|---|---|---|
+| Puskas & Hurlbut 2003 | Comments about the causes of deviations from the ASF distribution of the FT reaction products | why real C# distributions deviate from ASF; length-dependent growth probability | [10.1016/s0920-5861(03)00305-5](https://doi.org/10.1016/s0920-5861(03)00305-5) | closed |
+| Tavakoli 2008 | Application of ASF equation in the product distribution of slurry phase FT synthesis with nanosized iron catalysts | fitting ASF/two-α to C# data | [10.1016/j.cej.2007.04.017](https://doi.org/10.1016/j.cej.2007.04.017) | closed |
+| Ancheyta 2005 | Kinetic modeling of hydrocracking of heavy oil fractions: a review | review of lumped vs continuous vs mechanistic | [10.1016/j.cattod.2005.08.015](https://doi.org/10.1016/j.cattod.2005.08.015) | closed |
+| Elizalde & Ancheyta 2009 | Application of continuous kinetic lumping modeling to moderate hydrocracking of heavy oil | continuous lumping on real feed | [10.1016/j.apcata.2009.06.018](https://doi.org/10.1016/j.apcata.2009.06.018) | closed |
+| Elizalde & Ancheyta 2010 | Modeling the effect of pressure and temperature on the hydrocracking of heavy crude oil by the continuous kinetic lumping approach | **direction 2 template**: distribution params as f(T, P) | [10.1016/j.apcata.2010.04.050](https://doi.org/10.1016/j.apcata.2010.04.050) | closed |
+| Elizalde & Ancheyta 2011 | On the detailed solution and application of the continuous kinetic lumping modeling to hydrocracking of heavy oils | numerical solution details | [10.1016/j.fuel.2011.03.044](https://doi.org/10.1016/j.fuel.2011.03.044) | closed |
+| Elizalde & Ancheyta 2014 | Modeling catalyst deactivation during hydrocracking of atmospheric residue by using the continuous kinetic lumping model | deactivation in distribution model | [10.1016/j.fuproc.2014.02.006](https://doi.org/10.1016/j.fuproc.2014.02.006) | closed |
+| Becker 2015 | Comparing hydrocracking models: continuous lumping vs. single events | when the simple distribution model is enough | [10.1016/j.fuel.2015.09.091](https://doi.org/10.1016/j.fuel.2015.09.091) | closed |
+| Boosari 2017 | Application of Bayesian approach in the parameter estimation of continuous lumping kinetic model of hydrocracking process | Bayesian fit of distribution params (cf. our BO); low-tier journal | [10.4236/aces.2017.73019](https://doi.org/10.4236/aces.2017.73019) | diamond |
+| Rocha & Lage 2019 | The solution of continuous kinetic lumping models using the adaptive characterization method | solver method | [10.1002/aic.16758](https://doi.org/10.1002/aic.16758) | closed |
+| Laxmi Narasimhan 2004 | Relumped single-event microkinetic model for alkane hydrocracking on shape-selective catalysts | mechanistic (single-event) C# distribution | [10.1016/j.ces.2004.07.093](https://doi.org/10.1016/j.ces.2004.07.093) | closed |
+| Kumar & Froment 2006 | A generalized mechanistic kinetic model for the hydroisomerization and hydrocracking of long-chain paraffins | mechanistic C# distribution, long chains | [10.1021/ie060957w](https://doi.org/10.1021/ie060957w) | closed |
+| Mitsios 2009 | Single-event microkinetic model for long-chain paraffin hydrocracking and hydroisomerization on an amorphous Pt/SiO2·Al2O3 catalyst | same, amorphous bifunctional catalyst | [10.1021/ie800974q](https://doi.org/10.1021/ie800974q) | closed |
+| Kim 2025 | A population balance model for lignin: tracking molecular weights, S/G ratio, and bond compositions | population balance on lignin (bio feed) | [10.1016/j.cej.2025.170474](https://doi.org/10.1016/j.cej.2025.170474) | hybrid |
+
 ## References
 
 All DOIs Crossref-verified 2026-11-04. OA status from OpenAlex 2026-11-05: gold/hybrid/green = free copy exists; closed = needs KIST access. Plain list for Zotero "Add Item by Identifier": `dois.txt`.
