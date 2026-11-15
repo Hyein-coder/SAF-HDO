@@ -61,11 +61,6 @@ def nbinom_shift(r, q, n0=6):
     return p / p.sum() if p.sum() > 0 else None
 
 
-def mix2ln(f, s1, sc1, s2, sc2):
-    a, b = binned(st.lognorm(s1, scale=sc1)), binned(st.lognorm(s2, scale=sc2))
-    return None if a is None or b is None else f * a + (1 - f) * b
-
-
 # name -> (pmf(*params), moment-based x0(mean, var), bounds, param names, shared idx for pooled fit)
 # ponytail: Nelder-Mead + random restarts; switch to a global optimizer if restarts disagree a lot
 def _ln(m, v):
@@ -94,11 +89,8 @@ MODELS = {
                  [(0.05, 500), (0.001, 0.999)], ["r", "q"], [0]),
     "gengamma": (gg_prentice, lambda m, v: [np.log(_ln(m, v)[1]), _ln(m, v)[0], 0.5],
                  [(0, 5), (0.01, 3), (-5, 5)], ["mu", "sigma", "Q"], [1, 2]),
-    "mix2ln":   (mix2ln, lambda m, v: [0.6, 0.3, m * 0.8, 0.4, m * 1.6],
-                 [(0.01, 0.99), (0.01, 3), (1, 60), (0.01, 3), (1, 60)],
-                 ["f", "s1", "scale1", "s2", "scale2"], None),
 }
-NESTED = [("gengamma", "gamma"), ("gengamma", "lognorm"), ("lognorm3", "lognorm"), ("mix2ln", "lognorm"),
+NESTED = [("gengamma", "gamma"), ("gengamma", "lognorm"), ("lognorm3", "lognorm"),
           ("nbinom", "asf_shift")]
 
 
@@ -268,6 +260,51 @@ def plots(W, P, M, top3):
     fig.savefig(fig_dir / "distfit_rmse.png"); fig.savefig(fig_dir / "distfit_rmse.svg"); plt.close(fig)
 
 
+def laxmi(W, X):
+    """Map per-case weibull3 (k, theta, lambda) onto the Laxminarasimhan et al. (1996) rate law.
+
+    Their Eq. 4: k(th) = k_max * th^(1/alpha), th = normalized TBP (0 at lightest, 1 at heaviest species).
+    Taking th = (n - n_l)/(n_h - n_l), first-order loss exp(-k(th) tau) of one species is a Weibull
+    survival exp(-((n - theta)/lambda)^k) with k = 1/alpha, theta = n_l, lambda = (n_h - n_l)(k_max tau)^-alpha.
+    Formal analogy only: equating it with the *cumulative* mass heavier than n also needs no formation
+    term (Eq. 8 integral), a feed uniform in k, TBP linear in n -- see REPORT.md.
+    kmax_tau_C38 = ((38.5 - theta)/lambda)^k, i.e. n_h = 38.5; it is -ln of the *untruncated* Weibull
+    mass above C38 (the fitted, window-renormalized pmf has none). sf_below/sf_above = untruncated
+    Weibull mass below C5.5 / above C38.5, to show how much the window truncation matters.
+    """
+    rows = []
+    for c in W.columns:
+        k, th, lam = X[("weibull3", c)]
+        d = st.weibull_min(k, loc=th, scale=lam)
+        rows.append(dict(case=c, k=k, theta=th, lam=lam, alpha=1 / k,
+                         kmax_tau_C38=((EDGES[-1] - th) / lam) ** k,
+                         sf_below=1 - d.sf(EDGES[0]), sf_above=d.sf(EDGES[-1])))
+    return pd.DataFrame(rows)
+
+
+def plot_laxmi(W, L):
+    """-ln(fraction heavier than n) vs (n - theta), log-log. Line = window-truncated weibull3 (what was
+    fitted); dashed = untruncated power law (n - theta)^(1/alpha) / lambda^(1/alpha)."""
+    import matplotlib.pyplot as plt
+    fig, axs = plt.subplots(3, 4, figsize=(14, 9))
+    for ax, (c, r) in zip(axs.flat, L.set_index("case").iterrows()):
+        H = 1 - np.cumsum(W[c].values)                       # mass fraction heavier than n (at edge n+0.5)
+        x = EDGES[1:] - r.theta; ok = (H > 1e-6) & (H < 1 - 1e-9) & (x > 0)   # drop empty leading bins
+        ax.loglog(x[ok], -np.log(H[ok]), "o", color="#444444", ms=3, label="SimDist")
+        n = np.linspace(EDGES[1:][ok].min(), EDGES[-1] - 0.05, 200)
+        sf = st.weibull_min(r.k, loc=r.theta, scale=r.lam).sf
+        Htr = (sf(n) - sf(EDGES[-1])) / (sf(EDGES[0]) - sf(EDGES[-1]))
+        ax.loglog(n - r.theta, -np.log(Htr), "-", color="#B56565", lw=1.2, label="weibull3 (fitted, truncated)")
+        ax.loglog(n - r.theta, ((n - r.theta) / r.lam) ** r.k, "--", color="#4F81BD", lw=1,
+                  label=rf"power law, $1/\alpha$ = {r.k:.2f}")
+        ax.set_title(f"case {c}"); ax.legend()
+    axs.flat[-1].axis("off")
+    for ax in axs[-1]: ax.set_xlabel(r"$n - \theta$ (carbon number)")
+    for ax in axs[:, 0]: ax.set_ylabel("−ln(wt fraction heavier than n)")
+    fig_dir = ROOT / "figures"
+    fig.savefig(fig_dir / "distfit_laxmi.png"); fig.savefig(fig_dir / "distfit_laxmi.svg"); plt.close(fig)
+
+
 def main():
     W = load()
     rows, prow, P, X = [], [], {}, {}
@@ -340,7 +377,10 @@ def main():
     pool.to_csv(out / "pooled.csv", index=False)
     pd.set_option("display.width", 200)
     print(rank.round(3).to_string()); print(); print(pool.round(4).to_string())
+    L = laxmi(W, X); L.to_csv(out / "weibull_laxmi.csv", index=False)
+    print(); print(L.round(3).to_string())
     plots(W, P, M, top3)
+    plot_laxmi(W, L)
 
 
 def selftest():
