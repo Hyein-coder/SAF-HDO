@@ -1,0 +1,16 @@
+# Catalyst inputs for cattree/tree.py. Case letters = HDO_exp.xlsx columns (mapping user-confirmed 2026-11-17; k=C2 dropped, degenerate Weibull3 fit).
+# n_*: cation moles per formula unit (mixed oxide), or of the support when Ni_wt is set (supported Ni; tree.py converts wt% -> mole fractions).
+# Ni_wt: SI Table S18 "Weight percent of Ni". H2_uptake (umol/g), red_pct, Ni_disp (%): SI Table S18. BET (m2/g): SI Table S1. O_def (Odefect/OL): SI Table S16.
+# Source: D:\SAF_Nurul\20260700_Review_CEJ\SupportingInformation_Ver8.docx; prep/config flags: Tables_ver4.docx Table 1.
+# a (C1) = Pd/C -> A2 material -> Ru/WZr: inherits A2 measured values. j (B4, PD) and e (A4, no Ni): no S18 data.
+case,entry,catalyst,n_La,n_Ti,n_Ce,n_Ni,Ni_wt,prep_PD,Ni_supported,has_RuWZr,H2_uptake,red_pct,Ni_disp,BET,O_def
+a,C1,La2Ti0.5Ce0.5NiOx then Ru/WZr,2,0.5,0.5,1,,0,0,1,27.4,52.0,4.32,1,2.1
+b,A1,La2TiNiOx,2,1,0,1,,0,0,0,28.8,37.5,8.16,10,2.4
+c,A2,La2Ti0.5Ce0.5NiOx,2,0.5,0.5,1,,0,0,0,27.4,52.0,4.32,1,2.1
+d,A3,La2CeNiOx,2,0,1,1,,0,0,0,19.2,100,2.41,5,2.2
+e,A4,La2Ti0.5Ce0.5Ox,2,0.5,0.5,0,,0,0,0,,,,10,0.8
+f,A5,Ni/La2Ti0.5Ce0.5Ox,2,0.5,0.5,0,13.5,0,1,0,32.9,93.0,3.06,3,1.1
+g,B1,Ni/LaOx (PD),1,0,0,0,13.5,1,1,0,36.5,100,3.16,,6.9
+h,B2,Ni/TiOx (PD),0,1,0,0,13.5,1,1,0,47.7,100,4.14,,0.5
+i,B3,Ni/CeOx (PD),0,0,1,0,13.5,1,1,0,64.1,100,5.55,,0.6
+j,B4,La2Ti0.5Ce0.5NiOx (PD),2,0.5,0.5,1,,1,0,0,,,,,

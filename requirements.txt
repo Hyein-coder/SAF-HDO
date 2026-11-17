@@ -7,6 +7,7 @@ pywin32
 GPy
 GPyOpt
 shap
+scikit-learn>=1.3  # native NaN handling in trees
 pygad
 requests
 setuptools<81  # GPyOpt imports pkg_resources

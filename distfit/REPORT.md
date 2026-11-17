@@ -155,7 +155,7 @@ Also note the paper describes VGO hydrocracking, whereas this is pyrolysis-oil H
 ## Caveats (fit)
 - **Fit objective vs ranking metric:** the fit minimizes KL, while ranking uses RMSE. The two agree on the winner in 9 of 11 cases.
 - **Data limits:** the data are rounded to integer wt% and contain no C≤5 light ends.
-- **Column mapping:** the mapping of columns a–k to Table 1 entries (A1–C2) is unconfirmed; see `ryield/PLAN_RYield_conversion.md`. It is needed before linking severity to T or catalyst.
+- **Column mapping:** confirmed 2026-11-17 as a–k = C1, A1, A2, A3, A4, A5, B1, B2, B3, B4, C2. Table 1 has the C1/C2 SimDist values swapped, and the Fig. S8 caption is off by one. See `cattree/REPORT.md` §2.
 - **Flags:**
   - `converged` (the Nelder-Mead stop flag) is weak.
   - Use `at_bound`, `unidentifiable` and `weak` instead.
