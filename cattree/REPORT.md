@@ -139,7 +139,53 @@ prep_PD = 1 ─┬ x_La <= 0.25  → 13.75 {B2, B3}
 - **Composition fractions are approximate.** For A5's La2Ti0.5Ce0.5Ox support, the conversion assumes O5 (Ce as CeO2) rather than about O4.75. That shifts A5's fractions by about 0.002 and changes no split.
 - **Weak supporting data.** The targets are fitted parameters carrying their own uncertainty (`distfit/results/params.csv` has SEs). The SimDist input is integer wt%.
 
-## 6. Reproduce
+## 6. Interpretation: catalyst → product composition
+
+**The catalyst changes the heavy tail, not the light end.**
+- Across cases, the most abundant carbon number is C8–C11 everywhere except B3 (C15).
+- C6–7 stays at 3–8 %.
+- C20+ ranges from 0 to 39 %, and jet C8–16 from 44 to 85 %.
+
+So the feed's monomers end up in the light end largely regardless of catalyst. The catalyst decides whether the dimer and oligomer pool is cracked back down or survives and condenses further. That is why only λ (width) responds.
+
+Spearman ρ below is over cases a–j with data. C1 copies A2's measured values, so measured-property ρ rests on 7 independent catalysts.
+
+1. **Ni is required (H₂ activation).**
+   - Ni-free A4 gives 29 % C20+, against 3 % for A2.
+   - Activated H saturates reactive intermediates before they couple.
+   - Spent A4 forms LaCO₃OH, meaning carbon reacted into the oxide (manuscript ¶129).
+2. **The Ni must sit on the La–Ti–Ce mixed oxide.**
+   - A5 (Ni impregnated on the mixed oxide) gives 2 % C20+.
+   - B1–B3 (Ni on a single oxide) give 20–39 %.
+   - The mixed oxide supplies Lewis acid sites for C–O/C–C cleavage. In the benzyl-phenyl-ether test, A2 gave the least C–C recondensation: 22 %, against 45.7 % without catalyst (¶79).
+3. **How strongly Ni is anchored matters more than how much metal is exposed.**
+   - red_pct vs λ: ρ = +0.89 (p = 0.003, n = 8).
+   - The narrow group is only partly reduced (37.5–93 %). Every broad catalyst with measurements is 100 % reduced.
+   - H₂ uptake does not help. Among the four supported-Ni catalysts, λ rises in the same order as H₂ uptake (ρ = 1.0): B3 has the highest uptake and the worst tail.
+   - Ni_disp shows no relation (ρ = −0.19).
+   - Reading: free Ni⁰ hydrogenates rings but does not crack C–C bonds. Cracking needs the Ni–oxide boundary (Niδ⁺, vacancies, reduced Ti).
+4. **Ti anchors Ni; Ce helps lifetime, not distribution.**
+   - C20+: A1 (Ti only) 4 %, A2 (Ti/Ce) 3 %, A3 (Ce only) 22 %.
+   - The manuscript reports stronger Ni segregation with Ce (¶105). A3 is 100 % reduced and has the lowest H₂ uptake and dispersion, so it behaves like supported Ni.
+   - Swapping half the Ti for Ce leaves the distribution unchanged. The gain shows up in run time instead: 100 h for A2 vs 26 h for A1.
+5. **Preparation route outweighs composition.**
+   - A2 and B4 have the same composition but give 3 % vs 33 % C20+.
+   - Combustion synthesis builds the Ni–oxide boundary. PD leaves aliphatic oxygenates that oligomerize (¶91).
+   - The trees use prep_PD and red_pct interchangeably for the same reason.
+6. **The Ru/WZr third bed trims the remaining tail.** Going from A2 to C1:
+   - C6–7 rises from 8 to 14 % and C20+ falls from 3 to 0 %.
+   - The most abundant carbon number drops from C11 to C8, and the maximum from C22 to C19.
+   - Without the Ni oxide in front (C2), Ru/WZr still leaves 18 % C20+. It polishes a feed that has already been cracked.
+
+Caveats:
+- **SimDist reports boiling point as an n-paraffin carbon number.** Oxygenates, aromatics and polycyclic naphthenes read heavier than their true carbon count.
+  - O/C vs C20+: ρ = +0.59, p = 0.07.
+  - B1 has the lowest O/C (0.0013) yet 20 % C20+, so true heavies exist too.
+- **A narrow product is not sufficient for lifetime.** A1 and A5 are narrow but plugged at 26 h and 16 h.
+  - Yield vs λ: ρ = −0.65, p = 0.058.
+- **These are correlations at n = 7–10.** Collinear pairs can't be separated (red_pct with prep_PD, H₂ uptake with Ni_supported).
+
+## 7. Reproduce
 
 ```
 PYTHONIOENCODING=utf-8 /d/saf_hdo/.venv/Scripts/python.exe cattree/tree.py --selftest
